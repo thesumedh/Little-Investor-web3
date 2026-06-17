@@ -1,0 +1,22 @@
+{
+  "name": "littleinvestors",
+  "version": "1.0.0",
+  "description": "working on the hackathon!",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node --env-file=./src/.env src/server.js"
+  },
+  "author": "Liam, Michael, Ahmed, and Christina",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.0",
+    "express-openid-connect": "^2.17.1",
+    "nodemon": "^3.1.7",
+    "ollama": "^0.5.9"
+  }
+}
