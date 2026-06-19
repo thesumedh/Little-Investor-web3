@@ -229,6 +229,11 @@ function selectChore(note, amt, el) {
 
 function sendMoney() {
   if (!selectedAmount) { showToast('Please select an allowance amount! 💸'); return; }
+  
+  if (typeof pendo !== 'undefined') {
+    pendo.track('allowance_sent', { amount: selectedAmount });
+  }
+
   transferCash(selectedAmount, "Pocket allowance sent! 💰");
   selectedAmount = 0;
   document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
@@ -242,6 +247,10 @@ function sendCustomReward() {
   
   if (isNaN(amt) || amt <= 0) { showToast('Please enter a valid amount! 💰'); return; }
   
+  if (typeof pendo !== 'undefined') {
+    pendo.track('custom_reward_sent', { amount: amt, note: note });
+  }
+
   transferCash(amt, note);
   
   amtInput.value = '';

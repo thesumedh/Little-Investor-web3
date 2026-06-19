@@ -258,6 +258,10 @@ async function sendMessage() {
   document.getElementById('chips').style.display = 'none';
   addMsg(msg, 'user');
   
+  if (typeof pendo !== 'undefined') {
+    pendo.track('chat_message_sent', { length: msg.length });
+  }
+  
   const typing = showTyping();
   try {
     const res = await fetch('/api/chat', {

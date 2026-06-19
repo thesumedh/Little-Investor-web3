@@ -41,6 +41,15 @@
   <div class="xp-badge">⭐ +<%= lesson.xp %> XP · 🪙 +<%= lesson.coins %> Coins</div>
   <h1><%= lesson.title %></h1>
   <p><%= lesson.description %></p>
+  
+  <div class="lesson-actions" style="display:flex;gap:12px;margin:20px 0">
+    <button class="action-btn" onclick="bookmarkLesson(<%= lesson.id %>)" id="bookmarkBtn" style="flex:1;background:rgba(26,35,50,0.05);color:var(--navy);border:none;border-radius:12px;padding:12px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s">
+      <span id="bookmarkIcon">🔖</span> <span id="bookmarkText">Bookmark Lesson</span>
+    </button>
+    <button class="action-btn" onclick="shareLesson(<%= lesson.id %>)" style="flex:1;background:rgba(26,35,50,0.05);color:var(--navy);border:none;border-radius:12px;padding:12px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:all 0.2s">
+      <span>🔗</span> Share Lesson
+    </button>
+  </div>
 </div>
 
 <div class="key-fact">
@@ -87,6 +96,82 @@ if (completed.includes(lessonId)) {
   btn.textContent = '🔄 Revisit Quiz';
   btn.style.background = 'linear-gradient(135deg,#2A3140,#1a2332)';
 }
+
+// Bookmark & Share Telemetry & Logic
+function bookmarkLesson(id) {
+  let bookmarks = JSON.parse(localStorage.getItem('li_bookmarked_lessons') || '[]');
+  let isBookmarked = bookmarks.includes(id);
+  if (isBookmarked) {
+    bookmarks = bookmarks.filter(b => b !== id);
+    showToast('Removed from bookmarks! 🔖');
+  } else {
+    bookmarks.push(id);
+    showToast('Lesson bookmarked! 🔖');
+  }
+  localStorage.setItem('li_bookmarked_lessons', JSON.stringify(bookmarks));
+  updateBookmarkUI(id);
+  
+  if (typeof pendo !== 'undefined') {
+    pendo.track('lesson_bookmarked', { lessonId: id, bookmarked: !isBookmarked });
+  }
+}
+
+function updateBookmarkUI(id) {
+  const bookmarks = JSON.parse(localStorage.getItem('li_bookmarked_lessons') || '[]');
+  const isBookmarked = bookmarks.includes(id);
+  const btn = document.getElementById('bookmarkBtn');
+  const text = document.getElementById('bookmarkText');
+  const icon = document.getElementById('bookmarkIcon');
+  if (btn && text && icon) {
+    if (isBookmarked) {
+      btn.style.background = 'rgba(249,166,27,0.1)';
+      btn.style.color = '#d97706';
+      text.textContent = 'Bookmarked';
+      icon.textContent = '⭐';
+    } else {
+      btn.style.background = 'rgba(26,35,50,0.05)';
+      btn.style.color = 'var(--navy)';
+      text.textContent = 'Bookmark Lesson';
+      icon.textContent = '🔖';
+    }
+  }
+}
+
+function shareLesson(id) {
+  if (navigator.share) {
+    navigator.share({
+      title: 'Learn Financial Literacy with LittleInvestors!',
+      text: 'Check out this lesson on LittleInvestors!',
+      url: window.location.href
+    }).then(() => {
+      showToast('Shared successfully! 🔗');
+      if (typeof pendo !== 'undefined') {
+        pendo.track('lesson_shared', { lessonId: id });
+      }
+    }).catch(() => {});
+  } else {
+    // Fallback: Copy link
+    navigator.clipboard.writeText(window.location.href);
+    showToast('Link copied to clipboard! 🔗');
+    if (typeof pendo !== 'undefined') {
+      pendo.track('lesson_shared', { lessonId: id });
+    }
+  }
+}
+
+function showToast(msg) {
+  const newT = document.createElement('div');
+  newT.className = 'toast show';
+  newT.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:12px 24px;border-radius:50px;font-size:14px;font-weight:600;z-index:9999;box-shadow:0 10px 25px rgba(0,0,0,0.2)';
+  newT.textContent = msg;
+  document.body.appendChild(newT);
+  setTimeout(() => newT.remove(), 2500);
+}
+
+// Initial UI sync
+window.addEventListener('DOMContentLoaded', () => {
+  updateBookmarkUI(lessonId);
+});
 
 function completeLessonFlow(id, xp, coins) {
   document.getElementById('lessonFill').style.width = '100%';

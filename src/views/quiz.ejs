@@ -77,6 +77,15 @@ function selectAnswer(i, correct, explanation) {
   opts[i].classList.add(i === correct ? 'correct' : 'wrong');
   if (i !== correct) opts[correct].classList.add('correct');
   const isRight = i === correct;
+  
+  if (typeof pendo !== 'undefined') {
+    pendo.track('quiz_answer_submitted', {
+      lessonId: lessonId,
+      questionIndex: current,
+      isCorrect: isRight
+    });
+  }
+
   if (isRight) score++;
   const fb = document.getElementById('quizFeedback');
   fb.textContent = (isRight ? '✅ Correct! ' : '❌ Not quite. ') + explanation;

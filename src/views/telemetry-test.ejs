@@ -105,7 +105,7 @@
   <script>
     let visitorCount = 0;
     const pages = ['/landing', '/home', '/courses', '/chatbot', '/parent', '/profile', '/course', '/quiz'];
-    const events = ['lesson_completed', 'premium_stocks_unlocked', 'quiz_completed', 'goal_set', 'allowance_sent', 'stock_purchased'];
+    const events = ['lesson_completed', 'premium_stocks_unlocked', 'quiz_completed', 'goal_set', 'allowance_sent', 'stock_purchased', 'chat_message_sent', 'custom_reward_sent', 'quiz_answer_submitted', 'lesson_bookmarked', 'lesson_shared'];
 
     function log(message, isEvent = false) {
       const logBox = document.getElementById('logBox');
@@ -164,6 +164,16 @@
               metadata = { ticker: ['AAPL', 'AMZN', 'WMT', 'TSLA'][Math.floor(Math.random() * 4)], value: Math.floor(Math.random() * 200) + 50 };
             } else if (event === 'quiz_completed') {
               metadata = { score: 3, lessonId: Math.floor(Math.random() * 5) + 1 };
+            } else if (event === 'chat_message_sent') {
+              metadata = { length: Math.floor(Math.random() * 50) + 10 };
+            } else if (event === 'custom_reward_sent') {
+              metadata = { amount: [10, 20, 50][Math.floor(Math.random() * 3)], note: 'Do homework' };
+            } else if (event === 'quiz_answer_submitted') {
+              metadata = { lessonId: Math.floor(Math.random() * 5) + 1, questionIndex: Math.floor(Math.random() * 3), isCorrect: Math.random() > 0.3 };
+            } else if (event === 'lesson_bookmarked') {
+              metadata = { lessonId: Math.floor(Math.random() * 5) + 1, bookmarked: Math.random() > 0.3 };
+            } else if (event === 'lesson_shared') {
+              metadata = { lessonId: Math.floor(Math.random() * 5) + 1 };
             }
             pendo.track(event, metadata);
             log(`Simulating event: <span style="color:#34d399">${event}</span>`, true);
