@@ -29,6 +29,8 @@ LittleInvestors is a **parent-child collaborative financial literacy app** that 
 | 🤖 **AI Chatbot** | Powered by Google Gemini — kid-friendly answers to money questions |
 | 👨‍👩‍👧 **Parent Mode** | Parents send virtual allowances, view child's progress and activity feed |
 | 📈 **Stock Simulator** | Buy/sell Apple, Amazon, Walmart with virtual coins — no real money |
+| 📈 **Live Trend Sparklines** | Dynamic inline SVG sparkline graphs rendering real Yahoo Finance 5-day historical trend lines |
+| 📰 **Market News Feed** | A curated stream of financial news updates displayed directly on the dashboard |
 | 🎖️ **Achievements** | 7 achievement badges: Baby Buffett, Quiz Ace, Level Up, and more |
 | 🔥 **Streak System** | Daily streak tracking + XP progression system |
 
@@ -36,9 +38,11 @@ LittleInvestors is a **parent-child collaborative financial literacy app** that 
 
 ## 🚀 Demo
 
-**Live app:** https://little-investors-delta.vercel.app
+**Live app:** https://little-investors-delta.vercel.app/
 
 **Demo video:** [YouTube](#)
+
+**Devpost submission:** [Link](#)
 
 ### Screenshots
 
@@ -71,7 +75,7 @@ LittleInvestors is a **parent-child collaborative financial literacy app** that 
 
 - **Backend:** Node.js + Express
 - **Frontend:** EJS templates + Vanilla CSS + Vanilla JS
-- **AI:** Google Gemini 1.5 Flash API
+- **AI:** Google Gemini 2.5 Flash API
 - **Analytics:** Novus.ai
 - **Storage:** localStorage (client-side state)
 - **Deployment:** Railway

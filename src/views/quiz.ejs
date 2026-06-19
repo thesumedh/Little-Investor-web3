@@ -2,34 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quiz — LittleInvestors</title>
+  <title>Quiz: <%= quiz.title %> — LittleInvestors</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/main.css">
   <link rel="icon" type="image/x-icon" href="/img/penny_logo.png">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-  <script>
-  (function(apiKey){
-      (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
-      v=['initialize','identify','updateOptions','pageLoad','track','trackAgent'];for(w=0,x=v.length;w<x;++w)(function(m){
-      o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
-      y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
-      z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
-  })('b441c372-5d2b-479f-8815-a8827f2cfb67');
-
-  pendo.initialize({
-    visitor: {
-      id: ''
-    }
-  });
-  </script>
+  <script src="/js/pendo-init.js"></script>
 </head>
 <body>
 
 <div id="header" style="border-bottom:1px solid #f1f5f9">
   <a href="/courses" style="display:flex;align-items:center;gap:8px;text-decoration:none;padding:0 20px">
     <span style="font-size:22px;color:#64748b">‹</span>
-    <span style="font-size:15px;font-weight:700;color:#1a2332">📝 Quiz: <%= quiz.title %></span>
+    <span style="font-size:15px;font-weight:700;color:#1a2332">📝 <%= quiz.title %></span>
   </a>
 </div>
 
@@ -37,7 +23,7 @@
   <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="quizFill" style="width:0%"></div></div>
 
   <div id="quizContainer">
-    <div class="xp-badge">⭐ +50 XP per correct answer</div>
+    <div class="xp-badge">⭐ +50 XP per correct answer · 🪙 +5 Coins</div>
     <div class="quiz-q" id="quizQ"></div>
     <div class="quiz-options" id="quizOpts"></div>
     <div class="quiz-feedback" id="quizFeedback"></div>
@@ -45,14 +31,15 @@
   </div>
 
   <div id="quizResult" style="display:none;text-align:center;padding-top:20px">
-    <div style="font-size:64px;margin-bottom:16px" id="resultEmoji">🎉</div>
-    <h2 style="font-size:24px;font-weight:900;color:#1a2332;margin-bottom:8px" id="resultTitle">Quiz Complete!</h2>
+    <div style="font-size:72px;margin-bottom:16px" id="resultEmoji">🎉</div>
+    <h2 style="font-size:26px;font-weight:900;color:#1a2332;margin-bottom:8px" id="resultTitle">Quiz Complete!</h2>
     <p style="color:#64748b;margin-bottom:24px" id="resultText"></p>
-    <div style="background:linear-gradient(135deg,#ecfdf5,#d1fae5);border-radius:16px;padding:20px;margin-bottom:24px">
-      <div style="font-size:36px;font-weight:900;color:#2AA46A" id="resultXP">+150 XP</div>
-      <div style="font-size:13px;color:#166534">earned this quiz!</div>
+    <div style="background:linear-gradient(135deg,#ecfdf5,#d1fae5);border-radius:20px;padding:24px;margin-bottom:24px;border:1px solid #bbf7d0">
+      <div style="font-size:42px;font-weight:900;color:#2AA46A" id="resultXP">+150 XP</div>
+      <div style="font-size:13px;color:#166534;margin-top:4px">earned this quiz!</div>
+      <div style="font-size:20px;font-weight:700;color:#F9A61B;margin-top:8px" id="resultCoins">+15 🪙</div>
     </div>
-    <a href="/courses" style="display:block;padding:16px;background:#2AA46A;color:#fff;border-radius:16px;font-weight:700;font-size:16px;text-decoration:none;margin-bottom:12px">Back to Lessons 📚</a>
+    <a href="/courses" style="display:block;padding:16px;background:linear-gradient(135deg,#2AA46A,#1b7a4e);color:#fff;border-radius:16px;font-weight:700;font-size:16px;text-decoration:none;margin-bottom:12px">← Back to Lessons 📚</a>
     <a href="/home" style="display:block;padding:14px;background:#f1f5f9;color:#1a2332;border-radius:16px;font-weight:600;font-size:15px;text-decoration:none">Go to Dashboard 🏠</a>
   </div>
 </div>
@@ -61,13 +48,14 @@
 
 <script>
 const quizData = <%- JSON.stringify(quiz.questions) %>;
+const lessonId = <%= lessonId %>;
 let current = 0, score = 0, answered = false;
 
 function renderQuestion() {
   const q = quizData[current];
   const pct = (current / quizData.length) * 100;
   document.getElementById('quizFill').style.width = pct + '%';
-  document.getElementById('quizQ').textContent = `Q${current+1}. ${q.q}`;
+  document.getElementById('quizQ').textContent = 'Q' + (current+1) + '. ' + q.q;
   const opts = document.getElementById('quizOpts');
   opts.innerHTML = '';
   q.options.forEach((opt, i) => {
@@ -88,9 +76,9 @@ function selectAnswer(i, correct, explanation) {
   const opts = document.querySelectorAll('.quiz-option');
   opts[i].classList.add(i === correct ? 'correct' : 'wrong');
   if (i !== correct) opts[correct].classList.add('correct');
-  const fb = document.getElementById('quizFeedback');
   const isRight = i === correct;
   if (isRight) score++;
+  const fb = document.getElementById('quizFeedback');
   fb.textContent = (isRight ? '✅ Correct! ' : '❌ Not quite. ') + explanation;
   fb.className = 'quiz-feedback show ' + (isRight ? 'good' : 'bad');
   document.getElementById('nextBtn').className = 'quiz-next-btn show';
@@ -98,30 +86,36 @@ function selectAnswer(i, correct, explanation) {
 
 function nextQuestion() {
   current++;
-  if (current >= quizData.length) {
-    showResult();
-  } else {
-    renderQuestion();
-  }
+  if (current >= quizData.length) showResult();
+  else renderQuestion();
 }
 
 function showResult() {
   document.getElementById('quizContainer').style.display = 'none';
   document.getElementById('quizFill').style.width = '100%';
   const xp = score * 50;
-  const res = document.getElementById('quizResult');
-  res.style.display = 'block';
+  const coins = score * 5;
+  document.getElementById('quizResult').style.display = 'block';
   document.getElementById('resultEmoji').textContent = score === quizData.length ? '🏆' : score >= 2 ? '🎉' : '💪';
   document.getElementById('resultTitle').textContent = score === quizData.length ? 'Perfect Score!' : 'Quiz Complete!';
-  document.getElementById('resultText').textContent = `You got ${score} out of ${quizData.length} correct.`;
-  document.getElementById('resultXP').textContent = `+${xp} XP`;
+  document.getElementById('resultText').textContent = 'You got ' + score + ' out of ' + quizData.length + ' correct!';
+  document.getElementById('resultXP').textContent = '+' + xp + ' XP';
+  document.getElementById('resultCoins').textContent = '+' + coins + ' 🪙';
+  
+  // Save to localStorage
   const prevXP = parseInt(localStorage.getItem('li_xp') || '0');
   localStorage.setItem('li_xp', prevXP + xp);
-  const level = Math.floor((prevXP + xp) / 200);
-  localStorage.setItem('li_level', level);
-  const coins = parseInt(localStorage.getItem('li_coins') || '800');
-  localStorage.setItem('li_coins', coins + score * 10);
-  // Confetti!
+  localStorage.setItem('li_level', Math.floor((prevXP + xp) / 200));
+  const prevCoins = parseInt(localStorage.getItem('li_coins') || '800');
+  localStorage.setItem('li_coins', prevCoins + coins);
+  const qDone = parseInt(localStorage.getItem('li_quizzes_done') || '0') + 1;
+  localStorage.setItem('li_quizzes_done', qDone);
+  if (score === quizData.length) {
+    localStorage.setItem('li_ach_perfect_quiz', '1');
+    localStorage.setItem('li_ach_first_quiz', '1');
+  }
+  if (qDone >= 1) localStorage.setItem('li_ach_first_quiz', '1');
+
   if (typeof confetti !== 'undefined') {
     if (score === quizData.length) {
       confetti({particleCount:150,spread:100,origin:{y:0.5},colors:['#2AA46A','#F9A61B','#34d399','#fff']});
@@ -131,12 +125,7 @@ function showResult() {
       confetti({particleCount:60,spread:70,origin:{y:0.6},colors:['#2AA46A','#F9A61B']});
     }
   }
-  // Track quiz completion
-  try { if(window.pendo) window.pendo.track('quiz_completed', {score, total: quizData.length, xp}); } catch(e) {}
-  // Unlock achievements
-  const quizDone = parseInt(localStorage.getItem('li_quizzes_done') || '0') + 1;
-  localStorage.setItem('li_quizzes_done', quizDone);
-  if (score === quizData.length) localStorage.setItem('li_ach_perfect_quiz', '1');
+  try { if(window.pendo) window.pendo.track('quiz_completed', {lessonId, score, total: quizData.length, xp}); } catch(e) {}
 }
 
 function showToast(msg) {

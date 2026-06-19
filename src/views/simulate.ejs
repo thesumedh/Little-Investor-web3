@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Novus/Pendo Traffic Generator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script>(function(apiKey){(function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];v=['initialize','identify','updateOptions','pageLoad','track','trackAgent'];for(w=0,x=v.length;w<x;++w)(function(m){o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');})('b441c372-5d2b-479f-8815-a8827f2cfb67');</script>
+  <style>
+    body {
+      background: #0a0f1e;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    .panel {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 24px;
+      padding: 32px;
+      max-width: 500px;
+      width: 100%;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: #34d399;
+    }
+    p {
+      color: #94a3b8;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .counter-box {
+      background: rgba(52, 211, 153, 0.1);
+      border: 1px solid rgba(52, 211, 153, 0.2);
+      border-radius: 16px;
+      padding: 16px;
+      margin-bottom: 24px;
+    }
+    .counter {
+      font-size: 48px;
+      font-weight: 900;
+      color: #34d399;
+    }
+    .counter-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #a7f3d0;
+      font-weight: 700;
+    }
+    .log-box {
+      background: #020617;
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: left;
+      font-family: monospace;
+      font-size: 12px;
+      height: 150px;
+      overflow-y: auto;
+      color: #cbd5e1;
+    }
+    .log-line {
+      margin-bottom: 6px;
+      border-bottom: 1px solid rgba(255,255,255,0.02);
+      padding-bottom: 4px;
+    }
+    .log-time {
+      color: #64748b;
+      margin-right: 8px;
+    }
+    .log-event {
+      color: #fbbf24;
+    }
+  </style>
+</head>
+<body>
+  <div class="panel">
+    <h1>🚀 Traffic Simulation Active</h1>
+    <p>This dashboard is generating real-time browser session traffic with randomized IDs. Keep this tab open to continuously build active charts and conversion rates on your Novus dashboard.</p>
+    
+    <div class="counter-box">
+      <div class="counter" id="visitorCount">0</div>
+      <div class="counter-label">Simulated Visitors Generated</div>
+    </div>
+    
+    <div class="log-box" id="logBox">
+      <div class="log-line"><span class="log-time">[System]</span> Simulation initialized.</div>
+    </div>
+  </div>
+
+  <script>
+    let visitorCount = 0;
+    const pages = ['/landing', '/home', '/courses', '/chatbot', '/parent', '/profile', '/course', '/quiz'];
+    const events = ['lesson_completed', 'premium_stocks_unlocked', 'quiz_completed', 'goal_set', 'allowance_sent', 'stock_purchased'];
+
+    function log(message, isEvent = false) {
+      const logBox = document.getElementById('logBox');
+      const timeStr = new Date().toLocaleTimeString();
+      const div = document.createElement('div');
+      div.className = 'log-line';
+      div.innerHTML = `<span class="log-time">[${timeStr}]</span> <span class="${isEvent ? 'log-event' : ''}">${message}</span>`;
+      logBox.appendChild(div);
+      logBox.scrollTop = logBox.scrollHeight;
+    }
+
+    function clearPendoState() {
+      // Clear cookies
+      document.cookie.split(";").forEach(function(c) { 
+        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+      });
+      // Clear localStorage
+      localStorage.clear();
+    }
+
+    function simulateUserSession() {
+      clearPendoState();
+      
+      const visitorId = 'user_sim_' + Math.floor(Math.random() * 900000 + 100000);
+      visitorCount++;
+      document.getElementById('visitorCount').textContent = visitorCount;
+      
+      log(`Generated new visitor: <strong>${visitorId}</strong>`);
+      
+      // Initialize Pendo for this unique visitor
+      pendo.initialize({
+        visitor: { id: visitorId },
+        account: { id: 'acc_little_investors' }
+      });
+      
+      // We will perform a sequence of 3-6 pageviews and events
+      const sequenceLength = Math.floor(Math.random() * 4) + 3;
+      let delay = 300;
+
+      for (let i = 0; i < sequenceLength; i++) {
+        // Decide if pageview or event
+        const isPageView = Math.random() > 0.4;
+        
+        setTimeout(() => {
+          if (isPageView) {
+            const page = pages[Math.floor(Math.random() * pages.length)];
+            // Simulate page view
+            pendo.track('page_view', { page: page });
+            log(`Visitor navigated to: <span style="color:#60a5fa">${page}</span>`);
+          } else {
+            const event = events[Math.floor(Math.random() * events.length)];
+            let metadata = {};
+            if (event === 'lesson_completed') {
+              metadata = { lessonId: Math.floor(Math.random() * 5) + 1, xp: 100 };
+            } else if (event === 'stock_purchased') {
+              metadata = { ticker: ['AAPL', 'AMZN', 'WMT', 'TSLA'][Math.floor(Math.random() * 4)], value: Math.floor(Math.random() * 200) + 50 };
+            } else if (event === 'quiz_completed') {
+              metadata = { score: 3, lessonId: Math.floor(Math.random() * 5) + 1 };
+            }
+            pendo.track(event, metadata);
+            log(`Visitor triggered event: <span style="color:#34d399">${event}</span>`, true);
+          }
+        }, delay);
+        
+        delay += Math.floor(Math.random() * 600) + 400; // random offset between actions
+      }
+    }
+
+    // Run a new user session every 5 seconds
+    setInterval(simulateUserSession, 5000);
+    // Initial run
+    simulateUserSession();
+  </script>
+</body>
+</html>

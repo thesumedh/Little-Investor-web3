@@ -8,21 +8,13 @@
   <link rel="stylesheet" href="/css/main.css">
   <link rel="icon" type="image/x-icon" href="/img/penny_logo.png">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-  <script>
-  (function(apiKey){
-      (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
-      v=['initialize','identify','updateOptions','pageLoad','track','trackAgent'];for(w=0,x=v.length;w<x;++w)(function(m){
-      o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
-      y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
-      z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
-  })('b441c372-5d2b-479f-8815-a8827f2cfb67');
-
-  pendo.initialize({
-    visitor: {
-      id: ''
-    }
-  });
-  </script>
+  <script src="/js/pendo-init.js"></script>
+  <style>
+    .lesson-progress-top{width:100%;background:#f1f5f9;height:4px;position:sticky;top:64px;z-index:40}
+    .lesson-progress-fill{height:100%;background:linear-gradient(90deg,#2AA46A,#34d399);width:0%;transition:width 1s ease}
+    .xp-flyout{position:fixed;top:80px;right:20px;background:#1a2332;color:#fff;border-radius:16px;padding:12px 18px;font-size:13px;font-weight:700;z-index:999;opacity:0;transform:translateY(-10px);transition:all .4s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+    .xp-flyout.show{opacity:1;transform:translateY(0)}
+  </style>
 </head>
 <body>
 
@@ -32,69 +24,107 @@
       <span style="font-size:22px;color:#64748b">‹</span>
       <span style="font-size:14px;font-weight:600;color:#1a2332">Lessons</span>
     </div>
-    <div class="star-container">
-      <img class="star" src="/img/star.png" alt="level">
-      <div class="level-number" id="levelNum">0</div>
+    <div style="font-size:13px;color:#64748b;font-weight:500">Lesson <%= lesson.id %> of 5</div>
+    <div style="display:flex;align-items:center;gap:4px">
+      <span style="font-size:13px;font-weight:700;color:#F9A61B">+<%= lesson.xp %> XP</span>
     </div>
-    <div class="progress-container">
-      <div class="progress-bar"><div class="progress" id="progress"></div></div>
-    </div>
-    <div id="streak"><img src="/img/Vector 10.png" alt="streak"><h1 id="streakCount">30</h1></div>
   </a>
 </div>
 
+<div class="lesson-progress-top"><div class="lesson-progress-fill" id="lessonFill"></div></div>
+
 <div class="lesson-video">
-  <iframe id="learn_video"
-    src="https://www.youtube.com/embed/<%= lesson.videoId %>?si=GZIx0KaSIa1KnHxv"
-    title="<%= lesson.title %>"
-    frameborder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-    allowfullscreen>
-  </iframe>
+  <iframe src="https://www.youtube.com/embed/<%= lesson.videoId %>?rel=0&modestbranding=1" frameborder="0" allowfullscreen loading="lazy"></iframe>
 </div>
 
 <div class="lesson-content">
-  <div class="xp-pill">⭐ +<%= lesson.xp %> XP on completion</div>
+  <div class="xp-badge">⭐ +<%= lesson.xp %> XP · 🪙 +<%= lesson.coins %> Coins</div>
   <h1><%= lesson.title %></h1>
   <p><%= lesson.description %></p>
+</div>
 
-  <div class="lesson-actions" style="margin-top:16px;border-top:none;padding-top:0">
-    <a class="btn-action" onclick="shareLesson()">📤 Share</a>
-    <a class="btn-action" onclick="bookmarkLesson()">🔖 Bookmark</a>
+<div class="key-fact">
+  💡 <strong>Quick Fact:</strong> <% if(lesson.id===1){ %>Money has existed for over 3,000 years — ancient civilizations used shells, beads, and metals as currency!<% } else if(lesson.id===2){ %>People who automate their savings are 3x more likely to reach their financial goals.<% } else if(lesson.id===3){ %>The average American spends $1,500 per year on impulse purchases they later regret.<% } else if(lesson.id===4){ %>Diversified portfolios have historically recovered from every major market crash in history.<% } else { %>Someone who invests $1,000 at age 15 could have over $88,000 by age 65 (at 8% annual return)!<% } %>
+</div>
+
+<button class="complete-btn" id="completeBtn" onclick="completeLessonFlow(<%= lesson.id %>, <%= lesson.xp %>, <%= lesson.coins %>)">
+  ✅ Complete Lesson &amp; Take Quiz
+</button>
+
+<% if(lesson.upNextId) { %>
+<div class="up-next-section">
+  <h2>Up Next</h2>
+  <div class="up-next-card">
+    <span>📖 <%= lesson.upNext %></span>
+    <span style="color:#2AA46A;font-weight:600">›</span>
   </div>
 </div>
-
-<a href="/quiz?lesson=<%= lesson.id %>" class="complete-btn" id="video_button" onclick="completeLesson(<%= lesson.xp %>)">
-  ✅ Complete & Take Quiz →
-</a>
-
+<% } else { %>
 <div class="up-next-section">
-  <h2>Up next</h2>
-  <div class="up-next-card">📘 <%= lesson.upNext %></div>
+  <h2>🏆 Final Lesson!</h2>
+  <div class="up-next-card">
+    <span>Complete this to become a certified money master!</span>
+    <span>🎓</span>
+  </div>
 </div>
+<% } %>
 
-<nav class="menu">
-  <a href="/home"><img src="/img/menu (3).png" alt="home"><span class="menu-label">Home</span></a>
-  <a href="/courses" class="active"><img src="/img/menu (4).png" alt="courses"><span class="menu-label">Learn</span></a>
-  <a href="/chatbot"><img src="/img/menu (2).png" alt="chat"><span class="menu-label">Chat</span></a>
-  <a href="/parent"><img src="/img/menu (1).png" alt="parent"><span class="menu-label">Parent</span></a>
-</nav>
+<div class="xp-flyout" id="xpFlyout">⭐ +<%= lesson.xp %> XP earned!</div>
 
-<div class="toast" id="toast"></div>
-<script src="/js/script.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
 <script>
-function completeLesson(xp) {
-  const coins = parseInt(localStorage.getItem('li_coins') || '800');
-  localStorage.setItem('li_coins', coins + Math.floor(xp/10));
-  const totalXP = parseInt(localStorage.getItem('li_xp') || '0') + xp;
-  localStorage.setItem('li_xp', totalXP);
-  const level = Math.floor(totalXP / 200);
-  localStorage.setItem('li_level', level);
-  const width = (totalXP % 200) / 200 * 100;
-  localStorage.setItem('li_progress', width);
+// Animate lesson progress bar as user reads
+let fillPct = 0;
+const fill = document.getElementById('lessonFill');
+setTimeout(() => { fill.style.width = '40%'; }, 500);
+setTimeout(() => { fill.style.width = '75%'; }, 3000);
+
+// Check if already completed
+const completed = JSON.parse(localStorage.getItem('li_completed_lessons') || '[]');
+const lessonId = <%= lesson.id %>;
+if (completed.includes(lessonId)) {
+  const btn = document.getElementById('completeBtn');
+  btn.textContent = '🔄 Revisit Quiz';
+  btn.style.background = 'linear-gradient(135deg,#2A3140,#1a2332)';
 }
-function shareLesson() { showToast('Link copied to clipboard! 📋'); }
-function bookmarkLesson() { showToast('Lesson bookmarked! 🔖'); }
+
+function completeLessonFlow(id, xp, coins) {
+  document.getElementById('lessonFill').style.width = '100%';
+  
+  // Mark as complete in localStorage
+  const completed = JSON.parse(localStorage.getItem('li_completed_lessons') || '[]');
+  if (!completed.includes(id)) {
+    completed.push(id);
+    localStorage.setItem('li_completed_lessons', JSON.stringify(completed));
+    
+    // Award XP & coins
+    const prevXP = parseInt(localStorage.getItem('li_xp') || '0');
+    const prevCoins = parseInt(localStorage.getItem('li_coins') || '800');
+    const prevLevel = Math.floor(prevXP / 200);
+    const newXP = prevXP + xp;
+    const newLevel = Math.floor(newXP / 200);
+    localStorage.setItem('li_xp', newXP);
+    localStorage.setItem('li_level', newLevel);
+    localStorage.setItem('li_coins', prevCoins + coins);
+    localStorage.setItem('li_lessons_completed', completed.length);
+    
+    // First lesson achievement
+    if (completed.length === 1) localStorage.setItem('li_ach_first_lesson', '1');
+    
+    // Show XP flyout
+    const flyout = document.getElementById('xpFlyout');
+    flyout.classList.add('show');
+    setTimeout(() => flyout.classList.remove('show'), 2800);
+    
+    // Confetti on level up
+    if (newLevel > prevLevel && typeof confetti !== 'undefined') {
+      confetti({particleCount:100,spread:80,origin:{y:0.6},colors:['#2AA46A','#F9A61B','#34d399','#fff']});
+    }
+  }
+  
+  // Navigate to quiz after brief delay
+  setTimeout(() => { window.location.href = '/quiz?lesson=' + id; }, 800);
+}
 </script>
 </body>
 </html>

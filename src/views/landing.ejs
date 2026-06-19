@@ -1,100 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LittleInvestors — Teach Kids to Invest Together</title>
-  <meta name="description" content="LittleInvestors helps parents teach kids financial literacy through interactive lessons, real stock simulations, and AI-powered guidance.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <meta name="description" content="LittleInvestors helps parents teach kids financial literacy through interactive lessons, real stock simulations, and AI-powered guidance. Free to use.">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/x-icon" href="/img/penny_logo.png">
-  <link rel="stylesheet" href="/css/landing.css">
-  <script>
-  (function(apiKey){
-      (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
-      v=['initialize','identify','updateOptions','pageLoad','track','trackAgent'];for(w=0,x=v.length;w<x;++w)(function(m){
-      o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
-      y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
-      z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
-  })('b441c372-5d2b-479f-8815-a8827f2cfb67');
+  <script src="/js/pendo-init.js"></script>
+  <style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{font-family:'Inter',sans-serif;scroll-behavior:smooth}
+  body{background:#0a0f1e;color:#fff;overflow-x:hidden}
+  
+  /* Nav */
+  .nav{display:flex;justify-content:space-between;align-items:center;padding:18px 40px;background:rgba(10,15,30,.8);backdrop-filter:blur(16px);position:sticky;top:0;z-index:100;border-bottom:1px solid rgba(255,255,255,.06)}
+  .nav-brand{font-size:20px;font-weight:800;display:flex;align-items:center;gap:8px}
+  .nav-logo{font-size:24px}
+  .nav-cta{background:linear-gradient(135deg,#2AA46A,#1b7a4e);color:#fff;padding:10px 22px;border-radius:99px;text-decoration:none;font-size:14px;font-weight:700;transition:all .2s ease}
+  .nav-cta:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(42,164,106,.4)}
 
-  pendo.initialize({
-    visitor: {
-      id: ''
-    }
-  });
-  </script>
+  /* Hero */
+  .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:60px 40px;position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(42,164,106,.15),transparent),radial-gradient(ellipse 60% 40% at 80% 50%,rgba(249,166,27,.08),transparent)}
+  .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;max-width:1100px;width:100%;align-items:center}
+  .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(42,164,106,.15);border:1px solid rgba(42,164,106,.3);color:#34d399;padding:6px 16px;border-radius:99px;font-size:13px;font-weight:600;margin-bottom:24px}
+  .hero-headline{font-size:clamp(36px,5vw,56px);font-weight:900;line-height:1.1;margin-bottom:20px;letter-spacing:-1px}
+  .highlight{background:linear-gradient(135deg,#2AA46A,#34d399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .hero-sub{font-size:17px;color:rgba(255,255,255,.65);line-height:1.7;margin-bottom:32px}
+  .hero-actions{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:36px}
+  .btn-primary{background:linear-gradient(135deg,#2AA46A,#1b7a4e);color:#fff;padding:15px 30px;border-radius:14px;text-decoration:none;font-size:16px;font-weight:700;transition:all .2s ease;display:inline-flex;align-items:center;gap:8px;box-shadow:0 8px 32px rgba(42,164,106,.35)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 12px 40px rgba(42,164,106,.5)}
+  .btn-secondary{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;padding:15px 30px;border-radius:14px;text-decoration:none;font-size:16px;font-weight:600;transition:all .2s ease}
+  .btn-secondary:hover{background:rgba(255,255,255,.14)}
+  .hero-stats{display:flex;gap:32px}
+  .stat{text-align:left}
+  .stat-number{font-size:28px;font-weight:900;color:#2AA46A;display:block}
+  .stat-label{font-size:12px;color:rgba(255,255,255,.5);font-weight:500}
+  .stat-divider{width:1px;background:rgba(255,255,255,.1)}
+
+  /* Phone mockup */
+  .phone-wrap{display:flex;justify-content:center;position:relative}
+  .phone-mockup{background:linear-gradient(160deg,#0f2027,#203a43,#2c5364);border-radius:32px;padding:24px 20px;width:260px;border:1px solid rgba(255,255,255,.1);box-shadow:0 40px 80px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.1);animation:float 4s ease-in-out infinite}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+  .mock-header{display:flex;justify-content:space-between;font-size:12px;color:rgba(255,255,255,.6);margin-bottom:16px}
+  .mock-balance{background:rgba(255,255,255,.06);border-radius:16px;padding:16px;margin-bottom:12px;text-align:center;border:1px solid rgba(255,255,255,.08)}
+  .mock-label{font-size:11px;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px}
+  .mock-amount{font-size:32px;font-weight:300;color:#fff;letter-spacing:-1px}
+  .mock-gain{font-size:12px;color:#34d399;margin-top:4px}
+  .mock-stock{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:13px;color:rgba(255,255,255,.8)}
+  .mock-green{color:#34d399;font-weight:600}
+  .floating-badge{position:absolute;background:rgba(15,32,39,.95);border:1px solid rgba(42,164,106,.3);border-radius:12px;padding:8px 14px;font-size:12px;font-weight:600;color:#fff;white-space:nowrap;box-shadow:0 8px 24px rgba(0,0,0,.4)}
+  .badge-1{top:10%;left:-30px;animation:badgeFloat 4s ease-in-out infinite}
+  .badge-2{top:45%;right:-40px;animation:badgeFloat 4s ease-in-out 1.5s infinite}
+  .badge-3{bottom:15%;left:-20px;animation:badgeFloat 4s ease-in-out 3s infinite}
+  @keyframes badgeFloat{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-6px) scale(1.02)}}
+
+  /* Features */
+  .features{padding:100px 40px;max-width:1100px;margin:0 auto}
+  .section-label{font-size:13px;font-weight:700;color:#2AA46A;text-transform:uppercase;letter-spacing:1px;margin-bottom:12px}
+  .section-title{font-size:clamp(28px,4vw,42px);font-weight:900;line-height:1.2;margin-bottom:48px;letter-spacing:-.5px}
+  .features-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .feature-card{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:20px;padding:24px;transition:all .3s ease}
+  .feature-card:hover{background:rgba(42,164,106,.06);border-color:rgba(42,164,106,.2);transform:translateY(-4px)}
+  .feature-icon{font-size:32px;display:block;margin-bottom:14px}
+  .feature-card h3{font-size:16px;font-weight:700;margin-bottom:8px}
+  .feature-card p{font-size:14px;color:rgba(255,255,255,.55);line-height:1.6}
+
+  /* Steps */
+  .how-it-works{padding:80px 40px;text-align:center;background:rgba(42,164,106,.04);border-top:1px solid rgba(42,164,106,.1);border-bottom:1px solid rgba(42,164,106,.1)}
+  .steps{display:flex;gap:32px;max-width:800px;margin:0 auto;justify-content:center;flex-wrap:wrap}
+  .step{flex:1;min-width:220px;text-align:left}
+  .step-number{font-size:48px;font-weight:900;color:rgba(42,164,106,.3);line-height:1;margin-bottom:12px}
+  .step-content h3{font-size:16px;font-weight:700;margin-bottom:6px}
+  .step-content p{font-size:14px;color:rgba(255,255,255,.55);line-height:1.6}
+
+  /* CTA */
+  .cta-section{padding:100px 40px;text-align:center;position:relative;overflow:hidden}
+  .cta-section::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 50% 50%,rgba(42,164,106,.12),transparent)}
+  .cta-content{position:relative;z-index:1;max-width:600px;margin:0 auto}
+  .cta-emoji{font-size:56px;display:block;margin-bottom:20px}
+  .cta-content h2{font-size:clamp(28px,4vw,42px);font-weight:900;margin-bottom:12px}
+  .cta-content p{font-size:16px;color:rgba(255,255,255,.6);margin-bottom:32px}
+  .btn-lg{padding:18px 40px;font-size:18px}
+
+  /* Footer */
+  .footer{padding:40px;text-align:center;border-top:1px solid rgba(255,255,255,.06);color:rgba(255,255,255,.4);font-size:14px}
+  .footer-brand{font-size:18px;font-weight:700;color:#fff;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:8px}
+
+  /* Mobile */
+  @media(max-width:768px){
+    .hero-grid{grid-template-columns:1fr;text-align:center;gap:40px}
+    .hero-stats{justify-content:center}
+    .hero-actions{justify-content:center}
+    .phone-wrap{display:none}
+    .features-grid{grid-template-columns:1fr}
+    .nav{padding:16px 20px}
+    .hero{padding:40px 20px}
+    .features,.cta-section{padding:60px 20px}
+  }
+  </style>
 </head>
 <body>
-
 <nav class="nav">
   <div class="nav-brand"><span class="nav-logo">💰</span> LittleInvestors</div>
   <a href="/home" class="nav-cta">Open App →</a>
 </nav>
 
 <section class="hero">
-  <div class="hero-content">
-    <div class="hero-badge">🌟 Financial Education for the Next Generation</div>
-    <h1 class="hero-headline">Teach your kids to <span class="highlight">invest</span> — together.</h1>
-    <p class="hero-subheadline">LittleInvestors makes financial literacy fun. Kids learn, simulate real investments, and build healthy money habits — with parents cheering them on.</p>
-    <div class="hero-actions">
-      <a href="/home" class="btn-primary">Start Learning Free →</a>
-      <a href="/courses" class="btn-secondary">Browse Lessons</a>
-    </div>
-    <div class="hero-stats">
-      <div class="stat"><span class="stat-number">5</span><span class="stat-label">Lessons</span></div>
-      <div class="stat-divider"></div>
-      <div class="stat"><span class="stat-number">3+</span><span class="stat-label">Real Stocks</span></div>
-      <div class="stat-divider"></div>
-      <div class="stat"><span class="stat-number">AI</span><span class="stat-label">Money Coach</span></div>
-    </div>
-  </div>
-
-  <div class="hero-visual">
-    <div class="phone-mockup">
-      <div class="mock-header"><span>🪙 $800</span><span>🔥 30</span></div>
-      <div class="mock-balance">
-        <div class="mock-label">Portfolio Value</div>
-        <div class="mock-amount">$847.23</div>
-        <div class="mock-gain">📈 +$47.23 today</div>
+  <div class="hero-grid">
+    <div class="hero-content">
+      <div class="hero-badge">🌟 Mind the Product Hackathon 2026</div>
+      <h1 class="hero-headline">Teach your kids to <span class="highlight">invest</span> — together.</h1>
+      <p class="hero-sub">LittleInvestors makes financial literacy fun and engaging. Kids learn through interactive lessons, simulate real stock investments with zero risk, and earn rewards — while parents stay in the loop.</p>
+      <div class="hero-actions">
+        <a href="/home" class="btn-primary">Start Learning Free →</a>
+        <a href="/courses" class="btn-secondary">Browse Lessons</a>
       </div>
-      <div class="mock-stock"><span>🍎 AAPL</span><span class="mock-green">+$1.13</span></div>
-      <div class="mock-stock"><span>📦 AMZN</span><span class="mock-green">+$4.55</span></div>
-      <div class="mock-stock"><span>🏪 WMT</span><span class="mock-green">+$0.51</span></div>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-number">5</span><span class="stat-label">Lessons</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-number">6</span><span class="stat-label">Real Stocks</span></div>
+        <div class="stat-divider"></div>
+        <div class="stat"><span class="stat-number">AI</span><span class="stat-label">Coach</span></div>
+      </div>
     </div>
-    <div class="floating-badge badge-1">💡 What is savings?</div>
-    <div class="floating-badge badge-2">🎯 Quiz done! +50 XP</div>
-    <div class="floating-badge badge-3">💸 Mom sent $50!</div>
+    <div class="phone-wrap">
+      <div class="phone-mockup">
+        <div class="mock-header"><span>🪙 $800</span><span>🔥 30</span></div>
+        <div class="mock-balance">
+          <div class="mock-label">Portfolio Value</div>
+          <div class="mock-amount">$847.23</div>
+          <div class="mock-gain">📈 +$47.23 today</div>
+        </div>
+        <div class="mock-stock"><span>🍎 AAPL</span><span class="mock-green">+$1.13</span></div>
+        <div class="mock-stock"><span>📦 AMZN</span><span class="mock-green">+$4.55</span></div>
+        <div class="mock-stock"><span>🏪 WMT</span><span class="mock-green">+$0.51</span></div>
+      </div>
+      <div class="floating-badge badge-1">💡 What is savings?</div>
+      <div class="floating-badge badge-2">🎯 Quiz done! +50 XP</div>
+      <div class="floating-badge badge-3">💸 Mom sent $50!</div>
+    </div>
   </div>
 </section>
 
-<section class="features">
+<section class="features" style="width:100%">
   <div class="section-label">Everything you need</div>
   <h2 class="section-title">Built for kids. Loved by parents.</h2>
   <div class="features-grid">
-    <div class="feature-card"><span class="feature-icon">📚</span><h3>Interactive Lessons</h3><p>5 video-based lessons covering money basics, saving, spending, risk, and investing — designed for ages 8–16.</p></div>
-    <div class="feature-card"><span class="feature-icon">📈</span><h3>Real Stock Simulator</h3><p>Invest virtual money in real stocks like Apple, Amazon, and Walmart. See how markets work — zero real risk.</p></div>
-    <div class="feature-card"><span class="feature-icon">🤖</span><h3>AI Money Coach</h3><p>Ask our AI chatbot anything about money. Get instant, kid-friendly explanations — no jargon, just clarity.</p></div>
-    <div class="feature-card"><span class="feature-icon">👨‍👩‍👧</span><h3>Parent + Child Mode</h3><p>Parents send virtual allowances. Kids decide how to invest. Learn to talk about money as a family.</p></div>
-    <div class="feature-card"><span class="feature-icon">🏆</span><h3>Quizzes & Rewards</h3><p>Test knowledge after every lesson. Earn XP, level up, and collect badges that make learning addictive.</p></div>
-    <div class="feature-card"><span class="feature-icon">🔥</span><h3>Daily Streaks</h3><p>Build a daily learning habit. Maintain your streak and watch your financial knowledge compound.</p></div>
+    <div class="feature-card"><span class="feature-icon">📚</span><h3>5 Interactive Lessons</h3><p>Video-based lessons on money, saving, spending, risk & investing — designed for ages 8–16.</p></div>
+    <div class="feature-card"><span class="feature-icon">📈</span><h3>Real Stock Simulator</h3><p>Invest virtual money in 6 real stocks (Apple, Amazon, Tesla...). See live prices. Zero risk.</p></div>
+    <div class="feature-card"><span class="feature-icon">🤖</span><h3>AI Money Coach</h3><p>Ask Penny anything about money. Get instant, kid-friendly answers powered by Google Gemini.</p></div>
+    <div class="feature-card"><span class="feature-icon">👨‍👩‍👧</span><h3>Parent Mode</h3><p>Parents send virtual allowances, write notes, and track their child's learning progress.</p></div>
+    <div class="feature-card"><span class="feature-icon">🏆</span><h3>Quizzes & Rewards</h3><p>Test knowledge after every lesson. Earn XP, coins, and unlock achievements that motivate.</p></div>
+    <div class="feature-card"><span class="feature-icon">🎯</span><h3>Savings Goals</h3><p>Set a savings goal and watch your progress bar fill as you earn coins through learning.</p></div>
   </div>
 </section>
 
 <section class="how-it-works" style="width:100%">
-  <div style="max-width:800px;margin:0 auto">
-    <div class="section-label">Simple by design</div>
+  <div style="max-width:900px;margin:0 auto;padding:0 40px">
+    <div class="section-label" style="text-align:center">Simple by design</div>
     <h2 class="section-title">How it works</h2>
     <div class="steps">
-      <div class="step"><div class="step-number">01</div><div class="step-content"><h3>Parent deposits virtual money</h3><p>Parents simulate sending an allowance — just like a real bank transfer, but risk-free.</p></div></div>
-      <div class="step"><div class="step-number">02</div><div class="step-content"><h3>Child learns & invests</h3><p>Kids complete lessons, take quizzes, then decide how to invest their virtual money in real stocks.</p></div></div>
-      <div class="step"><div class="step-number">03</div><div class="step-content"><h3>Learn together, grow together</h3><p>Track progress, celebrate wins, and build money habits that last a lifetime.</p></div></div>
+      <div class="step"><div class="step-number">01</div><div class="step-content"><h3>Parent sets up allowance</h3><p>Parents send virtual allowances from the Family Dashboard — just like a real transfer, but risk-free.</p></div></div>
+      <div class="step"><div class="step-number">02</div><div class="step-content"><h3>Child learns & invests</h3><p>Kids complete lessons, take quizzes, earn coins & XP, then invest in real companies.</p></div></div>
+      <div class="step"><div class="step-number">03</div><div class="step-content"><h3>Grow together</h3><p>Track progress, celebrate wins, and build money habits that will last a lifetime.</p></div></div>
     </div>
   </div>
 </section>
 
-<section class="cta-section">
+<section class="cta-section" style="width:100%">
   <div class="cta-content">
     <span class="cta-emoji">🚀</span>
     <h2>Ready to raise a financially smart kid?</h2>
@@ -104,9 +179,8 @@
 </section>
 
 <footer class="footer">
-  <div class="footer-brand"><span class="footer-logo">💰</span> LittleInvestors</div>
+  <div class="footer-brand"><span>💰</span> LittleInvestors</div>
   <p>Built with ❤️ for the Mind the Product Hackathon 2026 · <a href="/home" style="color:#2AA46A">Open App</a></p>
 </footer>
-
 </body>
 </html>

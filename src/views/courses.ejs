@@ -2,27 +2,13 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Courses — LittleInvestors</title>
+  <title>Learn — LittleInvestors</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/main.css">
   <link rel="icon" type="image/x-icon" href="/img/penny_logo.png">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-  <script>
-  (function(apiKey){
-      (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
-      v=['initialize','identify','updateOptions','pageLoad','track','trackAgent'];for(w=0,x=v.length;w<x;++w)(function(m){
-      o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
-      y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
-      z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
-  })('b441c372-5d2b-479f-8815-a8827f2cfb67');
-
-  pendo.initialize({
-    visitor: {
-      id: ''
-    }
-  });
-  </script>
+  <script src="/js/pendo-init.js"></script>
 </head>
 <body>
 
@@ -45,64 +31,46 @@
 
 <div class="course-header">
   <h1>📚 Financial Basics</h1>
-  <p>5 lessons · ~20 minutes total</p>
+  <p>5 lessons · Master money from scratch</p>
   <div class="progress-ring-wrap">
     <div style="font-size:32px">🎯</div>
     <div class="progress-ring-text">
-      <strong id="courseProgress">1/5</strong>
+      <strong id="courseProgress">0/5</strong>
       <span>Lessons Complete</span>
     </div>
     <div style="flex:1"></div>
     <div style="text-align:right">
-      <div style="color:#f9a61b;font-weight:700;font-size:14px" id="xpTotal">100 XP</div>
-      <div style="color:#64748b;font-size:12px">earned</div>
+      <div style="color:#f9a61b;font-weight:700;font-size:14px" id="xpTotal">0 XP</div>
+      <div style="color:#94a3b8;font-size:12px">earned</div>
     </div>
   </div>
 </div>
 
-<div style="padding:0 20px">
-  <a href="/course?lesson=1" class="lesson-card" id="lesson1card">
-    <div class="lesson-icon">🪙</div>
-    <div class="lesson-body">
-      <div class="lesson-tag">✅ Completed</div>
-      <div class="lesson-title">What is Money?</div>
-      <div class="lesson-meta">5 min · Quiz included</div>
-    </div>
-    <span class="lesson-arrow">›</span>
-  </a>
+<div style="padding:0 20px" id="lessonsContainer">
+  <% const lessonList = [
+    {id:1,icon:'🪙',title:'What is Money?',tag:'Start here',tagClass:'',meta:'5 min · Quiz included'},
+    {id:2,icon:'🐷',title:'Saving — Stack Your Coins',tag:'Next Up',tagClass:'next',meta:'5 min · Quiz included'},
+    {id:3,icon:'🛒',title:'Spending Wisely',tag:'Locked',tagClass:'locked',meta:'5 min · Quiz included'},
+    {id:4,icon:'⚡',title:'Understanding Risk',tag:'Locked',tagClass:'locked',meta:'6 min · Quiz included'},
+    {id:5,icon:'🌱',title:'Investing Basics',tag:'Locked',tagClass:'locked',meta:'7 min · Quiz included'}
+  ]; %>
 
-  <a href="/course?lesson=2" class="lesson-card" id="lesson2card" style="opacity:.8">
-    <div class="lesson-icon">🐷</div>
-    <div class="lesson-body">
-      <div class="lesson-tag" style="color:#f9a61b">▶ Next Up</div>
-      <div class="lesson-title">Saving — Stack Your Coins</div>
-      <div class="lesson-meta">5 min · Quiz included</div>
-    </div>
-    <span class="lesson-arrow">›</span>
-  </a>
-
-  <div class="locked-card">
-    <div class="locked-icon">🛒</div>
-    <div style="flex:1"><div class="locked-title">Spending Wisely</div><div style="font-size:12px;color:#94a3b8;margin-top:2px">Complete Saving first</div></div>
-    <span class="locked-badge">🔒 Locked</span>
-  </div>
-
-  <div class="locked-card">
-    <div class="locked-icon">⚡</div>
-    <div style="flex:1"><div class="locked-title">Understanding Risk</div><div style="font-size:12px;color:#94a3b8;margin-top:2px">3 lessons to unlock</div></div>
-    <span class="locked-badge">🔒 Locked</span>
-  </div>
-
-  <div class="locked-card">
-    <div class="locked-icon">🌱</div>
-    <div style="flex:1"><div class="locked-title">Investing Basics</div><div style="font-size:12px;color:#94a3b8;margin-top:2px">4 lessons to unlock</div></div>
-    <span class="locked-badge">🔒 Locked</span>
-  </div>
+  <% lessonList.forEach(function(l) { %>
+    <a class="lesson-card" id="lesson<%= l.id %>card" style="text-decoration:none; display:flex">
+      <div class="lesson-icon"><%= l.icon %></div>
+      <div class="lesson-body">
+        <div class="lesson-tag <%= l.tagClass %>" id="lesson<%= l.id %>tag"><%= l.tag %></div>
+        <div class="lesson-title" style="color:var(--dark)"><%= l.title %></div>
+        <div class="lesson-meta"><%= l.meta %></div>
+      </div>
+      <span class="lesson-arrow">›</span>
+    </a>
+  <% }); %>
 
   <div class="completion-bar">
-    <div class="completion-text" id="completionText">1 of 5 complete — keep going! 🚀</div>
+    <div class="completion-text" id="completionText">Start your first lesson! 🚀</div>
     <div class="progress-bar" style="width:100%;height:8px">
-      <div class="progress" id="courseProgressBar" style="width:20%"></div>
+      <div class="progress" id="courseProgressBar" style="width:0%"></div>
     </div>
   </div>
 </div>
@@ -116,5 +84,55 @@
 
 <div class="toast" id="toast"></div>
 <script src="/js/script.js"></script>
+<script>
+// Dynamic lesson progress from localStorage
+(function() {
+  const completed = JSON.parse(localStorage.getItem('li_completed_lessons') || '[]');
+  const xp = parseInt(localStorage.getItem('li_xp') || '0');
+  const count = completed.length;
+  
+  document.getElementById('courseProgress').textContent = count + '/5';
+  document.getElementById('xpTotal').textContent = xp + ' XP';
+  document.getElementById('courseProgressBar').style.width = (count / 5 * 100) + '%';
+
+  const msgs = ['Start your first lesson! 🚀','1 down, 4 to go! Keep it up 💪','Halfway there — you\'re doing great! ⭐','Almost done — 2 lessons left! 🔥','One more lesson to master it all! 🏆','🎉 All lessons complete! You\'re a money master!'];
+  document.getElementById('completionText').textContent = msgs[count] || msgs[0];
+
+  // Update lesson cards
+  const lessonData = [
+    {id:1,href:'/course?lesson=1'},
+    {id:2,href:'/course?lesson=2'},
+    {id:3,href:'/course?lesson=3'},
+    {id:4,href:'/course?lesson=4'},
+    {id:5,href:'/course?lesson=5'}
+  ];
+  
+  let nextAssigned = false;
+  lessonData.forEach(function(l, i) {
+    const card = document.getElementById('lesson'+l.id+'card');
+    const tag = document.getElementById('lesson'+l.id+'tag');
+    if (!card) return;
+    
+    if (completed.includes(l.id)) {
+      card.href = l.href;
+      card.classList.add('done');
+      tag.textContent = '✅ Completed';
+      tag.style.color = '#34d399';
+    } else if (!nextAssigned) {
+      card.href = l.href;
+      tag.textContent = i === 0 ? 'Start here' : '▶ Next Up';
+      tag.style.color = '#f9a61b';
+      nextAssigned = true;
+    } else {
+      card.style.opacity = '0.6';
+      card.style.cursor = 'default';
+      card.removeAttribute('href');
+      card.onclick = function(e) { e.preventDefault(); showToast('Complete previous lessons first! 📚'); };
+      tag.textContent = '🔒 Locked';
+      tag.style.color = '#94a3b8';
+    }
+  });
+})();
+</script>
 </body>
 </html>

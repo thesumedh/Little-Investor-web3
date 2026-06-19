@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent';
 
 const SYSTEM_PROMPT = `You are Penny, a friendly and enthusiastic financial coach for children aged 8-16.
 Your goal is to make learning about money fun, simple, and encouraging.
@@ -60,14 +60,15 @@ exports.handleChat = async (req, res) => {
         const response = await axios.post(
             `${GEMINI_API_URL}?key=${apiKey}`,
             {
+                systemInstruction: {
+                    parts: [{ text: SYSTEM_PROMPT }]
+                },
                 contents: [{
-                    parts: [{
-                        text: `${SYSTEM_PROMPT}\n\nChild's question: ${message}`
-                    }]
+                    parts: [{ text: message }]
                 }],
                 generationConfig: {
                     temperature: 0.7,
-                    maxOutputTokens: 150,
+                    maxOutputTokens: 300,
                 }
             },
             { timeout: 8000 }

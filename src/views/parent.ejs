@@ -2,105 +2,197 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Parent Mode — LittleInvestors</title>
+  <title>Family Dashboard — LittleInvestors</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/css/main.css">
   <link rel="icon" type="image/x-icon" href="/img/penny_logo.png">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-  <script>
-  (function(apiKey){
-      (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
-      v=['initialize','identify','updateOptions','pageLoad','track','trackAgent'];for(w=0,x=v.length;w<x;++w)(function(m){
-      o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
-      y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
-      z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
-  })('b441c372-5d2b-479f-8815-a8827f2cfb67');
-
-  pendo.initialize({
-    visitor: {
-      id: ''
+  <script src="/js/pendo-init.js"></script>
+  <style>
+    .parent-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 0 20px;
+      margin-bottom: 16px;
     }
-  });
-  </script>
+    .chore-chip {
+      background: #fff;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--dark);
+      cursor: pointer;
+      text-align: left;
+      transition: var(--tr);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+    }
+    .chore-chip:hover {
+      border-color: var(--green);
+      background: var(--light);
+      transform: translateY(-1px);
+    }
+    .chore-chip.active {
+      border-color: var(--green);
+      background: var(--light);
+      box-shadow: 0 0 0 2px rgba(42, 164, 106, 0.15);
+    }
+    .portfolio-pie {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--r);
+      padding: 16px;
+      margin: 0 20px 16px;
+    }
+    .pie-chart {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: conic-gradient(var(--green) 0% 40%, var(--gold) 40% 70%, var(--navy) 70% 100%);
+      flex-shrink: 0;
+    }
+    .pie-legend {
+      flex: 1;
+      font-size: 12px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 4px;
+      font-weight: 500;
+      color: var(--dark);
+    }
+    .legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+  </style>
 </head>
 <body>
 
 <div class="parent-header">
-  <a href="/home" style="color:#94a3b8;text-decoration:none;font-size:14px;display:inline-flex;align-items:center;gap:6px;margin-bottom:12px">‹ Back to App</a>
-  <div class="parent-badge">👨‍👩‍👧 Parent Mode</div>
-  <h1>Family Dashboard</h1>
-  <p>Track your child's progress and send virtual allowances</p>
+  <a href="/home" style="color:rgba(255,255,255,0.7);text-decoration:none;font-size:14px;display:inline-flex;align-items:center;gap:6px;margin-bottom:12px;font-weight:600">‹ Back to App</a>
+  <div style="display:flex;justify-content:between;align-items:center;width:100%">
+    <div>
+      <div class="parent-badge">👨‍👩‍👧 Family Dashboard</div>
+      <h1 style="color:#fff;font-size:22px;font-weight:800;letter-spacing:-0.5px">Parent Control Center</h1>
+    </div>
+  </div>
 </div>
 
-<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 20px;margin-bottom:12px">
+<div class="parent-grid">
   <div class="stat-card" style="margin:0">
-    <h3>Balance</h3>
+    <h3>Child's Balance</h3>
     <div class="stat-val" id="parentBalance">$800</div>
-    <div class="stat-sub">child's account</div>
+    <div class="stat-sub" style="color:var(--green)">available pocket money</div>
   </div>
   <div class="stat-card" style="margin:0">
     <h3>Streak</h3>
-    <div class="stat-val">🔥 30</div>
-    <div class="stat-sub">days learning</div>
+    <div class="stat-val" id="parentStreak">🔥 30</div>
+    <div class="stat-sub" style="color:var(--gold)">days active learning</div>
   </div>
   <div class="stat-card" style="margin:0">
-    <h3>XP Earned</h3>
+    <h3>XP Points</h3>
     <div class="stat-val" id="parentXP">100</div>
-    <div class="stat-sub">total experience</div>
+    <div class="stat-sub" style="color:var(--green)">total rewards earned</div>
   </div>
   <div class="stat-card" style="margin:0">
     <h3>Level</h3>
     <div class="stat-val" id="parentLevel">0</div>
-    <div class="stat-sub">investor level</div>
+    <div class="stat-sub" style="color:var(--navy)">learning tier</div>
+  </div>
+</div>
+
+<!-- Child's Active Savings Goal -->
+<div class="stat-card" id="parentGoalCard" style="display:none">
+  <h3>Child's Active Goal</h3>
+  <div style="display:flex;justify-content:between;align-items:center;margin-top:6px;margin-bottom:8px">
+    <span style="font-size:15px;font-weight:700;color:var(--dark)" id="goalName">New Bike</span>
+    <span style="font-size:14px;font-weight:700;color:var(--gold)" id="goalPct">40% complete</span>
+  </div>
+  <div class="progress-bar"><div class="progress" id="goalProgress" style="width:40%"></div></div>
+  <div style="font-size:12px;color:var(--gray);margin-top:6px;display:flex;justify-content:space-between">
+    <span id="goalSaved">Saved: $320</span>
+    <span id="goalTarget">Goal Target: $800</span>
+  </div>
+</div>
+
+<!-- Portfolio breakdown -->
+<div style="padding:0 20px 8px 20px"><div style="font-size:13px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px">💼 Investment Allocation</div></div>
+<div class="portfolio-pie">
+  <div class="pie-chart" id="pieChart"></div>
+  <div class="pie-legend" id="pieLegend">
+    <div class="legend-item"><span class="legend-dot" style="background:var(--green)"></span> Cash: <span id="cashPct" style="font-weight:700">100%</span></div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--gold)"></span> Stocks: <span id="stocksPct" style="font-weight:700">0%</span></div>
   </div>
 </div>
 
 <div class="send-money-card">
-  <h3>💸 Send Quick Allowance</h3>
+  <h3>💸 Fast Allowance Transfer</h3>
   <div class="amount-btns" id="amountBtns">
     <button class="amount-btn" onclick="selectAmount(5,this)">$5</button>
     <button class="amount-btn" onclick="selectAmount(10,this)">$10</button>
-    <button class="amount-btn" onclick="selectAmount(20,this)">$20</button>
+    <button class="amount-btn" onclick="selectAmount(25,this)">$25</button>
     <button class="amount-btn" onclick="selectAmount(50,this)">$50</button>
   </div>
-  <p style="font-size:12px;color:#64748b;margin-bottom:12px">Selected: <strong id="selectedAmt">none</strong></p>
-  <button class="send-btn-big" onclick="sendMoney()">Send Allowance 📤</button>
+  <button class="send-btn-big" onclick="sendMoney()">Send Selected Allowance 📤</button>
 </div>
 
 <div class="send-money-card" style="margin-top:12px">
-  <h3>✍️ Send Custom Reward & Note</h3>
-  <div style="display:flex;flex-direction:column;gap:10px;margin-top:12px">
-    <input type="number" id="customAmount" placeholder="Amount (e.g. 15)" style="padding:12px;border-radius:12px;border:1px solid #e2e8f0;font-size:15px;font-weight:600">
-    <input type="text" id="customNote" placeholder="Personal Note (e.g. Cleaning your room! 🧼)" style="padding:12px;border-radius:12px;border:1px solid #e2e8f0;font-size:14px">
-    <button class="send-btn-big" onclick="sendCustomReward()" style="background:var(--navy)">Send Note & Money 🚀</button>
+  <h3>🧹 Reward Clean Chores & Homework</h3>
+  <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">
+    <button class="chore-chip" onclick="selectChore('Reading a book 📚', 5, this)">
+      <span>📚</span><span>Reading a book for 30m</span><span style="margin-left:auto;color:var(--green)">+$5</span>
+    </button>
+    <button class="chore-chip" onclick="selectChore('Math Homework ✏️', 10, this)">
+      <span>✏️</span><span>Completing Math homework</span><span style="margin-left:auto;color:var(--green)">+$10</span>
+    </button>
+    <button class="chore-chip" onclick="selectChore('Clean Room 🧹', 15, this)">
+      <span>🧹</span><span>Cleaning bedroom & bed</span><span style="margin-left:auto;color:var(--green)">+$15</span>
+    </button>
+    <button class="chore-chip" onclick="selectChore('Helped with dishes 🍽️', 5, this)">
+      <span>🍽️</span><span>Helping wash dinner dishes</span><span style="margin-left:auto;color:var(--green)">+$5</span>
+    </button>
+  </div>
+  
+  <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px;border-top:1px solid #e2e8f0;padding-top:14px">
+    <div style="font-size:13px;font-weight:700;color:var(--dark)">Or create a custom reward note:</div>
+    <input type="number" id="customAmount" placeholder="Reward amount ($)" style="width:100%;padding:12px;border-radius:12px;border:1px solid #e2e8f0;font-size:14px;font-weight:600">
+    <input type="text" id="customNote" placeholder="Personal note (e.g. Great job coding today! 💻)" style="width:100%;padding:12px;border-radius:12px;border:1px solid #e2e8f0;font-size:14px">
+    <button class="send-btn-big" onclick="sendCustomReward()" style="background:var(--navy)">Send Custom Reward 🚀</button>
   </div>
 </div>
 
-<div style="padding:16px 20px 12px 20px"><div style="font-size:14px;font-weight:700;color:#1a2332">📋 Recent Activity</div></div>
+<div style="padding:16px 20px 8px 20px"><div style="font-size:13px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px">📋 Family Activity History</div></div>
 <div class="activity-list" id="activityList">
   <div class="activity-item">
     <div class="activity-dot green">✅</div>
     <div class="activity-info"><div class="activity-title">Completed: What is Money?</div><div class="activity-time">Today · +100 XP</div></div>
-    <div class="activity-val" style="color:#2AA46A">+100 XP</div>
+    <div class="activity-val" style="color:var(--green)">+100 XP</div>
   </div>
   <div class="activity-item">
     <div class="activity-dot gold">🎯</div>
     <div class="activity-info"><div class="activity-title">Quiz: What is Money?</div><div class="activity-time">Today · 3/3 correct</div></div>
-    <div class="activity-val" style="color:#f9a61b">100%</div>
-  </div>
-  <div class="activity-item">
-    <div class="activity-dot green">📈</div>
-    <div class="activity-info"><div class="activity-title">Bought 1 share of AAPL</div><div class="activity-time">Yesterday</div></div>
-    <div class="activity-val" style="color:#2AA46A">$226.80</div>
+    <div class="activity-val" style="color:var(--gold)">100%</div>
   </div>
 </div>
 
 <div style="padding:20px">
-  <div style="background:#fef9ee;border:1px solid #fde68a;border-radius:16px;padding:16px;text-align:center">
+  <div style="background:#fef9ee;border:1px solid #fde68a;border-radius:16px;padding:18px;text-align:center">
     <div style="font-size:24px;margin-bottom:8px">💡</div>
-    <div style="font-size:14px;font-weight:600;color:#92400e;margin-bottom:4px">Tip for Parents</div>
-    <div style="font-size:13px;color:#78350f;line-height:1.5">Research shows that kids who learn about money before 12 are more financially secure as adults. Keep encouraging your little investor!</div>
+    <div style="font-size:14px;font-weight:700;color:#92400e;margin-bottom:4px">Tip for Parents</div>
+    <div style="font-size:13px;color:#78350f;line-height:1.5">Kids learn best when you talk about real-life choices. Ask your child why they bought their favorite stock today!</div>
   </div>
 </div>
 
@@ -115,41 +207,31 @@
 <script src="/js/script.js"></script>
 <script>
 let selectedAmount = 0;
+let choreAmount = 0;
+let choreNote = "";
 
 function selectAmount(amt, el) {
   selectedAmount = amt;
   document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
-  document.getElementById('selectedAmt').textContent = '$' + amt;
+}
+
+function selectChore(note, amt, el) {
+  choreAmount = amt;
+  choreNote = note;
+  document.querySelectorAll('.chore-chip').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  
+  // Auto populate custom input to give visibility
+  document.getElementById('customAmount').value = amt;
+  document.getElementById('customNote').value = "Reward for: " + note;
 }
 
 function sendMoney() {
-  if (!selectedAmount) { showToast('Please select an amount first! 👆'); return; }
-  const bal = parseInt(localStorage.getItem('li_coins') || '800');
-  localStorage.setItem('li_coins', bal + selectedAmount);
-  document.getElementById('parentBalance').textContent = '$' + (bal + selectedAmount);
-  
-  // Add notification to localStorage
-  const notifs = JSON.parse(localStorage.getItem('li_notifications') || '[]');
-  notifs.push({
-    id: 'notif_' + Date.now(),
-    icon: '💸',
-    title: `Parent sent you $${selectedAmount}!`,
-    sub: `Allowance payout! 💸`,
-    time: 'Just now'
-  });
-  localStorage.setItem('li_notifications', JSON.stringify(notifs));
-
-  const list = document.getElementById('activityList');
-  const item = document.createElement('div');
-  item.className = 'activity-item';
-  item.style.animation = 'slideIn .3s ease';
-  item.innerHTML = `<div class="activity-dot green">💸</div><div class="activity-info"><div class="activity-title">Allowance sent</div><div class="activity-time">Just now</div></div><div class="activity-val" style="color:#2AA46A">+$${selectedAmount}</div>`;
-  list.prepend(item);
-  showToast(`✅ $${selectedAmount} sent to your child!`);
+  if (!selectedAmount) { showToast('Please select an allowance amount! 💸'); return; }
+  transferCash(selectedAmount, "Pocket allowance sent! 💰");
   selectedAmount = 0;
   document.querySelectorAll('.amount-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('selectedAmt').textContent = 'none';
 }
 
 function sendCustomReward() {
@@ -160,43 +242,101 @@ function sendCustomReward() {
   
   if (isNaN(amt) || amt <= 0) { showToast('Please enter a valid amount! 💰'); return; }
   
-  // Add to coins
-  const bal = parseInt(localStorage.getItem('li_coins') || '800');
-  localStorage.setItem('li_coins', bal + amt);
-  document.getElementById('parentBalance').textContent = '$' + (bal + amt);
+  transferCash(amt, note);
   
-  // Add to shared notifications array
+  amtInput.value = '';
+  noteInput.value = '';
+  document.querySelectorAll('.chore-chip').forEach(b => b.classList.remove('active'));
+}
+
+function transferCash(amt, note) {
+  const bal = parseFloat(localStorage.getItem('li_coins') || '800');
+  const newBal = Math.round((bal + amt) * 100) / 100;
+  localStorage.setItem('li_coins', newBal);
+  
+  // Update header and displays
+  document.getElementById('parentBalance').textContent = '$' + newBal;
+  const coinAmt = document.getElementById('coinAmount');
+  if (coinAmt) coinAmt.textContent = newBal;
+
+  // Add notification to localStorage
   const notifs = JSON.parse(localStorage.getItem('li_notifications') || '[]');
   notifs.push({
-    id: 'notif_custom_' + Date.now(),
-    icon: '🎁',
+    id: 'notif_' + Date.now(),
+    icon: '💸',
     title: `Parent sent you $${amt}!`,
     sub: note,
     time: 'Just now'
   });
   localStorage.setItem('li_notifications', JSON.stringify(notifs));
-  
-  // Append to Activity List
+
+  // Add activity log
   const list = document.getElementById('activityList');
   const item = document.createElement('div');
   item.className = 'activity-item';
   item.style.animation = 'slideIn .3s ease';
-  item.innerHTML = `<div class="activity-dot green">🎁</div><div class="activity-info"><div class="activity-title">${note}</div><div class="activity-time">Just now</div></div><div class="activity-val" style="color:#2AA46A">+$${amt}</div>`;
+  item.innerHTML = `<div class="activity-dot green">💸</div><div class="activity-info"><div class="activity-title">${note}</div><div class="activity-time">Just now</div></div><div class="activity-val" style="color:var(--green)">+$${amt}</div>`;
   list.prepend(item);
   
-  showToast(`✅ $${amt} custom reward sent!`);
-  amtInput.value = '';
-  noteInput.value = '';
+  if (typeof confetti !== 'undefined') {
+    confetti({particleCount: 50, spread: 60, origin: {y: 0.6}});
+  }
+  
+  showToast(`✅ $${amt} transfer successful!`);
+  
+  // Recalculate portfolio allocation pie
+  loadPortfolioStats();
 }
 
-// Load stats from localStorage
+function loadPortfolioStats() {
+  const coins = parseFloat(localStorage.getItem('li_coins') || '800');
+  const prices = { wmt: 80.94, aapl: 226.80, amzn: 186.51, googl: 175.40, tsla: 180.20, msft: 420.10 };
+  let stocksVal = 0;
+  
+  Object.keys(prices).forEach(ticker => {
+    const shares = parseFloat(localStorage.getItem('li_shares_' + ticker) || '0');
+    stocksVal += shares * prices[ticker];
+  });
+  
+  const total = coins + stocksVal;
+  const cashPct = total > 0 ? Math.round((coins / total) * 100) : 100;
+  const stocksPct = 100 - cashPct;
+  
+  document.getElementById('cashPct').textContent = cashPct + '%';
+  document.getElementById('stocksPct').textContent = stocksPct + '%';
+  
+  const pie = document.getElementById('pieChart');
+  if (pie) {
+    pie.style.background = `conic-gradient(var(--green) 0% ${cashPct}%, var(--gold) ${cashPct}% 100%)`;
+  }
+}
+
 window.addEventListener('DOMContentLoaded', () => {
-  const xp = localStorage.getItem('li_xp') || '100';
+  const xp = localStorage.getItem('li_xp') || '0';
   const level = localStorage.getItem('li_level') || '0';
   const coins = localStorage.getItem('li_coins') || '800';
+  const streak = localStorage.getItem('li_streak') || '30';
+  
   document.getElementById('parentXP').textContent = xp;
   document.getElementById('parentLevel').textContent = level;
-  document.getElementById('parentBalance').textContent = '$' + coins;
+  document.getElementById('parentBalance').textContent = '$' + parseFloat(coins).toFixed(2);
+  document.getElementById('parentStreak').textContent = '🔥 ' + streak;
+  
+  // Load goal progress
+  const goal = JSON.parse(localStorage.getItem('li_savings_goal') || 'null');
+  if (goal) {
+    const goalCard = document.getElementById('parentGoalCard');
+    goalCard.style.display = 'block';
+    document.getElementById('goalName').textContent = goal.name;
+    document.getElementById('goalTarget').textContent = 'Goal Target: $' + goal.amount;
+    document.getElementById('goalSaved').textContent = 'Saved: $' + parseFloat(coins).toFixed(2);
+    
+    const pct = Math.min(100, Math.round((parseFloat(coins) / goal.amount) * 100));
+    document.getElementById('goalPct').textContent = pct + '% complete';
+    document.getElementById('goalProgress').style.width = pct + '%';
+  }
+  
+  loadPortfolioStats();
 });
 </script>
 </body>

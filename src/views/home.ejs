@@ -8,26 +8,7 @@
   <link rel="stylesheet" href="/css/main.css">
   <link rel="icon" type="image/x-icon" href="/img/penny_logo.png">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-  <script>
-  (function(apiKey){
-      (function(p,e,n,d,o){var v,w,x,y,z;o=p[d]=p[d]||{};o._q=o._q||[];
-      v=['initialize','identify','updateOptions','pageLoad','track','trackAgent'];for(w=0,x=v.length;w<x;++w)(function(m){
-      o[m]=o[m]||function(){o._q[m===v[0]?'unshift':'push']([m].concat([].slice.call(arguments,0)));};})(v[w]);
-      y=e.createElement(n);y.async=!0;y.src='https://cdn.pendo.io/agent/static/'+apiKey+'/pendo.js';
-      z=e.getElementsByTagName(n)[0];z.parentNode.insertBefore(y,z);})(window,document,'script','pendo');
-  })('b441c372-5d2b-479f-8815-a8827f2cfb67');
-
-  pendo.initialize({
-    visitor: {
-      id: ''
-    }
-  });
-  </script>
-  <style>
-    .portfolio-gain{font-size:13px;font-weight:600;color:#2AA46A;margin-top:4px}
-    .section-pad{padding:0 20px}
-    .notifs-wrap{padding:0 20px;margin-bottom:4px}
-  </style>
+  <script src="/js/pendo-init.js"></script>
 </head>
 <body>
 
@@ -52,36 +33,79 @@
 </div>
 
 <div id="balance">
-  <h1>Your Current Balance</h1>
+  <h1>Your Balance</h1>
   <div class="cylinder">
-    <h3 class="center" id="balanceDisplay">$<span id="balanceNum">0</span></h3>
+    <h3 class="center" style="color:#fff">$<span id="balanceNum">0</span></h3>
     <div class="balance-sub">
-      <div class="portfolio-gain" id="portfolioGain">📈 +$0.00 today</div>
-      <a onclick="showToast('Full history coming soon! 📊')">View Full History</a>
+      <div class="portfolio-gain" id="portfolioGain">📈 Loading portfolio...</div>
+      <a onclick="showGoalModal()" style="color:rgba(255,255,255,.6);text-decoration:underline;font-size:12px;cursor:pointer">Set Goal</a>
     </div>
   </div>
 </div>
 
-<div class="notifs-wrap" id="notifWrap">
-  <!-- Notifications loaded dynamically via JS -->
+<!-- Market Ticker -->
+<div class="market-ticker" id="marketTicker">
+  <div class="ticker-inner" id="tickerInner">
+    <span class="ticker-item"><span class="t-sym">AAPL</span><span class="t-up" id="tk-aapl">+0.50%</span></span>
+    <span class="ticker-item"><span class="t-sym">AMZN</span><span class="t-up" id="tk-amzn">+2.50%</span></span>
+    <span class="ticker-item"><span class="t-sym">WMT</span><span class="t-up" id="tk-wmt">+0.60%</span></span>
+    <span class="ticker-item"><span class="t-sym">TSLA</span><span class="t-dn" id="tk-tsla">-0.80%</span></span>
+    <span class="ticker-item"><span class="t-sym">GOOGL</span><span class="t-up" id="tk-googl">+1.21%</span></span>
+    <span class="ticker-item"><span class="t-sym">MSFT</span><span class="t-up" id="tk-msft">+0.84%</span></span>
+    <!-- duplicate for seamless loop -->
+    <span class="ticker-item"><span class="t-sym">AAPL</span><span class="t-up" id="tk-aapl2">+0.50%</span></span>
+    <span class="ticker-item"><span class="t-sym">AMZN</span><span class="t-up" id="tk-amzn2">+2.50%</span></span>
+    <span class="ticker-item"><span class="t-sym">WMT</span><span class="t-up" id="tk-wmt2">+0.60%</span></span>
+    <span class="ticker-item"><span class="t-sym">TSLA</span><span class="t-dn" id="tk-tsla2">-0.80%</span></span>
+    <span class="ticker-item"><span class="t-sym">GOOGL</span><span class="t-up" id="tk-googl2">+1.21%</span></span>
+    <span class="ticker-item"><span class="t-sym">MSFT</span><span class="t-up" id="tk-msft2">+0.84%</span></span>
+  </div>
 </div>
 
+<!-- Savings Goal Goal Card -->
+<div id="goalCardWrap"></div>
+
+<!-- Notifications -->
+<div class="notifs-wrap" id="notifWrap"></div>
+
+<!-- Today's learning quick card -->
+<div id="todayLearnWrap" style="padding:0 20px;margin-bottom:4px"></div>
+
 <div class="section-header">
-  <div class="section-title-sm">📈 Real Stock Simulator</div>
-  <a href="/parent" class="parent-btn">👨‍👩‍👧 Parent Mode</a>
+  <div class="section-title-sm">📈 Stock Simulator</div>
+  <a href="/parent" class="parent-btn">👨‍👩‍👧 Parent</a>
+</div>
+
+<!-- Portfolio summary bar -->
+<div class="portfolio-summary" id="portSummary" style="display:none">
+  <div>
+    <div class="port-label">Portfolio Value</div>
+    <div class="port-val" id="portVal">$0.00</div>
+  </div>
+  <div style="text-align:right">
+    <div class="port-label">Holdings</div>
+    <div class="port-gain" id="portHoldings">0 stocks</div>
+  </div>
 </div>
 
 <div class="stocks-list">
   <!-- Walmart -->
   <div class="stock" onclick="toggleStock('wmt')">
     <div class="stock-logo"><img src="/img/Walmart.png" alt="WMT"></div>
-    <div class="stock-info"><div class="stock-ticker">WMT</div><div class="stock-name">Walmart</div></div>
-    <div class="stock-right"><div class="stock-price" id="wmt-display-price">$80.94</div><div class="stock-change green" id="wmt-display-change">+$0.51 (+0.6%)</div></div>
+    <div class="stock-info"><div class="stock-ticker">WMT</div><div class="stock-name">Walmart Inc.</div></div>
+    <!-- Sparkline preview -->
+    <svg width="50" height="20" style="margin-left:auto;margin-right:12px;opacity:0.8">
+      <path id="sparkline-path-wmt" d="M0,14 Q12,12 25,8 T50,5" fill="none" stroke="#2AA46A" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <div class="stock-right">
+      <div class="stock-price" id="wmt-display-price">$80.94</div>
+      <div class="stock-change green" id="wmt-display-change">+$0.51 (+0.6%)</div>
+    </div>
   </div>
   <div class="stock-detail" id="detail-wmt">
     <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="wmt-detail-price">$80.94</span></div>
     <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="wmt-shares">0 shares</span></div>
-    <div class="stock-detail-row"><span>Value</span><span style="font-weight:600;color:#2AA46A" id="wmt-value">$0.00</span></div>
+    <div class="stock-detail-row"><span>Holdings value</span><span style="font-weight:600;color:#2AA46A" id="wmt-value">$0.00</span></div>
     <div class="buy-sell-btns">
       <button class="btn-buy" onclick="buySell('wmt','buy')">Buy 1 Share</button>
       <button class="btn-sell" onclick="buySell('wmt','sell')">Sell</button>
@@ -91,13 +115,20 @@
   <!-- Apple -->
   <div class="stock" onclick="toggleStock('aapl')">
     <div class="stock-logo"><img src="/img/Apple.png" alt="AAPL"></div>
-    <div class="stock-info"><div class="stock-ticker">AAPL</div><div class="stock-name">Apple</div></div>
-    <div class="stock-right"><div class="stock-price" id="aapl-display-price">$226.80</div><div class="stock-change green" id="aapl-display-change">+$1.13 (+0.5%)</div></div>
+    <div class="stock-info"><div class="stock-ticker">AAPL</div><div class="stock-name">Apple Inc.</div></div>
+    <!-- Sparkline preview -->
+    <svg width="50" height="20" style="margin-left:auto;margin-right:12px;opacity:0.8">
+      <path id="sparkline-path-aapl" d="M0,16 Q12,10 25,12 T50,4" fill="none" stroke="#2AA46A" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <div class="stock-right">
+      <div class="stock-price" id="aapl-display-price">$226.80</div>
+      <div class="stock-change green" id="aapl-display-change">+$1.13 (+0.5%)</div>
+    </div>
   </div>
   <div class="stock-detail" id="detail-aapl">
     <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="aapl-detail-price">$226.80</span></div>
     <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="aapl-shares">0 shares</span></div>
-    <div class="stock-detail-row"><span>Value</span><span style="font-weight:600;color:#2AA46A" id="aapl-value">$0.00</span></div>
+    <div class="stock-detail-row"><span>Holdings value</span><span style="font-weight:600;color:#2AA46A" id="aapl-value">$0.00</span></div>
     <div class="buy-sell-btns">
       <button class="btn-buy" onclick="buySell('aapl','buy')">Buy 1 Share</button>
       <button class="btn-sell" onclick="buySell('aapl','sell')">Sell</button>
@@ -107,63 +138,88 @@
   <!-- Amazon -->
   <div class="stock" onclick="toggleStock('amzn')">
     <div class="stock-logo"><img src="/img/Amazon.png" alt="AMZN"></div>
-    <div class="stock-info"><div class="stock-ticker">AMZN</div><div class="stock-name">Amazon</div></div>
-    <div class="stock-right"><div class="stock-price" id="amzn-display-price">$186.51</div><div class="stock-change green" id="amzn-display-change">+$4.55 (+2.5%)</div></div>
+    <div class="stock-info"><div class="stock-ticker">AMZN</div><div class="stock-name">Amazon.com</div></div>
+    <!-- Sparkline preview -->
+    <svg width="50" height="20" style="margin-left:auto;margin-right:12px;opacity:0.8">
+      <path id="sparkline-path-amzn" d="M0,18 Q12,14 25,10 T50,2" fill="none" stroke="#2AA46A" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    <div class="stock-right">
+      <div class="stock-price" id="amzn-display-price">$186.51</div>
+      <div class="stock-change green" id="amzn-display-change">+$4.55 (+2.5%)</div>
+    </div>
   </div>
   <div class="stock-detail" id="detail-amzn">
     <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="amzn-detail-price">$186.51</span></div>
     <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="amzn-shares">0 shares</span></div>
-    <div class="stock-detail-row"><span>Value</span><span style="font-weight:600;color:#2AA46A" id="amzn-value">$0.00</span></div>
+    <div class="stock-detail-row"><span>Holdings value</span><span style="font-weight:600;color:#2AA46A" id="amzn-value">$0.00</span></div>
     <div class="buy-sell-btns">
       <button class="btn-buy" onclick="buySell('amzn','buy')">Buy 1 Share</button>
       <button class="btn-sell" onclick="buySell('amzn','sell')">Sell</button>
     </div>
   </div>
 
-  <!-- Premium Stocks Wrapper -->
+  <!-- Premium Stocks -->
   <div id="premiumStocks" style="display:none">
-    <!-- Google -->
     <div class="stock" onclick="toggleStock('googl')">
-      <div class="stock-logo" style="background:#fff"><span style="font-size:24px;font-weight:900;color:#4285F4">G</span></div>
+      <div class="stock-logo" style="background:#fff;font-size:22px;font-weight:900;color:#4285F4;justify-content:center">G</div>
       <div class="stock-info"><div class="stock-ticker">GOOGL</div><div class="stock-name">Alphabet Inc.</div></div>
-      <div class="stock-right"><div class="stock-price" id="googl-display-price">$175.40</div><div class="stock-change green" id="googl-display-change">+$2.10 (+1.2%)</div></div>
+      <!-- Sparkline preview -->
+      <svg width="50" height="20" style="margin-left:auto;margin-right:12px;opacity:0.8">
+        <path id="sparkline-path-googl" d="M0,15 Q12,12 25,8 T50,3" fill="none" stroke="#2AA46A" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="stock-right">
+        <div class="stock-price" id="googl-display-price">$175.40</div>
+        <div class="stock-change green" id="googl-display-change">+$2.10 (+1.2%)</div>
+      </div>
     </div>
     <div class="stock-detail" id="detail-googl">
       <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="googl-detail-price">$175.40</span></div>
       <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="googl-shares">0 shares</span></div>
-      <div class="stock-detail-row"><span>Value</span><span style="font-weight:600;color:#2AA46A" id="googl-value">$0.00</span></div>
+      <div class="stock-detail-row"><span>Holdings value</span><span style="font-weight:600;color:#2AA46A" id="googl-value">$0.00</span></div>
       <div class="buy-sell-btns">
         <button class="btn-buy" onclick="buySell('googl','buy')">Buy 1 Share</button>
         <button class="btn-sell" onclick="buySell('googl','sell')">Sell</button>
       </div>
     </div>
 
-    <!-- Tesla -->
     <div class="stock" onclick="toggleStock('tsla')">
-      <div class="stock-logo" style="background:#fff"><span style="font-size:24px;font-weight:900;color:#E82127">T</span></div>
+      <div class="stock-logo" style="background:#fff;font-size:22px;font-weight:900;color:#E82127;justify-content:center">T</div>
       <div class="stock-info"><div class="stock-ticker">TSLA</div><div class="stock-name">Tesla Inc.</div></div>
-      <div class="stock-right"><div class="stock-price" id="tsla-display-price">$180.20</div><div class="stock-change red" id="tsla-display-change">-$1.45 (-0.8%)</div></div>
+      <!-- Sparkline preview -->
+      <svg width="50" height="20" style="margin-left:auto;margin-right:12px;opacity:0.8">
+        <path id="sparkline-path-tsla" d="M0,3 Q12,10 25,12 T50,17" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="stock-right">
+        <div class="stock-price" id="tsla-display-price">$180.20</div>
+        <div class="stock-change red" id="tsla-display-change">-$1.45 (-0.8%)</div>
+      </div>
     </div>
     <div class="stock-detail" id="detail-tsla">
       <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="tsla-detail-price">$180.20</span></div>
       <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="tsla-shares">0 shares</span></div>
-      <div class="stock-detail-row"><span>Value</span><span style="font-weight:600;color:#2AA46A" id="tsla-value">$0.00</span></div>
+      <div class="stock-detail-row"><span>Holdings value</span><span style="font-weight:600;color:#2AA46A" id="tsla-value">$0.00</span></div>
       <div class="buy-sell-btns">
         <button class="btn-buy" onclick="buySell('tsla','buy')">Buy 1 Share</button>
         <button class="btn-sell" onclick="buySell('tsla','sell')">Sell</button>
       </div>
     </div>
 
-    <!-- Microsoft -->
     <div class="stock" onclick="toggleStock('msft')">
-      <div class="stock-logo" style="background:#fff"><span style="font-size:24px;font-weight:900;color:#F25022">M</span></div>
+      <div class="stock-logo" style="background:#fff;font-size:22px;font-weight:900;color:#00A4EF;justify-content:center">M</div>
       <div class="stock-info"><div class="stock-ticker">MSFT</div><div class="stock-name">Microsoft Corp.</div></div>
-      <div class="stock-right"><div class="stock-price" id="msft-display-price">$420.10</div><div class="stock-change green" id="msft-display-change">+$3.50 (+0.8%)</div></div>
+      <!-- Sparkline preview -->
+      <svg width="50" height="20" style="margin-left:auto;margin-right:12px;opacity:0.8">
+        <path id="sparkline-path-msft" d="M0,16 Q12,10 25,14 T50,6" fill="none" stroke="#2AA46A" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <div class="stock-right">
+        <div class="stock-price" id="msft-display-price">$420.10</div>
+        <div class="stock-change green" id="msft-display-change">+$3.50 (+0.8%)</div>
+      </div>
     </div>
     <div class="stock-detail" id="detail-msft">
       <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="msft-detail-price">$420.10</span></div>
       <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="msft-shares">0 shares</span></div>
-      <div class="stock-detail-row"><span>Value</span><span style="font-weight:600;color:#2AA46A" id="msft-value">$0.00</span></div>
+      <div class="stock-detail-row"><span>Holdings value</span><span style="font-weight:600;color:#2AA46A" id="msft-value">$0.00</span></div>
       <div class="buy-sell-btns">
         <button class="btn-buy" onclick="buySell('msft','buy')">Buy 1 Share</button>
         <button class="btn-sell" onclick="buySell('msft','sell')">Sell</button>
@@ -171,10 +227,30 @@
     </div>
   </div>
 
-  <div class="lock-card" id="lockCard" onclick="unlockPremiumStocks()" style="cursor:pointer;transition:var(--tr)">
+  <div class="lock-card" id="lockCard" onclick="unlockPremiumStocks()" style="cursor:pointer">
     <div style="font-size:22px">🔒</div>
-    <div class="lock-text">Unlock more stocks to diversify!</div>
+    <div class="lock-text">Unlock Google, Tesla, Microsoft!</div>
     <div class="lock-cost">🪙 150</div>
+  </div>
+</div>
+
+<!-- Live Market News -->
+<div style="padding:0 20px;margin-top:16px;margin-bottom:80px">
+  <div style="font-size:12px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">📰 Market News & Learning Tips</div>
+  <div id="marketNewsWrap" style="display:flex;flex-direction:column;gap:8px">
+    <!-- news will load here -->
+  </div>
+</div>
+
+<!-- Goal Modal -->
+<div id="goalModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;align-items:flex-end;justify-content:center">
+  <div style="background:#fff;border-radius:24px 24px 0 0;padding:28px 24px;width:100%;max-width:430px">
+    <div style="font-size:18px;font-weight:800;color:#1a2332;margin-bottom:6px">🎯 Set a Savings Goal</div>
+    <div style="font-size:13px;color:#64748b;margin-bottom:20px">What are you saving up for?</div>
+    <input type="text" id="goalName" placeholder="e.g. New Bike, Video Game..." style="width:100%;padding:12px;border-radius:12px;border:1.5px solid #e2e8f0;font-size:15px;margin-bottom:12px;font-family:Inter,sans-serif">
+    <input type="number" id="goalAmount" placeholder="Goal amount (e.g. 500)" style="width:100%;padding:12px;border-radius:12px;border:1.5px solid #e2e8f0;font-size:15px;margin-bottom:16px;font-family:Inter,sans-serif">
+    <button onclick="saveGoal()" style="width:100%;padding:14px;background:linear-gradient(135deg,#2AA46A,#1b7a4e);color:#fff;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif">Set Goal 🎯</button>
+    <button onclick="document.getElementById('goalModal').style.display='none'" style="width:100%;padding:12px;background:#f8fafc;color:#64748b;border:none;border-radius:12px;font-size:14px;font-weight:600;cursor:pointer;margin-top:8px;font-family:Inter,sans-serif">Cancel</button>
   </div>
 </div>
 
@@ -186,7 +262,6 @@
 </nav>
 
 <div class="toast" id="toast"></div>
-
 <script src="/js/script.js"></script>
 </body>
 </html>
