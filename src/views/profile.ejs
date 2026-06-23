@@ -152,8 +152,8 @@
 
 <div class="profile-card">
   <div class="profile-avatar">👦</div>
-  <div class="profile-name">Little Investor</div>
-  <div class="profile-rank" id="profileRank">Novice Saver</div>
+  <div class="profile-name">Little Blockchainer</div>
+  <div class="profile-rank" id="profileRank">Novice Validator</div>
   
   <div class="profile-stats">
     <div class="profile-stat-box">
@@ -186,8 +186,8 @@
     </div>
     <div class="badge-card" id="ach-first_stock">
       <span class="badge-icon">📈</span>
-      <div class="badge-name">Baby Buffett!</div>
-      <div class="badge-desc">Bought your first stock</div>
+      <div class="badge-name">Baby Satoshi!</div>
+      <div class="badge-desc">Bought your first crypto token</div>
     </div>
     <div class="badge-card" id="ach-perfect_quiz">
       <span class="badge-icon">🏆</span>
@@ -197,12 +197,12 @@
     <div class="badge-card" id="ach-level_up">
       <span class="badge-icon">⭐</span>
       <div class="badge-name">Level Up!</div>
-      <div class="badge-desc">Reached investor Level 1</div>
+      <div class="badge-desc">Reached validator Level 1</div>
     </div>
     <div class="badge-card" id="ach-saver">
       <span class="badge-icon">🐷</span>
-      <div class="badge-name">Super Saver!</div>
-      <div class="badge-desc">Saved 500+ coins in balance</div>
+      <div class="badge-name">Super HODLer!</div>
+      <div class="badge-desc">HODLed 500+ coins in balance</div>
     </div>
     <div class="badge-card" id="ach-streak_7">
       <span class="badge-icon">🔥</span>
@@ -227,10 +227,10 @@
     const xp = parseInt(localStorage.getItem('li_xp') || '0');
     const level = Math.floor(xp / 200);
     
-    let rank = "Novice Saver 🪙";
-    if (level >= 1) rank = "Junior Investor 📈";
-    if (level >= 3) rank = "Asset Manager 💼";
-    if (level >= 5) rank = "Wall Street Kid 💎";
+    let rank = "Novice Validator 🔗";
+    if (level >= 1) rank = "Crypto Pioneer 🚀";
+    if (level >= 3) rank = "Smart Contract Dev 💻";
+    if (level >= 5) rank = "Satoshi Descendant 👑";
     
     document.getElementById('profileRank').textContent = rank;
     document.getElementById('profileXP').textContent = xp;

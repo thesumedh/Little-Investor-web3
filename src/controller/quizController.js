@@ -3,43 +3,43 @@
 
 const QUIZZES = {
     1: {
-        title: 'What is Money?',
+        title: 'What is a Blockchain?',
         questions: [
-            { q: 'What is the main purpose of money?', options: ['To collect and display', 'To trade value for goods and services', 'To make banks rich', 'Just for fun'], correct: 1, explanation: 'Money is a medium of exchange — we use it to trade for goods and services instead of bartering.' },
-            { q: 'If you save $1 every day for a year, how much will you have?', options: ['$100', '$200', '$365', '$500'], correct: 2, explanation: 'There are 365 days in a year, so saving $1 per day gives you $365!' },
-            { q: 'Which of these is a "store of value"?', options: ['A gift card that expires tomorrow', 'Coins in a piggy bank', 'A borrowed book', 'A borrowed pencil'], correct: 1, explanation: 'Coins in a piggy bank store value for you to use later — that\'s one of money\'s key functions!' }
+            { q: 'What is a blockchain?', options: ['A chain made of metal', 'A shared digital notebook that cannot be changed', 'A type of video game', 'A bank vault'], correct: 1, explanation: 'Blockchain is a decentralized, secure digital ledger that records transactions across many computers, so it cannot be altered.' },
+            { q: 'What does "decentralized" mean?', options: ['Controlled by one single boss', 'Spread out with no single owner or boss', 'Located in the center of a city', 'Broken and not working'], correct: 1, explanation: 'Decentralized means power and control are distributed, so there is no central authority like a bank or boss.' },
+            { q: 'Once information is written to a blockchain, what happens?', options: ['It can be deleted easily', 'It gets automatically erased after a day', 'It is permanent and cannot be changed', 'It becomes invisible to everyone'], correct: 2, explanation: 'Immutability is a core feature of blockchain — once written, blocks cannot be modified.' }
         ]
     },
     2: {
-        title: 'Saving — Stack Your Coins',
+        title: 'Cryptography & Blocks',
         questions: [
-            { q: 'What does "pay yourself first" mean?', options: ['Buy things before others do', 'Save money before spending anything', 'Give money to your parents', 'Spend all your money on yourself'], correct: 1, explanation: '"Pay yourself first" means saving a portion of your money before spending anything else.' },
-            { q: 'What percentage do financial experts recommend saving?', options: ['5%', '10%', '15%', '20%'], correct: 3, explanation: 'Most financial experts recommend saving at least 20% of any money you receive.' },
-            { q: 'What is a savings goal?', options: ['A specific item you want to buy eventually', 'The amount you spend per day', 'Money you give to charity', 'Your total debt'], correct: 0, explanation: 'A savings goal is a specific thing you\'re working toward buying — it motivates you to save!' }
+            { q: 'What is a "hash" in blockchain?', options: ['A delicious breakfast food', 'A unique digital fingerprint for a block', 'A type of key card', 'A computer virus'], correct: 1, explanation: 'A hash is a cryptographic string that acts as a unique signature or fingerprint for the data in a block.' },
+            { q: 'How are blocks connected to form a chain?', options: ['With real metal links', 'By gluing pages together', 'Each block contains the hash of the block before it', 'By sending emails'], correct: 2, explanation: 'Every block references the hash of the previous block, creating an unbroken and tamper-proof chain.' },
+            { q: 'What happens if someone tries to edit an old block?', options: ['Nothing, it works fine', 'The chain breaks because hashes no longer match', 'The block turns green', 'The computer gets turned off'], correct: 1, explanation: 'If old data is changed, its hash changes, breaking the link with the next block and alerting the network.' }
         ]
     },
     3: {
-        title: 'Spending Wisely',
+        title: 'Coins & Wallets',
         questions: [
-            { q: 'What\'s the difference between a "need" and a "want"?', options: ['Needs cost more', 'Needs are essential for survival; wants are extras', 'Wants are more important', 'There is no difference'], correct: 1, explanation: 'Needs are things required to live (food, shelter). Wants are extras we\'d like but could survive without.' },
-            { q: 'What is the 24-hour rule?', options: ['Only shop for 24 hours per week', 'Wait 24 hours before making a non-essential purchase', 'Save 24 cents per day', 'Return items within 24 hours'], correct: 1, explanation: 'The 24-hour rule means waiting a full day before buying something non-essential — it prevents impulse buying!' },
-            { q: 'Why should you compare prices before buying?', options: ['It wastes time', 'Prices are always the same everywhere', 'You might find the same thing cheaper elsewhere', 'Stores don\'t like it'], correct: 2, explanation: 'Comparing prices is smart spending — the same item can cost very different amounts at different stores!' }
+            { q: 'Which of these is a famous cryptocurrency?', options: ['Dollar coin', 'Bitcoin', 'Robux', 'V-Bucks'], correct: 1, explanation: 'Bitcoin was the very first cryptocurrency created and is the most well-known.' },
+            { q: 'Where do you store your cryptographic keys?', options: ['Under your mattress', 'In a digital wallet', 'In a real leather wallet', 'On a post-it note on your monitor'], correct: 1, explanation: 'A crypto wallet stores your public and private keys, allowing you to access and send your digital coins.' },
+            { q: 'What is a private key?', options: ['A physical brass key', 'A secret password that proves you own your coins', 'Your email address', 'The logo of the coin'], correct: 1, explanation: 'A private key is like a secret digital signature that allows you to spend coins. You must never share it!' }
         ]
     },
     4: {
-        title: 'Understanding Risk',
+        title: 'How Consensus Works',
         questions: [
-            { q: 'What does "diversify" mean in investing?', options: ['Put all money in one stock', 'Spread money across many different investments', 'Only invest in foreign countries', 'Never invest at all'], correct: 1, explanation: 'Diversification means spreading money across multiple investments so a single failure doesn\'t ruin everything.' },
-            { q: 'Which is generally lower risk?', options: ['Cryptocurrency', 'A startup company\'s stock', 'A savings account', 'Penny stocks'], correct: 2, explanation: 'Savings accounts are FDIC-insured and guaranteed, making them very low risk (but also lower reward).' },
-            { q: 'Higher risk investments usually have...', options: ['Lower potential returns', 'Higher potential returns', 'No returns ever', 'Guaranteed returns'], correct: 1, explanation: 'The risk-return tradeoff: higher risk generally means higher potential rewards (but also higher potential losses).' }
+            { q: 'What are "miners" in a Proof of Work blockchain?', options: ['People who dig for gold in caves', 'Computers that solve math puzzles to validate blocks', 'Children who play Minecraft', 'People who write code for website pages'], correct: 1, explanation: 'Miners use computer power to solve complex cryptographic puzzles to secure the network and earn rewards.' },
+            { q: 'What does "Proof of Stake" use instead of heavy puzzle solving?', options: ['Locking up (staking) coins to show you are trustworthy', 'Flipping a coin', 'Playing a video game tournament', 'Asking the bank for permission'], correct: 0, explanation: 'Proof of Stake validators lock up their own coins as collateral to show they will follow the rules and validate blocks honestly.' },
+            { q: 'Why does a blockchain need "consensus"?', options: ['To make the website load faster', 'So all computers agree on the true list of transactions', 'To choose a cool logo', 'To shut down the network'], correct: 1, explanation: 'Consensus mechanisms ensure all nodes in the decentralized network agree on the ledger\'s official state.' }
         ]
     },
     5: {
-        title: 'Investing Basics',
+        title: 'Smart Contracts & Web3',
         questions: [
-            { q: 'What do you own when you buy a stock?', options: ['A product from the company', 'A tiny piece of that company', 'A loan to that company', 'A discount at that company'], correct: 1, explanation: 'Stocks represent ownership shares — buying one makes you a part-owner of that company!' },
-            { q: 'What is compound growth?', options: ['Growing plants with money', 'When your gains themselves start earning gains', 'A type of bank account', 'A government savings plan'], correct: 1, explanation: 'Compound growth means your returns earn returns — it\'s how small amounts grow into large ones over time.' },
-            { q: 'Why does starting to invest young matter so much?', options: ['Young people get better stock prices', 'More time for compound growth to work', 'Young people are smarter', 'Stocks are cheaper when young'], correct: 1, explanation: 'Time is the most powerful force in investing — the longer your money compounds, the more dramatically it grows.' }
+            { q: 'What is a smart contract?', options: ['A paper agreement signed with a pen', 'A self-running program that automatically executes agreement rules', 'A contract that makes you look smart', 'A type of school homework'], correct: 1, explanation: 'A smart contract runs code automatically on the blockchain once specific conditions are met, with no middlemen.' },
+            { q: 'What does Web3 allow you to do that old webs did not?', options: ['Send emails', 'Actually own your digital items (like NFTs and tokens)', 'Browse pages in color', 'Watch videos in high definition'], correct: 1, explanation: 'Web3 is the decentralized web where ownership of digital assets is held directly by users, not by central tech platforms.' },
+            { q: 'What is an NFT?', options: ['A nice friendly teacher', 'A unique digital asset representing ownership of art, music, or game items', 'A type of fast internet cable', 'A new cryptocurrency coin'], correct: 1, explanation: 'NFT stands for Non-Fungible Token. It represents ownership of a specific, one-of-a-kind digital item on the blockchain.' }
         ]
     }
 };

@@ -1,17 +1,27 @@
 const axios = require('axios');
 
-// ===== STOCK CACHE (5-min TTL) =====
+// ===== CRYPTO PRICE CACHE (5-min TTL) =====
 let stockCache = null;
 let stockCacheTime = 0;
 const STOCK_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
+// Scale factors to make actual crypto prices fit a kid's $800 balance
+const scaleFactors = {
+    btc: 0.01,   // $65,000 -> $650
+    eth: 0.1,    // $3,200 -> $320
+    sol: 1.0,    // $145 -> $145
+    dot: 5.0,    // $6 -> $30
+    ada: 100.0,  // $0.40 -> $40
+    doge: 100.0  // $0.12 -> $12
+};
+
 const FALLBACK_STOCKS = {
-    aapl: { price: 213.45, change: 1.23, changePercent: 0.58, direction: 'up', name: 'Apple Inc.', logo: '🍎' },
-    amzn: { price: 196.80, change: 3.20, changePercent: 1.65, direction: 'up', name: 'Amazon.com', logo: '📦' },
-    wmt:  { price: 91.20,  change: 0.45, changePercent: 0.50, direction: 'up', name: 'Walmart Inc.', logo: '🏪' },
-    tsla: { price: 247.60, change: -4.80, changePercent: -1.90, direction: 'down', name: 'Tesla Inc.', logo: '⚡' },
-    googl:{ price: 183.90, change: 2.10, changePercent: 1.15, direction: 'up', name: 'Alphabet Inc.', logo: '🔍' },
-    msft: { price: 442.30, change: 5.70, changePercent: 1.30, direction: 'up', name: 'Microsoft Corp.', logo: '💻' }
+    sol:  { price: 145.00, change: 3.20, changePercent: 2.26, direction: 'up', name: 'Solana', logo: '☀️' },
+    eth:  { price: 320.00, change: -4.80, changePercent: -1.48, direction: 'down', name: 'Ethereum', logo: '⟠' },
+    btc:  { price: 650.00, change: 12.50, changePercent: 1.96, direction: 'up', name: 'Bitcoin', logo: '🪙' },
+    dot:  { price: 30.00,  change: 0.45, changePercent: 1.52, direction: 'up', name: 'Polkadot', logo: '🔴' },
+    ada:  { price: 40.00,  change: -0.90, changePercent: -2.20, direction: 'down', name: 'Cardano', logo: '🌀' },
+    doge: { price: 12.00,  change: 0.60, changePercent: 5.26, direction: 'up', name: 'Dogecoin', logo: '🐕' }
 };
 
 // Day-seeded variation so simulated prices change daily but stay consistent within a day
@@ -19,72 +29,79 @@ function getDailyVariation(key) {
     const d = new Date();
     const seed = (d.getFullYear() * 10000 + (d.getMonth() + 1) * 100 + d.getDate()) * 31 + key.charCodeAt(0) * 17;
     const rand = Math.sin(seed * 127.1 + 311.7) * 43758.5453;
-    return (rand - Math.floor(rand) - 0.5) * 0.030; // ±1.5% max variation
+    return (rand - Math.floor(rand) - 0.5) * 0.040; // ±2% max variation
 }
 
-const STOCK_SYMBOLS = { aapl: 'AAPL', amzn: 'AMZN', wmt: 'WMT', tsla: 'TSLA', googl: 'GOOGL', msft: 'MSFT' };
+const STOCK_SYMBOLS = {
+    sol: 'SOL-USD',
+    eth: 'ETH-USD',
+    btc: 'BTC-USD',
+    dot: 'DOT-USD',
+    ada: 'ADA-USD',
+    doge: 'DOGE-USD'
+};
 
 // ===== ALL 5 LESSONS =====
 const LESSONS = {
     1: {
         id: 1,
-        icon: '🪙',
-        title: 'What is Money?',
-        subtitle: 'The basics of money explained simply',
-        description: 'Money is a tool we use to trade value with each other. Instead of swapping your apples for someone\'s oranges, we use coins and bills that everyone agrees have value. Money lets you save up for things you want, pay for services, and plan for the future. There are three main things money does: it\'s a medium of exchange (you use it to buy things), a store of value (you can save it), and a unit of account (you can measure how much something is worth).',
-        videoId: '0iRbD5rM5qc',
+        icon: '🔗',
+        title: 'What is a Blockchain?',
+        subtitle: 'The magic behind digital trust',
+        description: 'Imagine a notebook that everyone in the world has a copy of. When someone writes a new entry, everyone\'s notebook updates automatically. Once something is written, it can never be erased or changed! That\'s a blockchain. It\'s a secure, shared, digital diary where blocks of information are chained together. Because there is no single owner, it\'s called "decentralized". This means we don\'t need a big bank or company to keep track of our money or information — the blockchain does it automatically and securely!',
+        videoId: 'vPMDpb9ho4s',
         xp: 100,
         coins: 10,
         duration: '5 min',
         upNextId: 2,
-        upNext: 'Saving — How to Stack Your Coins'
+        upNext: 'Cryptography & Blocks — Locking the Chain'
     },
     2: {
         id: 2,
-        icon: '🐷',
-        title: 'Saving — Stack Your Coins',
-        subtitle: 'Build the habit of saving money',
-        description: 'Saving is one of the most powerful money habits you can build! When you save a little bit every time you get money, it adds up fast. The trick is to pay yourself first — before you spend anything, put a set amount aside. Think of it like leveling up in a video game — every coin you save gets you closer to your goal. Even saving just $1 a day adds up to $365 in a year. Most financial experts recommend saving at least 20% of any money you receive.',
-        videoId: 'PnFbr_3LNZk',
+        icon: '🔒',
+        title: 'Cryptography & Blocks',
+        subtitle: 'How blocks are locked and chained',
+        description: 'How does a blockchain stay secure without a password? The answer is Cryptography — secret codes! Every block on the blockchain has a special fingerprint called a "hash". This hash is made of numbers and letters, and it changes completely if even a single letter in the block is modified. Each block also contains the hash of the block before it. This links them together like a real chain! If someone tries to change an old block, the chain breaks instantly, and everyone knows. It\'s like having a digital lock on every page of our diary!',
+        videoId: 'u0W3z1Y61oM',
         xp: 120,
         coins: 12,
         duration: '5 min',
         upNextId: 3,
-        upNext: 'Spending Wisely — Making Smart Choices'
+        upNext: 'Coins & Wallets — Digital Money'
     },
     3: {
         id: 3,
-        icon: '🛒',
-        title: 'Spending Wisely',
-        subtitle: 'Make every dollar count',
-        description: 'Spending wisely means thinking before you buy. Ask yourself: "Do I need this, or do I just want it?" Needs are things you must have (food, shelter, school supplies). Wants are things you\'d like to have but can survive without. A great trick is the 24-hour rule — wait one full day before buying something non-essential. If you still want it the next day, it might be worth it! Also, compare prices before buying and look for sales. Smart spenders get more for their money.',
-        videoId: 'H9SMfmZKvog',
+        icon: '🪙',
+        title: 'Coins & Wallets',
+        subtitle: 'Digital money on the blockchain',
+        description: 'Cryptocurrencies are digital coins that live on a blockchain. Unlike paper cash or metal coins in your piggy bank, you can\'t touch them! The two most famous cryptocurrencies are Bitcoin and Ethereum. Instead of keeping them in a physical wallet, you store them in a digital wallet. This wallet doesn\'t hold the coins itself; it holds your "private key" — which is like a super-secret password that proves you own those coins. Remember: never share your private key with anyone, or they can steal your coins!',
+        videoId: 'xvo_m_r2ubg',
         xp: 140,
         coins: 14,
         duration: '5 min',
         upNextId: 4,
-        upNext: 'Understanding Risk'
+        upNext: 'How Consensus Works — Mining & Validators'
     },
     4: {
         id: 4,
         icon: '⚡',
-        title: 'Understanding Risk',
-        subtitle: 'Higher risk can mean higher reward',
-        description: 'Risk is the chance that something might not go the way you planned. When you invest money, there\'s always a risk you might lose some of it — but there\'s also a chance to gain more! Generally, investments with higher potential returns come with higher risk. Keeping all your money in one place is risky — if that one thing fails, you lose everything. That\'s why smart investors "diversify" — they spread their money across many different investments. A savings account has very low risk but grows slowly. Stocks have higher risk but can grow much faster.',
-        videoId: 'xtl6s9SxHW8',
+        title: 'How Consensus Works',
+        subtitle: 'Voting and agreeing on the truth',
+        description: 'Since there is no boss in a blockchain, how does everyone agree on which transactions are real? They use "consensus" rules! In "Proof of Work" (like Bitcoin), computer owners called "miners" solve extremely hard math puzzles to add blocks and get rewarded with new coins. In "Proof of Stake" (like Ethereum), people lock up some of their own coins (stake them) to get a chance to validate transactions. Both methods ensure that everyone\'s digital notebooks stay in perfect agreement without anyone cheating!',
+        videoId: 'u0W3z1Y61oM',
         xp: 160,
         coins: 16,
         duration: '6 min',
         upNextId: 5,
-        upNext: 'Investing Basics — Make Your Money Work'
+        upNext: 'Smart Contracts & Web3 — Code is Law'
     },
     5: {
         id: 5,
-        icon: '🌱',
-        title: 'Investing Basics',
-        subtitle: 'Make your money work for you',
-        description: 'Investing means putting your money to work so it can grow over time. When you buy a share of a company\'s stock, you\'re buying a tiny piece of that company. If the company does well, your share becomes worth more! The stock market lets anyone own parts of amazing companies like Apple, Amazon, and Google. One of the most powerful concepts in investing is compound growth — your gains themselves start earning gains. Albert Einstein called compound interest "the eighth wonder of the world." Starting early is the most important thing — money invested at age 12 is worth far more than the same money invested at age 22.',
-        videoId: '2T6R3oCh-lI',
+        icon: '📜',
+        title: 'Smart Contracts & Web3',
+        subtitle: 'Programs that run on the blockchain',
+        description: 'What if money could think? Smart contracts are digital agreements written in code that run automatically on the blockchain when rules are met. For example: "If Liam cleans his room, transfer 10 digital coins from Mom\'s wallet." No human needs to check or press send; the code does it! Smart contracts power Web3 — a new version of the internet where you own your digital items, like gaming items and art (NFTs), instead of big companies owning them. It\'s the future of the web!',
+        videoId: 'ZE2HxTmxfrI',
         xp: 200,
         coins: 20,
         duration: '7 min',
@@ -96,61 +113,61 @@ const LESSONS = {
 // ===== QUIZ DATA =====
 const QUIZZES = {
     1: {
-        title: 'What is Money?',
+        title: 'What is a Blockchain?',
         questions: [
-            { q: 'What is the main purpose of money?', options: ['To collect and display', 'To trade value for goods and services', 'To make banks rich', 'Just for fun'], correct: 1, explanation: 'Money is a medium of exchange — we use it to trade for goods and services instead of bartering.' },
-            { q: 'If you save $1 every day for a year, how much will you have?', options: ['$100', '$200', '$365', '$500'], correct: 2, explanation: 'There are 365 days in a year, so saving $1 per day gives you $365!' },
-            { q: 'Which of these is a "store of value"?', options: ['A gift card that expires tomorrow', 'Coins in a piggy bank', 'A borrowed book', 'A borrowed pencil'], correct: 1, explanation: 'Coins in a piggy bank store value for you to use later — that\'s one of money\'s key functions!' }
+            { q: 'What is a blockchain?', options: ['A chain made of metal', 'A shared digital notebook that cannot be changed', 'A type of video game', 'A bank vault'], correct: 1, explanation: 'Blockchain is a decentralized, secure digital ledger that records transactions across many computers, so it cannot be altered.' },
+            { q: 'What does "decentralized" mean?', options: ['Controlled by one single boss', 'Spread out with no single owner or boss', 'Located in the center of a city', 'Broken and not working'], correct: 1, explanation: 'Decentralized means power and control are distributed, so there is no central authority like a bank or boss.' },
+            { q: 'Once information is written to a blockchain, what happens?', options: ['It can be deleted easily', 'It gets automatically erased after a day', 'It is permanent and cannot be changed', 'It becomes invisible to everyone'], correct: 2, explanation: 'Immutability is a core feature of blockchain — once written, blocks cannot be modified.' }
         ]
     },
     2: {
-        title: 'Saving — Stack Your Coins',
+        title: 'Cryptography & Blocks',
         questions: [
-            { q: 'What does "pay yourself first" mean?', options: ['Buy things before others do', 'Save money before spending anything', 'Give money to your parents', 'Spend all your money on yourself'], correct: 1, explanation: '"Pay yourself first" means saving a portion of your money before spending anything else.' },
-            { q: 'What percentage do financial experts recommend saving?', options: ['5%', '10%', '15%', '20%'], correct: 3, explanation: 'Most financial experts recommend saving at least 20% of any money you receive.' },
-            { q: 'What is a savings goal?', options: ['A specific item you want to buy eventually', 'The amount you spend per day', 'Money you give to charity', 'Your total debt'], correct: 0, explanation: 'A savings goal is a specific thing you\'re working toward buying — it motivates you to save!' }
+            { q: 'What is a "hash" in blockchain?', options: ['A delicious breakfast food', 'A unique digital fingerprint for a block', 'A type of key card', 'A computer virus'], correct: 1, explanation: 'A hash is a cryptographic string that acts as a unique signature or fingerprint for the data in a block.' },
+            { q: 'How are blocks connected to form a chain?', options: ['With real metal links', 'By gluing pages together', 'Each block contains the hash of the block before it', 'By sending emails'], correct: 2, explanation: 'Every block references the hash of the previous block, creating an unbroken and tamper-proof chain.' },
+            { q: 'What happens if someone tries to edit an old block?', options: ['Nothing, it works fine', 'The chain breaks because hashes no longer match', 'The block turns green', 'The computer gets turned off'], correct: 1, explanation: 'If old data is changed, its hash changes, breaking the link with the next block and alerting the network.' }
         ]
     },
     3: {
-        title: 'Spending Wisely',
+        title: 'Coins & Wallets',
         questions: [
-            { q: 'What\'s the difference between a "need" and a "want"?', options: ['Needs cost more', 'Needs are essential for survival; wants are extras', 'Wants are more important', 'There is no difference'], correct: 1, explanation: 'Needs are things required to live (food, shelter). Wants are extras we\'d like but could survive without.' },
-            { q: 'What is the 24-hour rule?', options: ['Only shop for 24 hours per week', 'Wait 24 hours before making a non-essential purchase', 'Save 24 cents per day', 'Return items within 24 hours'], correct: 1, explanation: 'The 24-hour rule means waiting a full day before buying something non-essential — it prevents impulse buying!' },
-            { q: 'Why should you compare prices before buying?', options: ['It wastes time', 'Prices are always the same everywhere', 'You might find the same thing cheaper elsewhere', 'Stores don\'t like it'], correct: 2, explanation: 'Comparing prices is smart spending — the same item can cost very different amounts at different stores!' }
+            { q: 'Which of these is a famous cryptocurrency?', options: ['Dollar coin', 'Bitcoin', 'Robux', 'V-Bucks'], correct: 1, explanation: 'Bitcoin was the very first cryptocurrency created and is the most well-known.' },
+            { q: 'Where do you store your cryptographic keys?', options: ['Under your mattress', 'In a digital wallet', 'In a real leather wallet', 'On a post-it note on your monitor'], correct: 1, explanation: 'A crypto wallet stores your public and private keys, allowing you to access and send your digital coins.' },
+            { q: 'What is a private key?', options: ['A physical brass key', 'A secret password that proves you own your coins', 'Your email address', 'The logo of the coin'], correct: 1, explanation: 'A private key is like a secret digital signature that allows you to spend coins. You must never share it!' }
         ]
     },
     4: {
-        title: 'Understanding Risk',
+        title: 'How Consensus Works',
         questions: [
-            { q: 'What does "diversify" mean in investing?', options: ['Put all money in one stock', 'Spread money across many different investments', 'Only invest in foreign countries', 'Never invest at all'], correct: 1, explanation: 'Diversification means spreading money across multiple investments so a single failure doesn\'t ruin everything.' },
-            { q: 'Which is generally lower risk?', options: ['Cryptocurrency', 'A startup company\'s stock', 'A savings account', 'Penny stocks'], correct: 2, explanation: 'Savings accounts are FDIC-insured and guaranteed, making them very low risk (but also lower reward).' },
-            { q: 'Higher risk investments usually have...', options: ['Lower potential returns', 'Higher potential returns', 'No returns ever', 'Guaranteed returns'], correct: 1, explanation: 'The risk-return tradeoff: higher risk generally means higher potential rewards (but also higher potential losses).' }
+            { q: 'What are "miners" in a Proof of Work blockchain?', options: ['People who dig for gold in caves', 'Computers that solve math puzzles to validate blocks', 'Children who play Minecraft', 'People who write code for website pages'], correct: 1, explanation: 'Miners use computer power to solve complex cryptographic puzzles to secure the network and earn rewards.' },
+            { q: 'What does "Proof of Stake" use instead of heavy puzzle solving?', options: ['Locking up (staking) coins to show you are trustworthy', 'Flipping a coin', 'Playing a video game tournament', 'Asking the bank for permission'], correct: 0, explanation: 'Proof of Stake validators lock up their own coins as collateral to show they will follow the rules and validate blocks honestly.' },
+            { q: 'Why does a blockchain need "consensus"?', options: ['To make the website load faster', 'So all computers agree on the true list of transactions', 'To choose a cool logo', 'To shut down the network'], correct: 1, explanation: 'Consensus mechanisms ensure all nodes in the decentralized network agree on the ledger\'s official state.' }
         ]
     },
     5: {
-        title: 'Investing Basics',
+        title: 'Smart Contracts & Web3',
         questions: [
-            { q: 'What do you own when you buy a stock?', options: ['A product from the company', 'A tiny piece of that company', 'A loan to that company', 'A discount at that company'], correct: 1, explanation: 'Stocks represent ownership shares — buying one makes you a part-owner of that company!' },
-            { q: 'What is compound growth?', options: ['Growing plants with money', 'When your gains themselves start earning gains', 'A type of bank account', 'A government savings plan'], correct: 1, explanation: 'Compound growth means your returns earn returns — it\'s how small amounts grow into large ones over time.' },
-            { q: 'Why does starting to invest young matter so much?', options: ['Young people get better stock prices', 'More time for compound growth to work', 'Young people are smarter', 'Stocks are cheaper when young'], correct: 1, explanation: 'Time is the most powerful force in investing — the longer your money compounds, the more dramatically it grows.' }
+            { q: 'What is a smart contract?', options: ['A paper agreement signed with a pen', 'A self-running program that automatically executes agreement rules', 'A contract that makes you look smart', 'A type of school homework'], correct: 1, explanation: 'A smart contract runs code automatically on the blockchain once specific conditions are met, with no middlemen.' },
+            { q: 'What does Web3 allow you to do that old webs did not?', options: ['Send emails', 'Actually own your digital items (like NFTs and tokens)', 'Browse pages in color', 'Watch videos in high definition'], correct: 1, explanation: 'Web3 is the decentralized web where ownership of digital assets is held directly by users, not by central tech platforms.' },
+            { q: 'What is an NFT?', options: ['A nice friendly teacher', 'A unique digital asset representing ownership of art, music, or game items', 'A type of fast internet cable', 'A new cryptocurrency coin'], correct: 1, explanation: 'NFT stands for Non-Fungible Token. It represents ownership of a specific, one-of-a-kind digital item on the blockchain.' }
         ]
     }
 };
 
 // ===== MARKET NEWS =====
 const MARKET_NEWS = [
-    { emoji: '📊', text: 'Tech stocks rise as AI investment continues to boom' },
-    { emoji: '🛒', text: 'Walmart reports strong quarterly earnings, shares up 2%' },
-    { emoji: '🍎', text: 'Apple\'s new product lineup drives record iPhone sales' },
-    { emoji: '🚗', text: 'Electric vehicle demand continues growing worldwide' },
-    { emoji: '💰', text: 'S&P 500 hits new all-time highs driven by Big Tech rally' },
-    { emoji: '🌍', text: 'Global markets steady as inflation continues to cool' },
-    { emoji: '📱', text: 'Amazon Prime membership reaches 200 million users globally' },
-    { emoji: '🔋', text: 'Clean energy stocks surge on new government incentives' }
+    { emoji: '🪙', text: 'Bitcoin hash rate hits new all-time high, securing the ledger' },
+    { emoji: '💎', text: 'Ethereum validators lock up record staking coins post-upgrade' },
+    { emoji: '☀️', text: 'Solana transactions surge as new Web3 games launch' },
+    { emoji: '📜', text: 'Smart contract platforms see major usage increase for digital art' },
+    { emoji: '🔐', text: 'Security experts remind users: Never share your private key' },
+    { emoji: '⛏️', text: 'Bitcoin miners solve puzzles and receive blocks of block rewards' },
+    { emoji: '🌐', text: 'Web3 decentralized applications reach 50 million active wallets' },
+    { emoji: '🐕', text: 'Dogecoin transaction fees drop, making digital tips cheaper' }
 ];
 
 // ===== FETCH SINGLE STOCK =====
-const fetchYahooStock = async (symbol) => {
+const fetchYahooStock = async (symbol, key) => {
     try {
         const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=1d&range=5d`;
         const response = await axios.get(url, {
@@ -165,12 +182,18 @@ const fetchYahooStock = async (symbol) => {
         if (!chart) return null;
         const meta = chart.meta;
         const closes = chart.indicators?.quote?.[0]?.close || [];
-        const price = meta.regularMarketPrice;
-        const prevClose = meta.chartPreviousClose || (closes[closes.length - 2] || price);
+        
+        let price = meta.regularMarketPrice;
+        let prevClose = meta.chartPreviousClose || (closes[closes.length - 2] || price);
+        
+        const factor = scaleFactors[key] || 1.0;
+        price = price * factor;
+        prevClose = prevClose * factor;
+        
         const change = price - prevClose;
         const changePercent = (change / prevClose) * 100;
         // sparkline: last 5 close prices (filter nulls)
-        const sparkline = closes.filter(v => v != null).slice(-5).map(v => Math.round(v * 100) / 100);
+        const sparkline = closes.filter(v => v != null).slice(-5).map(v => Math.round(v * factor * 100) / 100);
 
         return {
             price: Math.round(price * 100) / 100,
@@ -215,7 +238,7 @@ const getLiveStocks = async (req, res) => {
     const result = {};
     // Fetch all in parallel for speed
     const fetchPromises = Object.entries(STOCK_SYMBOLS).map(async ([key, sym]) => {
-        const data = await fetchYahooStock(sym);
+        const data = await fetchYahooStock(sym, key);
         result[key] = data
             ? { ...data, name: FALLBACK_STOCKS[key].name, logo: FALLBACK_STOCKS[key].logo }
             : (() => {

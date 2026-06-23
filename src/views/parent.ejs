@@ -90,7 +90,7 @@
 <body>
 
 <!-- Parent Passcode Overlay -->
-<div id="passcodeOverlay" style="position:fixed;inset:0;background:linear-gradient(160deg,#0a0f1e 0%,#1a2332 60%,#0f2027 100%);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center">
+<div id="passcodeOverlay" style="position:fixed;inset:0;background:rgba(10, 15, 30, 0.75);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:all 0.4s ease;">
   <div style="text-align:center;max-width:300px;width:100%;padding:0 32px">
     <div style="font-size:52px;margin-bottom:20px;transition:all .3s" id="lockEmoji">🔒</div>
     <h2 style="color:#fff;font-size:24px;font-weight:800;margin-bottom:8px;letter-spacing:-.5px">Parent Mode</h2>
@@ -145,8 +145,8 @@
 <div class="parent-grid">
   <div class="stat-card" style="margin:0">
     <h3>Child's Balance</h3>
-    <div class="stat-val" id="parentBalance">$800</div>
-    <div class="stat-sub" style="color:var(--green)">available pocket money</div>
+    <div class="stat-val" id="parentBalance">🪙 800</div>
+    <div class="stat-sub" style="color:var(--green)">available pocket coins</div>
   </div>
   <div class="stat-card" style="margin:0">
     <h3>Streak</h3>
@@ -159,7 +159,7 @@
     <div class="stat-sub" style="color:var(--green)">total rewards earned</div>
   </div>
   <div class="stat-card" style="margin:0">
-    <h3>Level</h3>
+    <h3>Validator Level</h3>
     <div class="stat-val" id="parentLevel">0</div>
     <div class="stat-sub" style="color:var(--navy)">learning tier</div>
   </div>
@@ -174,53 +174,152 @@
   </div>
   <div class="progress-bar"><div class="progress" id="goalProgress" style="width:40%"></div></div>
   <div style="font-size:12px;color:var(--gray);margin-top:6px;display:flex;justify-content:space-between">
-    <span id="goalSaved">Saved: $320</span>
-    <span id="goalTarget">Goal Target: $800</span>
+    <span id="goalSaved">Saved: 🪙 320</span>
+    <span id="goalTarget">Goal Target: 🪙 800</span>
   </div>
 </div>
 
 <!-- Portfolio breakdown -->
-<div style="padding:0 20px 8px 20px"><div style="font-size:13px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px">💼 Investment Allocation</div></div>
+<div style="padding:0 20px 8px 20px"><div style="font-size:13px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.5px">💼 Token Allocation</div></div>
 <div class="portfolio-pie">
   <div class="pie-chart" id="pieChart"></div>
   <div class="pie-legend" id="pieLegend">
-    <div class="legend-item"><span class="legend-dot" style="background:var(--green)"></span> Cash: <span id="cashPct" style="font-weight:700">100%</span></div>
-    <div class="legend-item"><span class="legend-dot" style="background:var(--gold)"></span> Stocks: <span id="stocksPct" style="font-weight:700">0%</span></div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--green)"></span> Cash Coins: <span id="cashPct" style="font-weight:700">100%</span></div>
+    <div class="legend-item"><span class="legend-dot" style="background:var(--gold)"></span> Tokens: <span id="stocksPct" style="font-weight:700">0%</span></div>
+  </div>
+</div>
+
+<!-- Web3 Vault Panel -->
+<div class="send-money-card" style="background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff; border: none; margin-top: 12px;">
+  <h3 style="color:#fff; margin-bottom: 8px;">🔐 Soroban Smart Vault</h3>
+  <p style="color: rgba(255,255,255,0.6); font-size: 13px; line-height: 1.4; margin-bottom: 16px;">
+    Connect your Freighter wallet to deploy and control your child's on-chain Soroban allowance vault contract.
+  </p>
+  
+  <!-- Wallet state control -->
+  <div id="walletSection" style="display: flex; flex-direction: column; gap: 10px;">
+    <button id="connectWalletBtn" onclick="handleWalletConnect()" class="send-btn-big" style="background: #2AA46A; color:#fff; border:none; border-radius:12px; cursor:pointer;">
+      🔌 Connect Freighter Wallet
+    </button>
+    <button id="createLocalParentBtn" onclick="handleCreateLocalParent()" class="send-btn-big" style="background: #38bdf8; color:#0f172a; border:none; border-radius:12px; cursor:pointer; font-weight:700;">
+      🔑 Generate Local Parent Account (No Extension)
+    </button>
+    
+    <div id="walletDetails" style="display: none; background: rgba(255,255,255,0.06); padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); font-size:13px;">
+      <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+        <span style="color:rgba(255,255,255,0.5)">Address:</span>
+        <span id="walletAddressDisplay" style="font-family:monospace; font-weight:700; color:#2AA46A;">GA...</span>
+      </div>
+      <div style="display:flex; justify-content:space-between; margin-bottom:12px;">
+        <span style="color:rgba(255,255,255,0.5)">Testnet Balance:</span>
+        <span id="walletBalanceDisplay" style="font-weight:700; color:#ffd700;">0.00 XLM</span>
+      </div>
+      <div style="display:flex; gap: 8px;">
+        <button onclick="handleFaucetClaim()" class="wallet-action-btn" style="flex:1; background:rgba(255,255,255,0.1); color:#fff; padding:6px; font-size:11px; border-radius:6px; border:1px solid rgba(255,255,255,0.15); cursor:pointer;">
+          🪙 Get Testnet XLM
+        </button>
+        <button onclick="handleWalletDisconnect()" class="wallet-action-btn" style="flex:1; background:rgba(239,68,68,0.2); color:#ef4444; padding:6px; font-size:11px; border-radius:6px; border:1px solid rgba(239,68,68,0.3); cursor:pointer;">
+          Disconnect
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contract deployment / control -->
+  <div id="vaultControlSection" style="display: none; margin-top: 16px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; flex-direction:column; gap:12px;">
+    
+    <!-- Child account generation -->
+    <div id="childAccountDetails" style="background: rgba(255,255,255,0.04); padding: 12px; border-radius: 10px; font-size:12px;">
+      <div style="font-weight:700; margin-bottom: 6px; color:#38bdf8;">👦 Child Profile Account</div>
+      <div id="noChildAccount" style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="color:rgba(255,255,255,0.5)">No on-chain child account yet.</span>
+        <button onclick="handleCreateChild()" style="background:#38bdf8; border:none; padding:6px 12px; font-size:11px; font-weight:700; border-radius:6px; color:#0f172a; cursor:pointer;">Generate Account</button>
+      </div>
+      <div id="childAccountDisplay" style="display:none; flex-direction:column; gap:4px;">
+        <div style="display:flex; justify-content:space-between;">
+          <span style="color:rgba(255,255,255,0.5)">Public Address:</span>
+          <span id="childPubkeyDisplay" style="font-family:monospace; color:#38bdf8;">GD...</span>
+        </div>
+        <div style="display:flex; justify-content:space-between;">
+          <span style="color:rgba(255,255,255,0.5)">Testnet Balance:</span>
+          <span id="childBalanceDisplay" style="color:#ffd700; font-weight:700;">0.00 XLM</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contract deployment -->
+    <div id="deployVaultContainer">
+      <button id="deployVaultBtn" onclick="handleDeployVault()" class="send-btn-big" style="background: #e2e8f0; color:#0f172a; border:none; border-radius:12px; cursor:pointer; width:100%;">
+        🚀 Deploy Allowance Vault Contract
+      </button>
+    </div>
+
+    <!-- Contract initialized display -->
+    <div id="contractDisplay" style="display:none; background: rgba(255,255,255,0.06); padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); font-size:12px; flex-direction:column; gap:6px;">
+      <div style="display:flex; justify-content:space-between;">
+        <span style="color:rgba(255,255,255,0.5)">Vault Contract ID:</span>
+        <a id="contractLink" href="#" target="_blank" style="font-family:monospace; color:#2aa46a; font-weight:700; text-decoration:underline;">C...</a>
+      </div>
+      <div id="vaultStatsDisplay" style="display:flex; flex-direction:column; gap:4px; border-top: 1px solid rgba(255,255,255,0.1); margin-top:6px; padding-top:6px;">
+        <div style="display:flex; justify-content:space-between;">
+          <span style="color:rgba(255,255,255,0.5)">Daily Spend Limit:</span>
+          <span id="vaultDailyLimitDisplay" style="font-weight:700; color:#fff;">0 XLM</span>
+        </div>
+        <div style="display:flex; justify-content:space-between;">
+          <span style="color:rgba(255,255,255,0.5)">Spent Today:</span>
+          <span id="vaultSpentDisplay" style="font-weight:700; color:#ef4444;">0 XLM</span>
+        </div>
+        <div style="display:flex; justify-content:space-between;">
+          <span style="color:rgba(255,255,255,0.5)">Saved Vault Pool:</span>
+          <span id="vaultSavedDisplay" style="font-weight:700; color:#2aa46a;">0 XLM</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contract limit controls -->
+    <div id="vaultSettingsContainer" style="display:none; flex-direction:column; gap:8px;">
+      <div style="font-weight:700; font-size:13px; color:rgba(255,255,255,0.8)">Modify Spending Limit:</div>
+      <div style="display:flex; gap:6px;">
+        <input type="number" id="newSpendLimitInput" placeholder="Limit in XLM (e.g. 10)" style="flex:1; padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.2); background:rgba(0,0,0,0.2); color:#fff; font-size:13px;">
+        <button onclick="handleUpdateLimit()" style="background:#2AA46A; color:#fff; border:none; padding:8px 12px; font-size:12px; font-weight:700; border-radius:8px; cursor:pointer;">Update</button>
+      </div>
+    </div>
+
   </div>
 </div>
 
 <div class="send-money-card">
   <h3>💸 Fast Allowance Transfer</h3>
   <div class="amount-btns" id="amountBtns">
-    <button class="amount-btn" onclick="selectAmount(5,this)">$5</button>
-    <button class="amount-btn" onclick="selectAmount(10,this)">$10</button>
-    <button class="amount-btn" onclick="selectAmount(25,this)">$25</button>
-    <button class="amount-btn" onclick="selectAmount(50,this)">$50</button>
+    <button class="amount-btn" onclick="selectAmount(5,this)">🪙 5</button>
+    <button class="amount-btn" onclick="selectAmount(10,this)">🪙 10</button>
+    <button class="amount-btn" onclick="selectAmount(25,this)">🪙 25</button>
+    <button class="amount-btn" onclick="selectAmount(50,this)">🪙 50</button>
   </div>
   <button class="send-btn-big" onclick="sendMoney()">Send Selected Allowance 📤</button>
 </div>
 
 <div class="send-money-card" style="margin-top:12px">
-  <h3>🧹 Reward Clean Chores & Homework</h3>
+  <h3>🧹 Reward Chores & Learning Tasks</h3>
   <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px">
     <button class="chore-chip" onclick="selectChore('Reading a book 📚', 5, this)">
-      <span>📚</span><span>Reading a book for 30m</span><span style="margin-left:auto;color:var(--green)">+$5</span>
+      <span>📚</span><span>Reading a book for 30m</span><span style="margin-left:auto;color:var(--green)">+🪙 5</span>
     </button>
     <button class="chore-chip" onclick="selectChore('Math Homework ✏️', 10, this)">
-      <span>✏️</span><span>Completing Math homework</span><span style="margin-left:auto;color:var(--green)">+$10</span>
+      <span>✏️</span><span>Completing Math homework</span><span style="margin-left:auto;color:var(--green)">+🪙 10</span>
     </button>
     <button class="chore-chip" onclick="selectChore('Clean Room 🧹', 15, this)">
-      <span>🧹</span><span>Cleaning bedroom & bed</span><span style="margin-left:auto;color:var(--green)">+$15</span>
+      <span>🧹</span><span>Cleaning bedroom & bed</span><span style="margin-left:auto;color:var(--green)">+🪙 15</span>
     </button>
-    <button class="chore-chip" onclick="selectChore('Helped with dishes 🍽️', 5, this)">
-      <span>🍽️</span><span>Helping wash dinner dishes</span><span style="margin-left:auto;color:var(--green)">+$5</span>
+    <button class="chore-chip" onclick="selectChore('Write Smart Contract 💻', 20, this)">
+      <span>💻</span><span>Helping write a smart contract</span><span style="margin-left:auto;color:var(--green)">+🪙 20</span>
     </button>
   </div>
   
   <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px;border-top:1px solid #e2e8f0;padding-top:14px">
     <div style="font-size:13px;font-weight:700;color:var(--dark)">Or create a custom reward note:</div>
-    <input type="number" id="customAmount" placeholder="Reward amount ($)" style="width:100%;padding:12px;border-radius:12px;border:1px solid #e2e8f0;font-size:14px;font-weight:600">
-    <input type="text" id="customNote" placeholder="Personal note (e.g. Great job coding today! 💻)" style="width:100%;padding:12px;border-radius:12px;border:1px solid #e2e8f0;font-size:14px">
+    <input type="number" id="customAmount" placeholder="Reward amount (coins)" style="width:100%;padding:12px;border-radius:12px;border:1px solid #e2e8f0;font-size:14px;font-weight:600">
+    <input type="text" id="customNote" placeholder="Personal note (e.g. Great job writing that block! 💻)" style="width:100%;padding:12px;border-radius:12px;border:1px solid #e2e8f0;font-size:14px">
     <button class="send-btn-big" onclick="sendCustomReward()" style="background:var(--navy)">Send Custom Reward 🚀</button>
   </div>
 </div>
@@ -234,7 +333,7 @@
   <div style="background:#fef9ee;border:1px solid #fde68a;border-radius:16px;padding:18px;text-align:center">
     <div style="font-size:24px;margin-bottom:8px">💡</div>
     <div style="font-size:14px;font-weight:700;color:#92400e;margin-bottom:4px">Tip for Parents</div>
-    <div style="font-size:13px;color:#78350f;line-height:1.5">Kids learn best when you talk about real-life choices. Ask your child why they bought their favorite stock today!</div>
+    <div style="font-size:13px;color:#78350f;line-height:1.5">Web3 is built on cryptography and peer-to-peer networks. Ask your child what a private key does today!</div>
   </div>
 </div>
 
@@ -247,54 +346,9 @@
 
 <div class="toast" id="toast"></div>
 <script src="/js/script.js"></script>
+<script src="/js/stellar-helper.js"></script>
 <script>
-// ===== PARENT PIN SYSTEM =====
-let pinEntry = '';
-function pinPress(d){if(pinEntry.length>=4)return;pinEntry+=d;renderPinDots();if(pinEntry.length===4)setTimeout(verifyPin,200);}
-function pinDelete(){pinEntry=pinEntry.slice(0,-1);renderPinDots();}
-function pinClear(){pinEntry='';renderPinDots();}
-function renderPinDots(state){
-  for(let i=0;i<4;i++){
-    const d=document.getElementById('dot'+i);if(!d)continue;
-    d.classList.remove('filled','error');
-    if(state==='error')d.classList.add('error');
-    else if(state==='success'||i<pinEntry.length)d.classList.add('filled');
-  }
-}
-function verifyPin(){
-  const stored=localStorage.getItem('li_parent_pin')||'0000';
-  if(pinEntry===stored){
-    renderPinDots('success');
-    document.getElementById('lockEmoji').textContent='✅';
-    document.getElementById('pinStatusMsg').textContent='Welcome back! 🎉';
-    document.getElementById('pinStatusMsg').style.color='#34d399';
-    sessionStorage.setItem('li_parent_session','1');
-    setTimeout(()=>{const ov=document.getElementById('passcodeOverlay');ov.style.transition='opacity .35s ease';ov.style.opacity='0';setTimeout(()=>ov.style.display='none',350);},600);
-  }else{
-    renderPinDots('error');
-    const row=document.getElementById('pinDotsRow');row.classList.add('pin-shake');setTimeout(()=>row.classList.remove('pin-shake'),550);
-    document.getElementById('pinStatusMsg').textContent='Incorrect PIN — try again.';
-    document.getElementById('pinStatusMsg').style.color='#EF4444';
-    setTimeout(()=>{document.getElementById('pinStatusMsg').textContent='Enter your 4-digit PIN to access the Family Dashboard';document.getElementById('pinStatusMsg').style.color='rgba(255,255,255,.5)';pinEntry='';renderPinDots();},1400);
-  }
-}
-document.addEventListener('keydown',e=>{
-  const ov=document.getElementById('passcodeOverlay');
-  if(!ov||ov.style.display==='none')return;
-  if(e.key>='0'&&e.key<='9')pinPress(e.key);
-  else if(e.key==='Backspace')pinDelete();
-  else if(e.key==='Escape')window.location.href='/home';
-});
-function showChangePinModal(){document.getElementById('changePinModal').style.display='flex';}
-function saveNewPin(){
-  const val=document.getElementById('newPinInput').value.trim();
-  if(!/^\d{4}$/.test(val)){showToast('Please enter exactly 4 digits! 🔑');return;}
-  localStorage.setItem('li_parent_pin',val);
-  document.getElementById('changePinModal').style.display='none';
-  document.getElementById('newPinInput').value='';
-  showToast('✅ PIN changed! Use it next time you open Parent Mode.');
-}
-// ===== END PIN SYSTEM =====
+// ===== PARENT PIN SYSTEM (VERIFIED) =====
 
 let selectedAmount = 0;
 let choreAmount = 0;
@@ -348,13 +402,52 @@ function sendCustomReward() {
   document.querySelectorAll('.chore-chip').forEach(b => b.classList.remove('active'));
 }
 
-function transferCash(amt, note) {
+async function transferCash(amt, note) {
+  const parentAddress = StellarHelper.getSavedAddress();
+  const childAddress = localStorage.getItem('li_child_stellar_address');
+  const contractId = localStorage.getItem('li_contract_id');
+  const parentSecret = localStorage.getItem('li_parent_stellar_secret') || '';
+  
+  if (parentAddress && childAddress) {
+    showToast('Initiating real on-chain allowance payment... ⏳');
+    try {
+      // 1. Perform XLM transfer from parent to child on Stellar testnet
+      const paymentRes = await StellarHelper.sendPayment(parentAddress, childAddress, amt, parentSecret);
+      if (!paymentRes.success) {
+        showToast('❌ On-Chain Payment Error: ' + (paymentRes.error || 'Failed to send payment.'));
+        return;
+      }
+      
+      // 2. If a contract is deployed, update the saved pool on-chain
+      if (contractId) {
+        showToast('Depositing coins into Smart Vault... ⚙️');
+        const saveRes = await StellarHelper.vaultSave(contractId, amt);
+        if (!saveRes.success) {
+          showToast('⚠️ Note: On-chain payment succeeded, but vault contract state update failed.');
+        } else {
+          showToast('✅ Allowance deposited into Smart Vault on-chain!');
+        }
+      } else {
+        showToast('✅ Allowance sent successfully on-chain!');
+      }
+      
+      // Update child's balance in parent view
+      const childData = await StellarHelper.getParentBalance(childAddress);
+      if (childData.success) {
+        document.getElementById('childBalanceDisplay').textContent = parseFloat(childData.balance).toFixed(2) + ' XLM';
+      }
+    } catch (e) {
+      showToast('❌ On-Chain Error: ' + e.message);
+      return;
+    }
+  }
+
   const bal = parseFloat(localStorage.getItem('li_coins') || '800');
   const newBal = Math.round((bal + amt) * 100) / 100;
   localStorage.setItem('li_coins', newBal);
   
   // Update header and displays
-  document.getElementById('parentBalance').textContent = '$' + newBal;
+  document.getElementById('parentBalance').textContent = '🪙 ' + newBal;
   const coinAmt = document.getElementById('coinAmount');
   if (coinAmt) coinAmt.textContent = newBal;
 
@@ -363,7 +456,7 @@ function transferCash(amt, note) {
   notifs.push({
     id: 'notif_' + Date.now(),
     icon: '💸',
-    title: `Parent sent you $${amt}!`,
+    title: `Parent sent you ${amt} coins!`,
     sub: note,
     time: 'Just now'
   });
@@ -374,22 +467,30 @@ function transferCash(amt, note) {
   const item = document.createElement('div');
   item.className = 'activity-item';
   item.style.animation = 'slideIn .3s ease';
-  item.innerHTML = `<div class="activity-dot green">💸</div><div class="activity-info"><div class="activity-title">${note}</div><div class="activity-time">Just now</div></div><div class="activity-val" style="color:var(--green)">+$${amt}</div>`;
-  list.prepend(item);
+  item.innerHTML = `<div class="activity-dot green">💸</div><div class="activity-info"><div class="activity-title">${note}</div><div class="activity-time">Just now</div></div><div class="activity-val" style="color:var(--green)">+🪙 ${amt}</div>`;
+  if (list) {
+    if (list.querySelector('.activity-item') || list.innerHTML.includes('No activity')) {
+      if (list.innerHTML.includes('No activity')) list.innerHTML = '';
+      list.prepend(item);
+    } else {
+      list.appendChild(item);
+    }
+  }
   
   if (typeof confetti !== 'undefined') {
     confetti({particleCount: 50, spread: 60, origin: {y: 0.6}});
   }
   
-  showToast(`✅ $${amt} transfer successful!`);
+  showToast(`✅ ${amt} coins transfer successful!`);
   
   // Recalculate portfolio allocation pie
   loadPortfolioStats();
+  refreshWalletState();
 }
 
 function loadPortfolioStats() {
   const coins = parseFloat(localStorage.getItem('li_coins') || '800');
-  const prices = { wmt: 80.94, aapl: 226.80, amzn: 186.51, googl: 175.40, tsla: 180.20, msft: 420.10 };
+  const prices = { sol: 145.00, eth: 320.00, btc: 650.00, dot: 30.00, ada: 40.00, doge: 12.00 };
   let stocksVal = 0;
   
   Object.keys(prices).forEach(ticker => {
@@ -401,8 +502,10 @@ function loadPortfolioStats() {
   const cashPct = total > 0 ? Math.round((coins / total) * 100) : 100;
   const stocksPct = 100 - cashPct;
   
-  document.getElementById('cashPct').textContent = cashPct + '%';
-  document.getElementById('stocksPct').textContent = stocksPct + '%';
+  const cashPctEl = document.getElementById('cashPct');
+  const stocksPctEl = document.getElementById('stocksPct');
+  if (cashPctEl) cashPctEl.textContent = cashPct + '%';
+  if (stocksPctEl) stocksPctEl.textContent = stocksPct + '%';
   
   const pie = document.getElementById('pieChart');
   if (pie) {
@@ -424,62 +527,358 @@ window.addEventListener('DOMContentLoaded', () => {
   
   document.getElementById('parentXP').textContent = xp;
   document.getElementById('parentLevel').textContent = level;
-  document.getElementById('parentBalance').textContent = '$' + parseFloat(coins).toFixed(2);
+  document.getElementById('parentBalance').textContent = '🪙 ' + parseFloat(coins).toFixed(0);
   document.getElementById('parentStreak').textContent = '🔥 ' + streak;
   
   // Load goal progress
   const goal = JSON.parse(localStorage.getItem('li_savings_goal') || 'null');
   if (goal) {
     const goalCard = document.getElementById('parentGoalCard');
-    goalCard.style.display = 'block';
-    document.getElementById('goalName').textContent = goal.name;
-    document.getElementById('goalTarget').textContent = 'Goal Target: $' + goal.amount;
-    document.getElementById('goalSaved').textContent = 'Saved: $' + parseFloat(coins).toFixed(2);
-    
-    const pct = Math.min(100, Math.round((parseFloat(coins) / goal.amount) * 100));
-    document.getElementById('goalPct').textContent = pct + '% complete';
-    document.getElementById('goalProgress').style.width = pct + '%';
+    if (goalCard) {
+      goalCard.style.display = 'block';
+      document.getElementById('goalName').textContent = goal.name;
+      document.getElementById('goalTarget').textContent = 'Goal Target: 🪙 ' + goal.amount;
+      document.getElementById('goalSaved').textContent = 'Saved: 🪙 ' + parseFloat(coins).toFixed(0);
+      
+      const pct = Math.min(100, Math.round((parseFloat(coins) / goal.amount) * 100));
+      document.getElementById('goalPct').textContent = pct + '% complete';
+      document.getElementById('goalProgress').style.width = pct + '%';
+    }
   }
   
   loadPortfolioStats();
 
   // ── Dynamic Activity History ──
   const list = document.getElementById('activityList');
-  const lessonTitles = {1:'What is Money?',2:'Saving — Stack Your Coins',3:'Spending Wisely',4:'Understanding Risk',5:'Investing Basics'};
-  const lessonXP = {1:100,2:120,3:140,4:160,5:200};
-  const activities = [];
+  if (list) {
+    const lessonTitles = {
+      1: 'What is a Blockchain?',
+      2: 'Cryptography & Blocks',
+      3: 'Coins & Wallets',
+      4: 'How Consensus Works',
+      5: 'Smart Contracts & Web3'
+    };
+    const lessonXP = {1:100,2:120,3:140,4:160,5:200};
+    const activities = [];
 
-  // Lesson completions
-  const completedLessons = JSON.parse(localStorage.getItem('li_completed_lessons') || '[]');
-  completedLessons.forEach(id => {
-    activities.push({ dot: '✅', dotClass: 'green', title: 'Completed: ' + (lessonTitles[id] || 'Lesson ' + id), time: 'Lesson · +' + (lessonXP[id] || 100) + ' XP', val: '+' + (lessonXP[id] || 100) + ' XP', valColor: 'var(--green)' });
-    activities.push({ dot: '🎯', dotClass: 'gold', title: 'Quiz: ' + (lessonTitles[id] || 'Lesson ' + id), time: 'Quiz completed', val: '+XP', valColor: 'var(--gold)' });
-  });
-
-  // Allowance transfers from notifications
-  const notifs = JSON.parse(localStorage.getItem('li_notifications') || '[]');
-  notifs.filter(n => n.icon === '💸').forEach(n => {
-    activities.push({ dot: '💸', dotClass: 'green', title: n.title, time: n.time || 'Recently', val: '', valColor: 'var(--green)' });
-  });
-
-  // Stock purchases (if total_shares > 0)
-  const totalShares = parseInt(localStorage.getItem('li_total_shares') || '0');
-  if (totalShares > 0) {
-    activities.push({ dot: '📈', dotClass: 'green', title: 'Bought stocks in simulator', time: totalShares + ' share' + (totalShares !== 1 ? 's' : '') + ' owned', val: totalShares + ' shares', valColor: 'var(--navy)' });
-  }
-
-  if (activities.length === 0) {
-    list.innerHTML = '<div style="padding:16px 20px;text-align:center;color:var(--gray);font-size:14px">No activity yet — your child hasn\'t started learning! 📚</div>';
-  } else {
-    list.innerHTML = '';
-    activities.slice(-6).reverse().forEach(a => {
-      const item = document.createElement('div');
-      item.className = 'activity-item';
-      item.innerHTML = `<div class="activity-dot ${a.dotClass}">${a.dot}</div><div class="activity-info"><div class="activity-title">${a.title}</div><div class="activity-time">${a.time}</div></div><div class="activity-val" style="color:${a.valColor}">${a.val}</div>`;
-      list.appendChild(item);
+    // Lesson completions
+    const completedLessons = JSON.parse(localStorage.getItem('li_completed_lessons') || '[]');
+    completedLessons.forEach(id => {
+      activities.push({ dot: '✅', dotClass: 'green', title: 'Completed: ' + (lessonTitles[id] || 'Lesson ' + id), time: 'Lesson · +' + (lessonXP[id] || 100) + ' XP', val: '+' + (lessonXP[id] || 100) + ' XP', valColor: 'var(--green)' });
+      activities.push({ dot: '🎯', dotClass: 'gold', title: 'Quiz: ' + (lessonTitles[id] || 'Lesson ' + id), time: 'Quiz completed', val: '+XP', valColor: 'var(--gold)' });
     });
+
+    // Allowance transfers from notifications
+    const notifs = JSON.parse(localStorage.getItem('li_notifications') || '[]');
+    notifs.filter(n => n.icon === '💸').forEach(n => {
+      activities.push({ dot: '💸', dotClass: 'green', title: n.title, time: n.time || 'Recently', val: '', valColor: 'var(--green)' });
+    });
+
+    // Stock/token purchases
+    const totalShares = parseInt(localStorage.getItem('li_total_shares') || '0');
+    if (totalShares > 0) {
+      activities.push({ dot: '📈', dotClass: 'green', title: 'Bought tokens in simulator', time: totalShares + ' token' + (totalShares !== 1 ? 's' : '') + ' owned', val: totalShares + ' tokens', valColor: 'var(--navy)' });
+    }
+
+    if (activities.length === 0) {
+      list.innerHTML = '<div style="padding:16px 20px;text-align:center;color:var(--gray);font-size:14px">No activity yet — your child hasn\'t started learning! 📚</div>';
+    } else {
+      list.innerHTML = '';
+      activities.slice(-6).reverse().forEach(a => {
+        const item = document.createElement('div');
+        item.className = 'activity-item';
+        item.innerHTML = `<div class="activity-dot ${a.dotClass}">${a.dot}</div><div class="activity-info"><div class="activity-title">${a.title}</div><div class="activity-time">${a.time}</div></div><div class="activity-val" style="color:${a.valColor}">${a.val}</div>`;
+        list.appendChild(item);
+      });
+    }
+    // Load wallet state
+    refreshWalletState();
   }
 });
+
+// ===== WALLET AND VAULT LOGIC =====
+async function refreshWalletState() {
+  const address = StellarHelper.getSavedAddress();
+  if (address) {
+    document.getElementById('connectWalletBtn').style.display = 'none';
+    if (document.getElementById('createLocalParentBtn')) {
+      document.getElementById('createLocalParentBtn').style.display = 'none';
+    }
+    document.getElementById('walletDetails').style.display = 'block';
+    document.getElementById('walletAddressDisplay').textContent = address.slice(0,6) + '...' + address.slice(-4);
+    
+    // Show vault control section
+    document.getElementById('vaultControlSection').style.display = 'flex';
+
+    // Fetch balance
+    const parentData = await StellarHelper.getParentBalance(address);
+    if (parentData.success) {
+      document.getElementById('walletBalanceDisplay').textContent = parseFloat(parentData.balance).toFixed(2) + ' XLM';
+    }
+
+    // Refresh child details if exist
+    const childAddress = localStorage.getItem('li_child_stellar_address');
+    if (childAddress) {
+      document.getElementById('noChildAccount').style.display = 'none';
+      document.getElementById('childAccountDisplay').style.display = 'flex';
+      document.getElementById('childPubkeyDisplay').textContent = childAddress.slice(0,6) + '...' + childAddress.slice(-4);
+      
+      const childData = await StellarHelper.getParentBalance(childAddress);
+      if (childData.success) {
+        document.getElementById('childBalanceDisplay').textContent = parseFloat(childData.balance).toFixed(2) + ' XLM';
+        // Sync local storage display
+        const localCoins = localStorage.getItem('li_coins') || '800';
+        document.getElementById('parentBalance').textContent = '🪙 ' + parseFloat(localCoins).toFixed(0);
+      }
+    } else {
+      document.getElementById('noChildAccount').style.display = 'flex';
+      document.getElementById('childAccountDisplay').style.display = 'none';
+    }
+
+    // Refresh contract details if exist
+    const contractId = localStorage.getItem('li_contract_id');
+    if (contractId) {
+      document.getElementById('deployVaultContainer').style.display = 'none';
+      document.getElementById('contractDisplay').style.display = 'flex';
+      document.getElementById('vaultSettingsContainer').style.display = 'flex';
+      
+      const link = document.getElementById('contractLink');
+      link.textContent = contractId.slice(0,6) + '...' + contractId.slice(-4);
+      link.href = `https://stellar.expert/explorer/testnet/contract/${contractId}`;
+      
+      // Load details from the contract
+      const details = await StellarHelper.getVaultDetails(contractId);
+      if (details.success && details.details) {
+        try {
+          const parts = details.details.replace(/[()\[\]"]/g, '').split(',');
+          if (parts.length >= 5) {
+            const savedPoolVal = parts[4].trim();
+            document.getElementById('vaultDailyLimitDisplay').textContent = parts[2].trim() + ' XLM';
+            document.getElementById('vaultSpentDisplay').textContent = parts[3].trim() + ' XLM';
+            document.getElementById('vaultSavedDisplay').textContent = savedPoolVal + ' XLM';
+            
+            // Sync top header child balance display to the vault's saved_pool
+            document.getElementById('parentBalance').textContent = '🪙 ' + parseFloat(savedPoolVal).toFixed(0);
+            localStorage.setItem('li_coins', parseFloat(savedPoolVal).toFixed(0));
+          }
+        } catch(e) {
+          console.error("Failed to parse vault details:", e);
+        }
+      }
+    } else {
+      document.getElementById('deployVaultContainer').style.display = 'block';
+      document.getElementById('contractDisplay').style.display = 'none';
+      document.getElementById('vaultSettingsContainer').style.display = 'none';
+    }
+
+  } else {
+    document.getElementById('connectWalletBtn').style.display = 'block';
+    if (document.getElementById('createLocalParentBtn')) {
+      document.getElementById('createLocalParentBtn').style.display = 'block';
+    }
+    document.getElementById('walletDetails').style.display = 'none';
+    document.getElementById('vaultControlSection').style.display = 'none';
+  }
+}
+
+async function handleWalletConnect() {
+  try {
+    const key = await StellarHelper.connectWallet();
+    showToast('Freighter connected successfully! 🔌');
+    refreshWalletState();
+  } catch(e) {
+    showToast(e.message);
+  }
+}
+
+async function handleCreateLocalParent() {
+  showToast('Generating local parent account... 🔑');
+  try {
+    const res = await fetch('/api/stellar/child/create', { method: 'POST' });
+    const data = await res.json();
+    if (data.success) {
+      localStorage.setItem('li_parent_stellar_address', data.publicKey);
+      localStorage.setItem('li_parent_stellar_secret', data.secret);
+      showToast('Local parent account created & funded! 🪙');
+      refreshWalletState();
+    } else {
+      showToast('Failed to create parent account.');
+    }
+  } catch(e) {
+    showToast('Error: ' + e.message);
+  }
+}
+
+function handleWalletDisconnect() {
+  StellarHelper.disconnectWallet();
+  showToast('Wallet disconnected.');
+  refreshWalletState();
+}
+
+async function handleFaucetClaim() {
+  const address = StellarHelper.getSavedAddress();
+  if (!address) return;
+  showToast('Requesting faucet funds... 🪙');
+  const res = await StellarHelper.fundAccount(address);
+  if (res.success) {
+    showToast(res.message);
+    refreshWalletState();
+  } else {
+    showToast('Failed to claim testnet XLM.');
+  }
+}
+
+async function handleCreateChild() {
+  showToast('Creating child profile on-chain... 👦');
+  const res = await StellarHelper.createChildProfile();
+  if (res.success) {
+    showToast('Child profile created and funded on Testnet! 🪙');
+    refreshWalletState();
+  } else {
+    showToast('Failed to create child profile.');
+  }
+}
+
+async function handleDeployVault() {
+  showToast('Deploying Soroban vault wasm... 🚀');
+  const res = await StellarHelper.deployVault();
+  if (res.success) {
+    showToast('Vault deployed! Initializing... ⚙️');
+    const parent = StellarHelper.getSavedAddress();
+    const child = localStorage.getItem('li_child_stellar_address');
+    if (!child) {
+      showToast('Please generate a child account first.');
+      return;
+    }
+    const initRes = await StellarHelper.initializeVault(res.contractId, parent, child, 10);
+    if (initRes.success) {
+      showToast('Smart Vault successfully initialized on Testnet! 🎉');
+      logOnchainActivity('Deployed & Initialized Vault', res.contractId);
+    } else {
+      showToast('Failed to initialize vault: ' + initRes.error);
+    }
+    refreshWalletState();
+  } else {
+    showToast('Failed to deploy vault WASM.');
+  }
+}
+
+async function handleUpdateLimit() {
+  const limitInput = document.getElementById('newSpendLimitInput');
+  const limit = parseInt(limitInput.value);
+  if (isNaN(limit) || limit <= 0) {
+    showToast('Please enter a valid spending limit.');
+    return;
+  }
+  const contractId = localStorage.getItem('li_contract_id');
+  if (!contractId) return;
+  showToast('Updating daily spend limit on-chain... ⚙️');
+  const res = await StellarHelper.setSpendingLimit(contractId, limit);
+  if (res.success) {
+    showToast(`Daily limit updated to ${limit} XLM! ✅`);
+    limitInput.value = '';
+    logOnchainActivity('Updated daily limit to ' + limit + ' XLM', contractId);
+    refreshWalletState();
+  } else {
+    showToast('Failed to update limit.');
+  }
+}
+
+function logOnchainActivity(note, details) {
+  const notifs = JSON.parse(localStorage.getItem('li_notifications') || '[]');
+  notifs.push({
+    id: 'notif_' + Date.now(),
+    icon: '🔗',
+    title: note,
+    sub: 'Contract: ' + details.slice(0,8) + '...',
+    time: 'Just now'
+  });
+  localStorage.setItem('li_notifications', JSON.stringify(notifs));
+}
+
+let enteredPin = '';
+
+function pinPress(digit) {
+  if (enteredPin.length >= 4) return;
+  enteredPin += digit;
+  updatePinDots();
+  
+  if (enteredPin.length === 4) {
+    const correctPin = localStorage.getItem('li_parent_pin') || '0000';
+    if (enteredPin === correctPin) {
+      document.getElementById('lockEmoji').textContent = '🔓';
+      document.getElementById('pinStatusMsg').innerHTML = '<span style="color:#2AA46A;font-weight:700">Access Granted!</span>';
+      sessionStorage.setItem('li_parent_session', '1');
+      setTimeout(() => {
+        const ov = document.getElementById('passcodeOverlay');
+        if (ov) {
+          ov.style.transition = 'opacity 0.4s ease';
+          ov.style.opacity = '0';
+          setTimeout(() => ov.style.display = 'none', 400);
+        }
+      }, 500);
+    } else {
+      // Shake dots
+      const dotsRow = document.getElementById('pinDotsRow');
+      dotsRow.classList.add('pin-shake');
+      document.querySelectorAll('.pin-dot').forEach(dot => dot.classList.add('error'));
+      document.getElementById('pinStatusMsg').innerHTML = '<span style="color:#ef4444;font-weight:700">Incorrect PIN! Try again.</span>';
+      
+      setTimeout(() => {
+        dotsRow.classList.remove('pin-shake');
+        enteredPin = '';
+        updatePinDots();
+      }, 1000);
+    }
+  }
+}
+
+function pinClear() {
+  enteredPin = '';
+  updatePinDots();
+}
+
+function pinDelete() {
+  if (enteredPin.length > 0) {
+    enteredPin = enteredPin.slice(0, -1);
+    updatePinDots();
+  }
+}
+
+function updatePinDots() {
+  const msg = document.getElementById('pinStatusMsg');
+  if (enteredPin.length === 0 && (!msg.textContent || msg.textContent.includes('Incorrect'))) {
+    msg.innerHTML = 'Enter your 4-digit PIN to<br>access the Family Dashboard';
+  }
+  
+  for (let i = 0; i < 4; i++) {
+    const dot = document.getElementById('dot' + i);
+    if (dot) {
+      dot.className = 'pin-dot';
+      if (i < enteredPin.length) {
+        dot.classList.add('filled');
+      }
+    }
+  }
+}
+
+function showChangePinModal() {
+  const modal = document.getElementById('changePinModal');
+  if (modal) modal.style.display = 'flex';
+}
+
+function saveNewPin() {
+  const input = document.getElementById('newPinInput');
+  const val = input.value.trim();
+  if (val.length !== 4) {
+    showToast('PIN must be exactly 4 digits! 🔐');
+    return;
+  }
+  localStorage.setItem('li_parent_pin', val);
+  showToast('PIN updated successfully! 🔐');
+  input.value = '';
+  document.getElementById('changePinModal').style.display = 'none';
+}
 </script>
 </body>
 </html>

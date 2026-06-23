@@ -39,13 +39,13 @@ function launchConfetti() {
 
 // ===== ACHIEVEMENTS =====
 const ACHIEVEMENTS = {
-  first_lesson: { icon: '📚', title: 'First Step!', desc: 'Completed your first lesson' },
-  first_quiz: { icon: '🎯', title: 'Quiz Ace!', desc: 'Completed your first quiz' },
-  first_stock: { icon: '📈', title: 'Baby Buffett!', desc: 'Bought your first stock' },
+  first_lesson: { icon: '📚', title: 'First Step!', desc: 'Completed your first blockchain lesson' },
+  first_quiz: { icon: '🎯', title: 'Quiz Ace!', desc: 'Completed your first blockchain quiz' },
+  first_stock: { icon: '📈', title: 'Baby Satoshi!', desc: 'Bought your first crypto token' },
   perfect_quiz: { icon: '🏆', title: 'Perfect Score!', desc: 'Got all answers right in a quiz' },
-  level_up: { icon: '⭐', title: 'Level Up!', desc: 'Reached a new level' },
-  saver: { icon: '🐷', title: 'Super Saver!', desc: 'Saved 500+ coins' },
-  streak_7: { icon: '🔥', title: 'On Fire!', desc: 'Maintained a 7-day streak' },
+  level_up: { icon: '⭐', title: 'Level Up!', desc: 'Reached a new validator level' },
+  saver: { icon: '🐷', title: 'Super HODLer!', desc: 'HODLed 500+ coins' },
+  streak_7: { icon: '🔥', title: 'On Fire!', desc: 'Maintained a 7-day learning streak' },
 };
 
 function unlockAchievement(id) {
@@ -73,7 +73,13 @@ function showAchievementPopup(a) {
 
 // ===== HEADER =====
 function initHeader() {
-  const coins = LS.get('coins', DEFAULT_COINS);
+  const childAddress = localStorage.getItem('li_child_stellar_address');
+  let coins;
+  if (childAddress) {
+    coins = parseFloat(localStorage.getItem('li_coins') || '0');
+  } else {
+    coins = LS.get('coins', DEFAULT_COINS);
+  }
   const xp = LS.get('xp', 0);
   const level = Math.floor(xp / 200);
   const progressPct = (xp % 200) / 200 * 100;
@@ -110,7 +116,7 @@ function loadNotifications() {
   if (!wrap) return;
   let notifs = LS.get('notifications', []);
   if (notifs.length === 0) {
-    notifs = [{ id: 'notif_welcome', icon: '👋', title: 'Welcome to LittleInvestors!', sub: 'Start a lesson, pass the quiz, then invest your first virtual dollars.', time: 'Just now' }];
+    notifs = [{ id: 'notif_welcome', icon: '👋', title: 'Welcome to LittleInvestors!', sub: 'Start a blockchain lesson, pass the quiz, and collect your first digital coins.', time: 'Just now' }];
     LS.set('notifications', notifs);
   }
   wrap.innerHTML = '';
@@ -144,8 +150,8 @@ function loadTodayLearnCard() {
   const completed = JSON.parse(localStorage.getItem('li_completed_lessons') || '[]');
   const nextLesson = [1,2,3,4,5].find(id => !completed.includes(id));
   if (!nextLesson) return;
-  const icons = {1:'🪙',2:'🐷',3:'🛒',4:'⚡',5:'🌱'};
-  const titles = {1:'What is Money?',2:'Saving Basics',3:'Spending Wisely',4:'Understanding Risk',5:'Investing Basics'};
+  const icons = {1:'🔗',2:'🔒',3:'🪙',4:'⚡',5:'📜'};
+  const titles = {1:'What is a Blockchain?',2:'Cryptography & Blocks',3:'Coins & Wallets',4:'How Consensus Works',5:'Smart Contracts & Web3'};
   wrap.innerHTML = `<a href="/course?lesson=${nextLesson}" style="display:flex;align-items:center;gap:12px;padding:14px 16px;background:linear-gradient(135deg,#0f2027,#2c5364);border-radius:16px;text-decoration:none;margin-bottom:12px;transition:all .2s ease" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
     <div style="width:44px;height:44px;background:linear-gradient(135deg,#2AA46A,#1b7a4e);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">${icons[nextLesson]}</div>
     <div style="flex:1"><div style="font-size:11px;color:#34d399;font-weight:700;text-transform:uppercase;letter-spacing:.5px">Continue Learning</div><div style="font-size:14px;font-weight:600;color:#fff;margin-top:2px">${titles[nextLesson]}</div></div>
@@ -176,10 +182,33 @@ function showGoalModal() {
   if (modal) modal.style.display = 'flex';
 }
 
-function saveGoal() {
+async function saveGoal() {
   const name = document.getElementById('goalName')?.value.trim();
   const amount = parseInt(document.getElementById('goalAmount')?.value);
   if (!name || !amount || amount <= 0) { showToast('Please fill in both fields! 🎯'); return; }
+
+  const contractId = localStorage.getItem('li_contract_id');
+  if (contractId) {
+    showToast('Saving goal target on-chain... ⏳');
+    try {
+      const childSecret = localStorage.getItem('li_child_stellar_secret') || '';
+      const res = await fetch('/api/stellar/vault/save', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contractId, amount, childSecret })
+      });
+      const data = await res.json();
+      if (!data.success) {
+        showToast('❌ On-Chain Vault Error: ' + (data.error || 'Failed to save goal.'));
+        return;
+      }
+      showToast('✅ Savings Goal recorded on-chain!');
+    } catch (err) {
+      showToast('❌ Vault connection failed.');
+      return;
+    }
+  }
+
   LS.set('savings_goal', { name, amount });
   document.getElementById('goalModal').style.display = 'none';
   loadGoalCard();
@@ -193,12 +222,18 @@ function toggleStock(ticker) {
   if (!el) return;
   const isOpen = el.classList.contains('open');
   document.querySelectorAll('.stock-detail').forEach(d => d.classList.remove('open'));
-  if (!isOpen) { el.classList.add('open'); loadShareInfo(ticker); }
-  track('stock_viewed', { ticker });
+  document.querySelectorAll('.stock').forEach(s => s.classList.remove('expanded'));
+  if (!isOpen) {
+    el.classList.add('open');
+    const stockEl = el.previousElementSibling;
+    if (stockEl) stockEl.classList.add('expanded');
+    loadShareInfo(ticker);
+  }
+  track('token_viewed', { ticker });
 }
 
-// ===== LIVE STOCKS =====
-let PRICES = { wmt: 91.20, aapl: 213.45, amzn: 196.80, googl: 183.90, tsla: 247.60, msft: 442.30 };
+// ===== LIVE STOCKS (TOKENS) =====
+let PRICES = { sol: 145.00, eth: 320.00, btc: 650.00, dot: 30.00, ada: 40.00, doge: 12.00 };
 
 async function loadLiveStocks() {
   try {
@@ -289,14 +324,14 @@ function calculatePortfolioValue() {
     totalValue += shares * PRICES[ticker];
   });
   const gainEl = document.getElementById('portfolioGain');
-  if (gainEl) gainEl.textContent = totalValue > 0 ? `📈 Portfolio: $${totalValue.toFixed(2)}` : '📈 Start investing below!';
+  if (gainEl) gainEl.textContent = totalValue > 0 ? `📈 Portfolio: $${totalValue.toFixed(2)}` : '📈 Start trading below!';
   const portSummary = document.getElementById('portSummary');
   const portVal = document.getElementById('portVal');
   const portHoldings = document.getElementById('portHoldings');
   if (totalValue > 0 && portSummary) {
     portSummary.style.display = 'flex';
     if (portVal) portVal.textContent = `$${totalValue.toFixed(2)}`;
-    if (portHoldings) portHoldings.textContent = holdingsCount + ' stock' + (holdingsCount !== 1 ? 's' : '');
+    if (portHoldings) portHoldings.textContent = holdingsCount + ' token' + (holdingsCount !== 1 ? 's' : '');
   }
 }
 
@@ -328,29 +363,69 @@ function loadShareInfo(ticker) {
   const shares = LS.get('shares_' + ticker, 0);
   const el = document.getElementById(ticker + '-shares');
   const vel = document.getElementById(ticker + '-value');
-  if (el) el.textContent = shares + ' share' + (shares !== 1 ? 's' : '');
+  if (el) el.textContent = shares + ' token' + (shares !== 1 ? 's' : '');
   if (vel) vel.textContent = '$' + (shares * PRICES[ticker]).toFixed(2);
 }
 
-function buySell(ticker, action) {
-  const coins = LS.get('coins', DEFAULT_COINS);
-  const price = PRICES[ticker];
+async function buySell(ticker, action) {
+  const childAddress = localStorage.getItem('li_child_stellar_address');
+  let coins;
+  if (childAddress) {
+    coins = parseFloat(localStorage.getItem('li_coins') || '0');
+  } else {
+    coins = LS.get('coins', DEFAULT_COINS);
+  }
+  const price = Math.round(PRICES[ticker]);
   const shares = LS.get('shares_' + ticker, 0);
   const prevShares = LS.get('total_shares', 0);
+  
   if (action === 'buy') {
     if (coins < price) { showToast('Not enough coins! 💸 Complete lessons to earn more.'); return; }
-    LS.set('coins', Math.round((coins - price) * 100) / 100);
+    
+    // Check if on-chain vault is enabled
+    const contractId = localStorage.getItem('li_contract_id');
+    if (contractId) {
+      showToast('Enforcing daily spending limit on-chain... ⏳');
+      try {
+        const childSecret = localStorage.getItem('li_child_stellar_secret') || '';
+        const res = await fetch('/api/stellar/vault/spend', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contractId, amount: price, childSecret })
+        });
+        const data = await res.json();
+        if (!data.success) {
+          showToast('❌ On-Chain Vault Error: ' + (data.error || 'Spending limit exceeded!'));
+          return;
+        }
+        showToast('✅ Transaction approved by Soroban Vault!');
+      } catch (err) {
+        showToast('❌ Vault connection failed.');
+        return;
+      }
+    }
+    
+    if (childAddress) {
+      localStorage.setItem('li_coins', coins - price);
+    } else {
+      LS.set('coins', Math.round((coins - price) * 100) / 100);
+    }
     LS.set('shares_' + ticker, shares + 1);
     LS.set('total_shares', prevShares + 1);
     showToast(`✅ Bought 1 ${ticker.toUpperCase()} for $${price.toFixed(2)}!`);
-    track('stock_purchased', { ticker, price });
+    track('token_purchased', { ticker, price });
     if (prevShares === 0) { unlockAchievement('first_stock'); launchConfetti(); }
   } else {
-    if (shares < 1) { showToast("You don't own any shares to sell! 📉"); return; }
-    LS.set('coins', Math.round((coins + price) * 100) / 100);
+    if (shares < 1) { showToast("You don't own any tokens to sell! 📉"); return; }
+    
+    if (childAddress) {
+      localStorage.setItem('li_coins', coins + price);
+    } else {
+      LS.set('coins', Math.round((coins + price) * 100) / 100);
+    }
     LS.set('shares_' + ticker, shares - 1);
     showToast(`💰 Sold 1 ${ticker.toUpperCase()} for $${price.toFixed(2)}!`);
-    track('stock_sold', { ticker, price });
+    track('token_sold', { ticker, price });
   }
   loadShareInfo(ticker);
   calculatePortfolioValue();
@@ -358,7 +433,7 @@ function buySell(ticker, action) {
   updateMissionCard();
 }
 
-// ===== PREMIUM STOCKS =====
+// ===== PREMIUM TOKENS =====
 function checkPremiumStocksLock() {
   const isUnlocked = LS.get('stocks_unlocked', false);
   const premiumWrap = document.getElementById('premiumStocks');
@@ -387,9 +462,9 @@ function unlockPremiumStocks() {
     setTimeout(() => { premium.style.opacity = '1'; }, 50);
   }
   launchConfetti();
-  showToast('🎉 Unlocked: Tesla, Google & Microsoft!');
+  showToast('🎉 Unlocked: Polkadot, Cardano & Dogecoin!');
   initHeader();
-  track('premium_stocks_unlocked', { cost: 150 });
+  track('premium_tokens_unlocked', { cost: 150 });
 }
 
 // ===== LESSON COMPLETE =====

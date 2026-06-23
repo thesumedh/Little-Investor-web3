@@ -9,6 +9,7 @@
   <link rel="icon" type="image/x-icon" href="/img/penny_logo.png">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <script src="/js/pendo-init.js"></script>
+  <script src="/js/stellar-helper.js"></script>
 </head>
 <body>
 
@@ -39,6 +40,23 @@
       <div style="font-size:13px;color:#166534;margin-top:4px">earned this quiz!</div>
       <div style="font-size:20px;font-weight:700;color:#F9A61B;margin-top:8px" id="resultCoins">+15 🪙</div>
     </div>
+
+    <!-- Web3 On-chain claim block -->
+    <div id="web3ClaimBlock" style="display:none; background:#0f172a; border-radius:20px; padding:20px; margin-bottom:24px; color:#fff; text-align:center;">
+      <div style="font-weight:800; font-size:14px; color:#38bdf8; margin-bottom:8px;">⛓️ Web3 On-Chain Reward Available!</div>
+      <p style="font-size:12px; color:rgba(255,255,255,0.6); line-height:1.4; margin-bottom:14px;">
+        Your parent has initialized your allowance vault! You can claim <span id="rewardXLMAmount" style="color:#ffd700; font-weight:700;">15</span> Testnet XLM directly to your wallet address.
+      </p>
+      <button id="claimRewardBtn" onclick="triggerClaim()" style="width:100%; padding:12px; background:#2AA46A; color:#fff; border:none; border-radius:12px; font-weight:700; font-size:14px; cursor:pointer;">
+        Claim Reward on Stellar Blockchain 🚀
+      </button>
+      <div id="txDetails" style="display:none; margin-top:12px; font-size:11px; text-align:left; background:rgba(255,255,255,0.06); padding:10px; border-radius:8px;">
+        <div style="color:#2aa46a; font-weight:700; margin-bottom:4px;">✅ Transaction Confirmed!</div>
+        <div style="text-overflow:ellipsis; overflow:hidden; white-space:nowrap; font-family:monospace; color:rgba(255,255,255,0.7);">Tx Hash: <span id="txHashSpan"></span></div>
+        <a id="txExplorerLink" href="#" target="_blank" style="color:#38bdf8; text-decoration:underline; display:block; margin-top:4px; font-weight:600;">View on Stellar Explorer 🔍</a>
+      </div>
+    </div>
+
     <a href="/courses" style="display:block;padding:16px;background:linear-gradient(135deg,#2AA46A,#1b7a4e);color:#fff;border-radius:16px;font-weight:700;font-size:16px;text-decoration:none;margin-bottom:12px">← Back to Lessons 📚</a>
     <a href="/home" style="display:block;padding:14px;background:#f1f5f9;color:#1a2332;border-radius:16px;font-weight:600;font-size:15px;text-decoration:none">Go to Dashboard 🏠</a>
   </div>
@@ -134,7 +152,63 @@ function showResult() {
       confetti({particleCount:60,spread:70,origin:{y:0.6},colors:['#2AA46A','#F9A61B']});
     }
   }
+  
+  // Handle Web3 claims
+  const childAddress = localStorage.getItem('li_child_stellar_address');
+  if (childAddress && coins > 0) {
+    document.getElementById('web3ClaimBlock').style.display = 'block';
+    document.getElementById('rewardXLMAmount').textContent = coins;
+    window.earnedCoins = coins;
+  }
+
   try { if(window.pendo) window.pendo.track('quiz_completed', {lessonId, score, total: quizData.length, xp}); } catch(e) {}
+}
+
+async function triggerClaim() {
+  const childAddress = localStorage.getItem('li_child_stellar_address');
+  if (!childAddress) return;
+  const btn = document.getElementById('claimRewardBtn');
+  btn.disabled = true;
+  btn.style.opacity = '0.5';
+  btn.textContent = 'Processing transaction... ⏳';
+  
+  try {
+    const res = await StellarHelper.sendQuizReward(childAddress, window.earnedCoins || 5);
+    if (res.success) {
+      btn.style.display = 'none';
+      document.getElementById('txDetails').style.display = 'block';
+      document.getElementById('txHashSpan').textContent = res.hash;
+      document.getElementById('txExplorerLink').href = `https://stellar.expert/explorer/testnet/tx/${res.hash}`;
+      
+      const coinsToClaim = window.earnedCoins || 5;
+      
+      // Also update contract vault savings pool on-chain if contract is deployed
+      const contractId = localStorage.getItem('li_contract_id');
+      if (contractId) {
+        try {
+          await StellarHelper.vaultSave(contractId, coinsToClaim);
+        } catch (e) {
+          console.error("Failed to update vault contract saved pool:", e);
+        }
+      }
+      
+      // Update balance local storage and play confetti
+      const currentCoins = parseFloat(localStorage.getItem('li_coins') || '800');
+      localStorage.setItem('li_coins', currentCoins + coinsToClaim);
+      
+      if (typeof confetti !== 'undefined') {
+        confetti({particleCount:100,spread:80,origin:{y:0.6}});
+      }
+      showToast('Reward claimed successfully on-chain! 🎉');
+    } else {
+      throw new Error(res.error || 'Failed to submit reward.');
+    }
+  } catch(e) {
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    btn.textContent = 'Claim Reward on Stellar Blockchain 🚀';
+    showToast('Error: ' + e.message);
+  }
 }
 
 function showToast(msg) {

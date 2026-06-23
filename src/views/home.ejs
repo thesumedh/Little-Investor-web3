@@ -9,6 +9,7 @@
   <link rel="icon" type="image/x-icon" href="/img/penny_logo.png">
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <script src="/js/pendo-init.js"></script>
+  <script src="/js/stellar-helper.js"></script>
 </head>
 <body>
 
@@ -35,7 +36,7 @@
 <div id="balance">
   <h1>Your Balance</h1>
   <div class="cylinder">
-    <h3 class="center" style="color:#fff">$<span id="balanceNum">0</span></h3>
+    <h3 class="center" style="color:#fff">🪙 <span id="balanceNum">0</span></h3>
     <div class="balance-sub">
       <div class="portfolio-gain" id="portfolioGain">📈 Loading portfolio...</div>
       <a onclick="showGoalModal()" style="color:rgba(255,255,255,.6);text-decoration:underline;font-size:12px;cursor:pointer">Set Goal</a>
@@ -43,26 +44,60 @@
   </div>
 </div>
 
-<!-- Market Ticker -->
-<div class="market-ticker" id="marketTicker">
-  <div class="ticker-inner" id="tickerInner">
-    <span class="ticker-item"><span class="t-sym">AAPL</span><span class="t-up" id="tk-aapl">+0.50%</span></span>
-    <span class="ticker-item"><span class="t-sym">AMZN</span><span class="t-up" id="tk-amzn">+2.50%</span></span>
-    <span class="ticker-item"><span class="t-sym">WMT</span><span class="t-up" id="tk-wmt">+0.60%</span></span>
-    <span class="ticker-item"><span class="t-sym">TSLA</span><span class="t-dn" id="tk-tsla">-0.80%</span></span>
-    <span class="ticker-item"><span class="t-sym">GOOGL</span><span class="t-up" id="tk-googl">+1.21%</span></span>
-    <span class="ticker-item"><span class="t-sym">MSFT</span><span class="t-up" id="tk-msft">+0.84%</span></span>
-    <!-- duplicate for seamless loop -->
-    <span class="ticker-item"><span class="t-sym">AAPL</span><span class="t-up" id="tk-aapl2">+0.50%</span></span>
-    <span class="ticker-item"><span class="t-sym">AMZN</span><span class="t-up" id="tk-amzn2">+2.50%</span></span>
-    <span class="ticker-item"><span class="t-sym">WMT</span><span class="t-up" id="tk-wmt2">+0.60%</span></span>
-    <span class="ticker-item"><span class="t-sym">TSLA</span><span class="t-dn" id="tk-tsla2">-0.80%</span></span>
-    <span class="ticker-item"><span class="t-sym">GOOGL</span><span class="t-up" id="tk-googl2">+1.21%</span></span>
-    <span class="ticker-item"><span class="t-sym">MSFT</span><span class="t-up" id="tk-msft2">+0.84%</span></span>
+<!-- Child On-chain Wallet Info -->
+<div id="childWalletCard" style="margin: 12px 20px; padding: 14px; background: linear-gradient(135deg, #1e3a8a, #0f172a); border: 1.5px solid rgba(56,189,248,0.3); border-radius: 16px; display: none; font-family:'Inter',sans-serif; color:#fff; box-shadow: 0 4px 15px rgba(30,58,138,0.4);">
+  <div style="display:flex; justify-content:space-between; align-items:center;">
+    <span style="font-size:14px; font-weight:800; color:#38bdf8; display:flex; align-items:center; gap:6px;">✨ Magic Savings Vault Connected!</span>
+    <button onclick="toggleBlockchainDetails()" style="background:rgba(255,255,255,0.1); border:none; color:#38bdf8; font-size:11px; padding:4px 8px; border-radius:8px; cursor:pointer; font-weight:700; font-family:'Inter',sans-serif;">
+      Show Details 🔍
+    </button>
+  </div>
+  
+  <div id="blockchainDetailsPanel" style="display:none; margin-top:12px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px; font-size:12px; flex-direction:column; gap:6px;">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <span style="color:rgba(255,255,255,0.6)">On-Chain Address:</span>
+      <span id="childWalletKey" style="font-family:monospace; color:#38bdf8;">GD...</span>
+    </div>
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <span style="color:rgba(255,255,255,0.6)">Soroban Vault Balance:</span>
+      <span id="childWalletXLM" style="color:#ffd700; font-weight:800;">0.00 XLM</span>
+    </div>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
+      <span style="color:rgba(255,255,255,0.6)">Blockchain Network:</span>
+      <a id="childExplorerLink" href="#" target="_blank" style="color:#2aa46a; text-decoration:underline; font-weight:700;">Stellar Testnet Explorer ↗</a>
+    </div>
   </div>
 </div>
 
-<!-- Savings Goal Goal Card -->
+<div id="childWalletUninitialized" style="margin: 12px 20px; padding: 14px; background: rgba(30,41,59,0.5); border: 1.5px dashed rgba(255,255,255,0.15); border-radius: 16px; text-align:center; font-family:'Inter',sans-serif; color:rgba(255,255,255,0.8)">
+  <div style="font-size:14px; font-weight:800; color:#fde68a; display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:4px;">
+    🔒 Smart Vault Locked
+  </div>
+  <div style="font-size:12px; color:rgba(255,255,255,0.6); line-height:1.4;">
+    Ask your parent to activate your pocket savings vault from the parent dashboard so you can unlock on-chain rewards!
+  </div>
+</div>
+
+<!-- Market Ticker -->
+<div class="market-ticker" id="marketTicker">
+  <div class="ticker-inner" id="tickerInner">
+    <span class="ticker-item"><span class="t-sym">SOL</span><span class="t-up" id="tk-sol">+2.26%</span></span>
+    <span class="ticker-item"><span class="t-sym">ETH</span><span class="t-dn" id="tk-eth">-1.48%</span></span>
+    <span class="ticker-item"><span class="t-sym">BTC</span><span class="t-up" id="tk-btc">+1.96%</span></span>
+    <span class="ticker-item"><span class="t-sym">DOT</span><span class="t-up" id="tk-dot">+1.52%</span></span>
+    <span class="ticker-item"><span class="t-sym">ADA</span><span class="t-dn" id="tk-ada">-2.20%</span></span>
+    <span class="ticker-item"><span class="t-sym">DOGE</span><span class="t-up" id="tk-doge">+5.26%</span></span>
+    <!-- duplicate for seamless loop -->
+    <span class="ticker-item"><span class="t-sym">SOL</span><span class="t-up" id="tk-sol2">+2.26%</span></span>
+    <span class="ticker-item"><span class="t-sym">ETH</span><span class="t-dn" id="tk-eth2">-1.48%</span></span>
+    <span class="ticker-item"><span class="t-sym">BTC</span><span class="t-up" id="tk-btc2">+1.96%</span></span>
+    <span class="ticker-item"><span class="t-sym">DOT</span><span class="t-up" id="tk-dot2">+1.52%</span></span>
+    <span class="ticker-item"><span class="t-sym">ADA</span><span class="t-dn" id="tk-ada2">-2.20%</span></span>
+    <span class="ticker-item"><span class="t-sym">DOGE</span><span class="t-up" id="tk-doge2">+5.26%</span></span>
+  </div>
+</div>
+
+<!-- Savings Goal Card -->
 <div id="goalCardWrap"></div>
 
 <!-- Notifications -->
@@ -73,7 +108,7 @@
 
 <div id="stocksTourContainer" style="width:100%">
 <div class="section-header" id="stocksSection">
-  <div class="section-title-sm">📈 Stock Simulator</div>
+  <div class="section-title-sm">📈 Token Simulator</div>
   <a href="/parent" class="parent-btn">👨‍👩‍👧 Parent</a>
 </div>
 
@@ -85,152 +120,155 @@
   </div>
   <div style="text-align:right">
     <div class="port-label">Holdings</div>
-    <div class="port-gain" id="portHoldings">0 stocks</div>
+    <div class="port-gain" id="portHoldings">0 tokens</div>
   </div>
 </div>
 
 <div class="stocks-list">
-  <!-- Walmart -->
-  <div class="stock" onclick="toggleStock('wmt')">
-    <div class="stock-logo"><img src="/img/Walmart.png" alt="WMT"></div>
-    <div class="stock-info"><div class="stock-ticker">WMT</div><div class="stock-name">Walmart Inc.</div></div>
+  <!-- Solana -->
+  <div class="stock" onclick="toggleStock('sol')">
+    <div class="stock-logo" style="background:linear-gradient(135deg, #14F195, #9945FF); display:flex; align-items:center; justify-content:center; border-radius:50%; font-size:18px">☀️</div>
+    <div class="stock-info"><div class="stock-ticker">SOL</div><div class="stock-name">Solana</div></div>
     <!-- Sparkline preview -->
     <svg width="50" height="20" style="margin-left:auto;margin-right:12px;opacity:0.8">
-      <path id="sparkline-path-wmt" d="M0,14 Q12,12 25,8 T50,5" fill="none" stroke="#2AA46A" stroke-width="2" stroke-linecap="round"/>
+      <path id="sparkline-path-sol" d="M0,14 Q12,12 25,8 T50,5" fill="none" stroke="#2AA46A" stroke-width="2" stroke-linecap="round"/>
     </svg>
     <div class="stock-right">
-      <div class="stock-price" id="wmt-display-price">$80.94</div>
-      <div class="stock-change green" id="wmt-display-change">+$0.51 (+0.6%)</div>
+      <div class="stock-price" id="sol-display-price">$145.00</div>
+      <div class="stock-change green" id="sol-display-change">+$3.20 (+2.26%)</div>
     </div>
   </div>
-  <div class="stock-detail" id="detail-wmt">
-    <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="wmt-detail-price">$80.94</span></div>
-    <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="wmt-shares">0 shares</span></div>
-    <div class="stock-detail-row"><span>Holdings value</span><span style="font-weight:600;color:#2AA46A" id="wmt-value">$0.00</span></div>
+  <div class="stock-detail" id="detail-sol">
+    <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="sol-detail-price">$145.00</span></div>
+    <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="sol-shares">0 tokens</span></div>
+    <div class="stock-detail-row"><span>Holdings value</span><span style="font-weight:600;color:#2AA46A" id="sol-value">$0.00</span></div>
     <div class="buy-sell-btns">
-      <button class="btn-buy" onclick="buySell('wmt','buy')">Buy 1 Share</button>
-      <button class="btn-sell" onclick="buySell('wmt','sell')">Sell</button>
+      <button class="btn-buy" onclick="buySell('sol','buy')">Buy 1 Token</button>
+      <button class="btn-sell" onclick="buySell('sol','sell')">Sell</button>
     </div>
   </div>
 
-  <!-- Apple -->
-  <div class="stock" onclick="toggleStock('aapl')">
-    <div class="stock-logo"><img src="/img/Apple.png" alt="AAPL"></div>
-    <div class="stock-info"><div class="stock-ticker">AAPL</div><div class="stock-name">Apple Inc.</div></div>
+  <!-- Ethereum -->
+  <div class="stock" onclick="toggleStock('eth')">
+    <div class="stock-logo" style="background:linear-gradient(135deg, #3C3C3D, #627EEA); display:flex; align-items:center; justify-content:center; border-radius:50%; font-size:18px">💎</div>
+    <div class="stock-info"><div class="stock-ticker">ETH</div><div class="stock-name">Ethereum</div></div>
     <!-- Sparkline preview -->
     <svg width="50" height="20" style="margin-left:auto;margin-right:12px;opacity:0.8">
-      <path id="sparkline-path-aapl" d="M0,16 Q12,10 25,12 T50,4" fill="none" stroke="#2AA46A" stroke-width="2" stroke-linecap="round"/>
+      <path id="sparkline-path-eth" d="M0,16 Q12,10 25,12 T50,4" fill="none" stroke="#2AA46A" stroke-width="2" stroke-linecap="round"/>
     </svg>
     <div class="stock-right">
-      <div class="stock-price" id="aapl-display-price">$226.80</div>
-      <div class="stock-change green" id="aapl-display-change">+$1.13 (+0.5%)</div>
+      <div class="stock-price" id="eth-display-price">$320.00</div>
+      <div class="stock-change red" id="eth-display-change">-$4.80 (-1.48%)</div>
     </div>
   </div>
-  <div class="stock-detail" id="detail-aapl">
-    <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="aapl-detail-price">$226.80</span></div>
-    <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="aapl-shares">0 shares</span></div>
-    <div class="stock-detail-row"><span>Holdings value</span><span style="font-weight:600;color:#2AA46A" id="aapl-value">$0.00</span></div>
+  <div class="stock-detail" id="detail-eth">
+    <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="eth-detail-price">$320.00</span></div>
+    <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="eth-shares">0 tokens</span></div>
+    <div class="stock-detail-row"><span>Holdings value</span><span style="font-weight:600;color:#2AA46A" id="eth-value">$0.00</span></div>
     <div class="buy-sell-btns">
-      <button class="btn-buy" onclick="buySell('aapl','buy')">Buy 1 Share</button>
-      <button class="btn-sell" onclick="buySell('aapl','sell')">Sell</button>
+      <button class="btn-buy" onclick="buySell('eth','buy')">Buy 1 Token</button>
+      <button class="btn-sell" onclick="buySell('eth','sell')">Sell</button>
     </div>
   </div>
 
-  <!-- Amazon -->
-  <div class="stock" onclick="toggleStock('amzn')">
-    <div class="stock-logo"><img src="/img/Amazon.png" alt="AMZN"></div>
-    <div class="stock-info"><div class="stock-ticker">AMZN</div><div class="stock-name">Amazon.com</div></div>
+  <!-- Bitcoin -->
+  <div class="stock" onclick="toggleStock('btc')">
+    <div class="stock-logo" style="background:linear-gradient(135deg, #F7931A, #F3BA2F); display:flex; align-items:center; justify-content:center; border-radius:50%; font-size:18px">🪙</div>
+    <div class="stock-info"><div class="stock-ticker">BTC</div><div class="stock-name">Bitcoin</div></div>
     <!-- Sparkline preview -->
     <svg width="50" height="20" style="margin-left:auto;margin-right:12px;opacity:0.8">
-      <path id="sparkline-path-amzn" d="M0,18 Q12,14 25,10 T50,2" fill="none" stroke="#2AA46A" stroke-width="2" stroke-linecap="round"/>
+      <path id="sparkline-path-btc" d="M0,18 Q12,14 25,10 T50,2" fill="none" stroke="#2AA46A" stroke-width="2" stroke-linecap="round"/>
     </svg>
     <div class="stock-right">
-      <div class="stock-price" id="amzn-display-price">$186.51</div>
-      <div class="stock-change green" id="amzn-display-change">+$4.55 (+2.5%)</div>
+      <div class="stock-price" id="btc-display-price">$650.00</div>
+      <div class="stock-change green" id="btc-display-change">+$12.50 (+1.96%)</div>
     </div>
   </div>
-  <div class="stock-detail" id="detail-amzn">
-    <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="amzn-detail-price">$186.51</span></div>
-    <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="amzn-shares">0 shares</span></div>
-    <div class="stock-detail-row"><span>Holdings value</span><span style="font-weight:600;color:#2AA46A" id="amzn-value">$0.00</span></div>
+  <div class="stock-detail" id="detail-btc">
+    <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="btc-detail-price">$650.00</span></div>
+    <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="btc-shares">0 tokens</span></div>
+    <div class="stock-detail-row"><span>Holdings value</span><span style="font-weight:600;color:#2AA46A" id="btc-value">$0.00</span></div>
     <div class="buy-sell-btns">
-      <button class="btn-buy" onclick="buySell('amzn','buy')">Buy 1 Share</button>
-      <button class="btn-sell" onclick="buySell('amzn','sell')">Sell</button>
+      <button class="btn-buy" onclick="buySell('btc','buy')">Buy 1 Token</button>
+      <button class="btn-sell" onclick="buySell('btc','sell')">Sell</button>
     </div>
   </div>
 
-  <!-- Premium Stocks -->
+  <!-- Premium Tokens -->
   <div id="premiumStocks" style="display:none">
-    <div class="stock" onclick="toggleStock('googl')">
-      <div class="stock-logo" style="background:#fff;font-size:22px;font-weight:900;color:#4285F4;justify-content:center">G</div>
-      <div class="stock-info"><div class="stock-ticker">GOOGL</div><div class="stock-name">Alphabet Inc.</div></div>
+    <!-- Polkadot -->
+    <div class="stock" onclick="toggleStock('dot')">
+      <div class="stock-logo" style="background:linear-gradient(135deg, #E6007A, #FF3B80); display:flex; align-items:center; justify-content:center; border-radius:50%; font-size:18px">🔴</div>
+      <div class="stock-info"><div class="stock-ticker">DOT</div><div class="stock-name">Polkadot</div></div>
       <!-- Sparkline preview -->
       <svg width="50" height="20" style="margin-left:auto;margin-right:12px;opacity:0.8">
-        <path id="sparkline-path-googl" d="M0,15 Q12,12 25,8 T50,3" fill="none" stroke="#2AA46A" stroke-width="2" stroke-linecap="round"/>
+        <path id="sparkline-path-dot" d="M0,15 Q12,12 25,8 T50,3" fill="none" stroke="#2AA46A" stroke-width="2" stroke-linecap="round"/>
       </svg>
       <div class="stock-right">
-        <div class="stock-price" id="googl-display-price">$175.40</div>
-        <div class="stock-change green" id="googl-display-change">+$2.10 (+1.2%)</div>
+        <div class="stock-price" id="dot-display-price">$30.00</div>
+        <div class="stock-change green" id="dot-display-change">+$0.45 (+1.52%)</div>
       </div>
     </div>
-    <div class="stock-detail" id="detail-googl">
-      <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="googl-detail-price">$175.40</span></div>
-      <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="googl-shares">0 shares</span></div>
-      <div class="stock-detail-row"><span>Holdings value</span><span style="font-weight:600;color:#2AA46A" id="googl-value">$0.00</span></div>
+    <div class="stock-detail" id="detail-dot">
+      <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="dot-detail-price">$30.00</span></div>
+      <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="dot-shares">0 tokens</span></div>
+      <div class="stock-detail-row"><span>Holdings value</span><span style="font-weight:600;color:#2AA46A" id="dot-value">$0.00</span></div>
       <div class="buy-sell-btns">
-        <button class="btn-buy" onclick="buySell('googl','buy')">Buy 1 Share</button>
-        <button class="btn-sell" onclick="buySell('googl','sell')">Sell</button>
+        <button class="btn-buy" onclick="buySell('dot','buy')">Buy 1 Token</button>
+        <button class="btn-sell" onclick="buySell('dot','sell')">Sell</button>
       </div>
     </div>
 
-    <div class="stock" onclick="toggleStock('tsla')">
-      <div class="stock-logo" style="background:#fff;font-size:22px;font-weight:900;color:#E82127;justify-content:center">T</div>
-      <div class="stock-info"><div class="stock-ticker">TSLA</div><div class="stock-name">Tesla Inc.</div></div>
+    <!-- Cardano -->
+    <div class="stock" onclick="toggleStock('ada')">
+      <div class="stock-logo" style="background:linear-gradient(135deg, #0033AD, #3CC8FF); display:flex; align-items:center; justify-content:center; border-radius:50%; font-size:18px">🌀</div>
+      <div class="stock-info"><div class="stock-ticker">ADA</div><div class="stock-name">Cardano</div></div>
       <!-- Sparkline preview -->
       <svg width="50" height="20" style="margin-left:auto;margin-right:12px;opacity:0.8">
-        <path id="sparkline-path-tsla" d="M0,3 Q12,10 25,12 T50,17" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round"/>
+        <path id="sparkline-path-ada" d="M0,3 Q12,10 25,12 T50,17" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round"/>
       </svg>
       <div class="stock-right">
-        <div class="stock-price" id="tsla-display-price">$180.20</div>
-        <div class="stock-change red" id="tsla-display-change">-$1.45 (-0.8%)</div>
+        <div class="stock-price" id="ada-display-price">$40.00</div>
+        <div class="stock-change red" id="ada-display-change">-$0.90 (-2.20%)</div>
       </div>
     </div>
-    <div class="stock-detail" id="detail-tsla">
-      <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="tsla-detail-price">$180.20</span></div>
-      <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="tsla-shares">0 shares</span></div>
-      <div class="stock-detail-row"><span>Holdings value</span><span style="font-weight:600;color:#2AA46A" id="tsla-value">$0.00</span></div>
+    <div class="stock-detail" id="detail-ada">
+      <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="ada-detail-price">$40.00</span></div>
+      <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="ada-shares">0 tokens</span></div>
+      <div class="stock-detail-row"><span>Holdings value</span><span style="font-weight:600;color:#2AA46A" id="ada-value">$0.00</span></div>
       <div class="buy-sell-btns">
-        <button class="btn-buy" onclick="buySell('tsla','buy')">Buy 1 Share</button>
-        <button class="btn-sell" onclick="buySell('tsla','sell')">Sell</button>
+        <button class="btn-buy" onclick="buySell('ada','buy')">Buy 1 Token</button>
+        <button class="btn-sell" onclick="buySell('ada','sell')">Sell</button>
       </div>
     </div>
 
-    <div class="stock" onclick="toggleStock('msft')">
-      <div class="stock-logo" style="background:#fff;font-size:22px;font-weight:900;color:#00A4EF;justify-content:center">M</div>
-      <div class="stock-info"><div class="stock-ticker">MSFT</div><div class="stock-name">Microsoft Corp.</div></div>
+    <!-- Dogecoin -->
+    <div class="stock" onclick="toggleStock('doge')">
+      <div class="stock-logo" style="background:linear-gradient(135deg, #C2A633, #E1B300); display:flex; align-items:center; justify-content:center; border-radius:50%; font-size:18px">🐕</div>
+      <div class="stock-info"><div class="stock-ticker">DOGE</div><div class="stock-name">Dogecoin</div></div>
       <!-- Sparkline preview -->
       <svg width="50" height="20" style="margin-left:auto;margin-right:12px;opacity:0.8">
-        <path id="sparkline-path-msft" d="M0,16 Q12,10 25,14 T50,6" fill="none" stroke="#2AA46A" stroke-width="2" stroke-linecap="round"/>
+        <path id="sparkline-path-doge" d="M0,16 Q12,10 25,14 T50,6" fill="none" stroke="#2AA46A" stroke-width="2" stroke-linecap="round"/>
       </svg>
       <div class="stock-right">
-        <div class="stock-price" id="msft-display-price">$420.10</div>
-        <div class="stock-change green" id="msft-display-change">+$3.50 (+0.8%)</div>
+        <div class="stock-price" id="doge-display-price">$12.00</div>
+        <div class="stock-change green" id="doge-display-change">+$0.60 (+5.26%)</div>
       </div>
     </div>
-    <div class="stock-detail" id="detail-msft">
-      <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="msft-detail-price">$420.10</span></div>
-      <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="msft-shares">0 shares</span></div>
-      <div class="stock-detail-row"><span>Holdings value</span><span style="font-weight:600;color:#2AA46A" id="msft-value">$0.00</span></div>
+    <div class="stock-detail" id="detail-doge">
+      <div class="stock-detail-row"><span>Price</span><span style="font-weight:600" id="doge-detail-price">$12.00</span></div>
+      <div class="stock-detail-row"><span>You own</span><span style="font-weight:600" id="doge-shares">0 tokens</span></div>
+      <div class="stock-detail-row"><span>Holdings value</span><span style="font-weight:600;color:#2AA46A" id="doge-value">$0.00</span></div>
       <div class="buy-sell-btns">
-        <button class="btn-buy" onclick="buySell('msft','buy')">Buy 1 Share</button>
-        <button class="btn-sell" onclick="buySell('msft','sell')">Sell</button>
+        <button class="btn-buy" onclick="buySell('doge','buy')">Buy 1 Token</button>
+        <button class="btn-sell" onclick="buySell('doge','sell')">Sell</button>
       </div>
     </div>
   </div>
 
   <div class="lock-card" id="lockCard" onclick="unlockPremiumStocks()" style="cursor:pointer">
     <div style="font-size:22px">🔒</div>
-    <div class="lock-text">Unlock Google, Tesla, Microsoft!</div>
+    <div class="lock-text">Unlock Polkadot, Cardano, Dogecoin!</div>
     <div class="lock-cost">🪙 150</div>
   </div>
 </div>
@@ -238,7 +276,7 @@
 
 <!-- Live Market News -->
 <div style="padding:0 20px;margin-top:16px;margin-bottom:80px">
-  <div style="font-size:12px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">📰 Market News & Learning Tips</div>
+  <div style="font-size:12px;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">📰 Blockchain News & Learning Tips</div>
   <div id="marketNewsWrap" style="display:flex;flex-direction:column;gap:8px">
     <!-- news will load here -->
   </div>
@@ -272,8 +310,8 @@
     <button onclick="closeTour()" style="position:absolute;top:20px;right:20px;background:none;border:none;font-size:22px;cursor:pointer;color:#64748b;line-height:1">×</button>
     
     <div id="tourStepBadge" style="background:rgba(42,164,106,0.1);color:#2AA46A;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:1px;padding:4px 12px;border-radius:20px;display:inline-block;margin-bottom:16px">Step 1 of 3</div>
-    <h3 id="tourTitle" style="font-size:20px;font-weight:800;color:#1a2332;margin:0 0 10px 0;display:flex;align-items:center;gap:8px">Welcome to LittleInvestors! 🪙</h3>
-    <p id="tourText" style="font-size:14px;color:#64748b;line-height:1.6;margin:0 0 24px 0">Let's take a quick 3-step tour to learn how to manage and invest virtual money as a family.</p>
+    <h3 id="tourTitle" style="font-size:20px;font-weight:800;color:#1a2332;margin:0 0 10px 0;display:flex;align-items:center;gap:8px">Welcome to LittleInvestors! 🔗</h3>
+    <p id="tourText" style="font-size:14px;color:#64748b;line-height:1.6;margin:0 0 24px 0">Let's take a quick 3-step tour to learn how to manage and trade virtual coins as a family.</p>
     
     <div style="display:flex;align-items:center;justify-content:space-between">
       <button onclick="closeTour()" style="background:none;border:none;color:#64748b;font-size:14px;font-weight:600;cursor:pointer">Skip</button>
@@ -311,22 +349,22 @@ let currentTourStep = 1;
 const tourSteps = [
   {
     badge: "Step 1 of 3",
-    title: "Welcome to LittleInvestors! 🪙",
-    text: "This is your family financial dashboard. At the top, you can see your current virtual Coins, level progression, and daily streak. Complete lessons and quizzes to earn more coins!",
+    title: "Welcome to LittleInvestors! 🔗",
+    text: "This is your family blockchain dashboard. At the top, you can see your virtual Coins, validator level, and daily streak. Complete lessons and quizzes to earn more coins!",
     targetId: "header",
     nextText: "Next Step →"
   },
   {
     badge: "Step 2 of 3",
-    title: "Trade Real Stocks 📈",
-    text: "Below, you can see real stock market simulators like Apple, Amazon, and Walmart. Tap any stock to view its dynamic historical trend chart, buy/sell shares, and grow your virtual portfolio!",
+    title: "Trade Crypto Tokens 📈",
+    text: "Below is the Live Token Simulator showing Solana, Ethereum, and Bitcoin. Tap any token to view its dynamic price trend chart, buy/sell coins, and grow your virtual portfolio!",
     targetId: "stocksSection",
     nextText: "Next Step →"
   },
   {
     badge: "Step 3 of 3",
     title: "Ask Penny AI Coach 🤖",
-    text: "Need financial help or explanations? Head over to the Chat tab in the menu below to ask Penny, our Gemini-powered AI money coach. She can simplify any financial concept for you!",
+    text: "Need help understanding blockchain, mining, or wallets? Head over to the Chat tab in the menu below to ask Penny, our Gemini-powered AI blockchain coach. She can simplify any Web3 concept for you!",
     targetId: "chatMenuTab",
     nextText: "Finish Tour 🎉"
   }
@@ -451,10 +489,67 @@ function submitFeedback(rating) {
 
 // Auto-start tour for new visitors
 window.addEventListener('DOMContentLoaded', () => {
+  loadChildWalletDetails();
   if (!localStorage.getItem('li_tour_completed')) {
     setTimeout(startTour, 1200);
   }
 });
+
+async function loadChildWalletDetails() {
+  const childAddress = localStorage.getItem('li_child_stellar_address');
+  if (childAddress) {
+    document.getElementById('childWalletCard').style.display = 'block';
+    document.getElementById('childWalletUninitialized').style.display = 'none';
+    
+    document.getElementById('childWalletKey').textContent = childAddress.slice(0,6) + '...' + childAddress.slice(-4);
+    document.getElementById('childExplorerLink').href = `https://stellar.expert/explorer/testnet/account/${childAddress}`;
+    
+    // Fetch live on-chain balance (only for the technical details dropdown)
+    const res = await StellarHelper.getParentBalance(childAddress);
+    if (res.success) {
+      document.getElementById('childWalletXLM').textContent = parseFloat(res.balance).toFixed(2) + ' XLM';
+    }
+
+    // Set child's visible game balance from the smart contract vault savings pool
+    const contractId = localStorage.getItem('li_contract_id');
+    if (contractId) {
+      const details = await StellarHelper.getVaultDetails(contractId);
+      if (details.success && details.details) {
+        try {
+          const parts = details.details.replace(/[()\[\]"]/g, '').split(',');
+          if (parts.length >= 5) {
+            const savedPoolVal = parseFloat(parts[4].trim());
+            document.getElementById('coinAmount').textContent = savedPoolVal.toFixed(0);
+            document.getElementById('balanceNum').textContent = savedPoolVal.toFixed(0);
+            localStorage.setItem('li_coins', savedPoolVal.toFixed(0));
+            return;
+          }
+        } catch(e) {
+          console.error("Failed to parse vault details:", e);
+        }
+      }
+    }
+
+    // Fallback before vault contract is deployed
+    const localCoins = localStorage.getItem('li_coins') || '800';
+    document.getElementById('coinAmount').textContent = localCoins;
+    document.getElementById('balanceNum').textContent = localCoins;
+  } else {
+    document.getElementById('childWalletCard').style.display = 'none';
+    document.getElementById('childWalletUninitialized').style.display = 'block';
+  }
+}
+function toggleBlockchainDetails() {
+  const panel = document.getElementById('blockchainDetailsPanel');
+  const btn = event.currentTarget;
+  if (panel.style.display === 'none') {
+    panel.style.display = 'flex';
+    btn.textContent = 'Hide Details ✕';
+  } else {
+    panel.style.display = 'none';
+    btn.textContent = 'Show Details 🔍';
+  }
+}
 </script>
 </body>
 </html>

@@ -30,8 +30,8 @@
 </div>
 
 <div class="course-header">
-  <h1>📚 Financial Basics</h1>
-  <p>5 lessons · Master money from scratch</p>
+  <h1>📚 Blockchain Basics</h1>
+  <p>5 lessons · Master cryptocurrency & web3 from scratch</p>
   <div class="progress-ring-wrap">
     <div style="font-size:32px">🎯</div>
     <div class="progress-ring-text">
@@ -48,11 +48,11 @@
 
 <div style="padding:0 20px" id="lessonsContainer">
   <% const lessonList = [
-    {id:1,icon:'🪙',title:'What is Money?',tag:'Start here',tagClass:'',meta:'5 min · Quiz included'},
-    {id:2,icon:'🐷',title:'Saving — Stack Your Coins',tag:'Next Up',tagClass:'next',meta:'5 min · Quiz included'},
-    {id:3,icon:'🛒',title:'Spending Wisely',tag:'Locked',tagClass:'locked',meta:'5 min · Quiz included'},
-    {id:4,icon:'⚡',title:'Understanding Risk',tag:'Locked',tagClass:'locked',meta:'6 min · Quiz included'},
-    {id:5,icon:'🌱',title:'Investing Basics',tag:'Locked',tagClass:'locked',meta:'7 min · Quiz included'}
+    {id:1,icon:'🔗',title:'What is a Blockchain?',tag:'Start here',tagClass:'',meta:'5 min · Quiz included'},
+    {id:2,icon:'🔒',title:'Cryptography & Blocks',tag:'Next Up',tagClass:'next',meta:'5 min · Quiz included'},
+    {id:3,icon:'🪙',title:'Coins & Wallets',tag:'Locked',tagClass:'locked',meta:'5 min · Quiz included'},
+    {id:4,icon:'⚡',title:'How Consensus Works',tag:'Locked',tagClass:'locked',meta:'6 min · Quiz included'},
+    {id:5,icon:'📜',title:'Smart Contracts & Web3',tag:'Locked',tagClass:'locked',meta:'7 min · Quiz included'}
   ]; %>
 
   <% lessonList.forEach(function(l) { %>
@@ -95,7 +95,14 @@
   document.getElementById('xpTotal').textContent = xp + ' XP';
   document.getElementById('courseProgressBar').style.width = (count / 5 * 100) + '%';
 
-  const msgs = ['Start your first lesson! 🚀','1 down, 4 to go! Keep it up 💪','Halfway there — you\'re doing great! ⭐','Almost done — 2 lessons left! 🔥','One more lesson to master it all! 🏆','🎉 All lessons complete! You\'re a money master!'];
+  const msgs = [
+    'Start your first lesson! 🚀',
+    '1 down, 4 to go! Keep it up 💪',
+    'Halfway there — you\'re doing great! ⭐',
+    'Almost done — 2 lessons left! 🔥',
+    'One more lesson to master it all! 🏆',
+    '🎉 All lessons complete! You\'re a blockchain master!'
+  ];
   document.getElementById('completionText').textContent = msgs[count] || msgs[0];
 
   // Update lesson cards

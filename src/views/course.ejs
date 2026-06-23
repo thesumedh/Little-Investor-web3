@@ -53,7 +53,7 @@
 </div>
 
 <div class="key-fact">
-  💡 <strong>Quick Fact:</strong> <% if(lesson.id===1){ %>Money has existed for over 3,000 years — ancient civilizations used shells, beads, and metals as currency!<% } else if(lesson.id===2){ %>People who automate their savings are 3x more likely to reach their financial goals.<% } else if(lesson.id===3){ %>The average American spends $1,500 per year on impulse purchases they later regret.<% } else if(lesson.id===4){ %>Diversified portfolios have historically recovered from every major market crash in history.<% } else { %>Someone who invests $1,000 at age 15 could have over $88,000 by age 65 (at 8% annual return)!<% } %>
+  💡 <strong>Quick Fact:</strong> <% if(lesson.id===1){ %>Satoshi Nakamoto published the Bitcoin whitepaper in 2008, introducing the first ever decentralized blockchain!<% } else if(lesson.id===2){ %>A cryptographic hash function converts any input data into a unique, fixed-size string of letters and numbers instantly.<% } else if(lesson.id===3){ %>Lost private keys mean lost coins — about 20% of all Bitcoin is locked forever in wallets people can't access!<% } else if(lesson.id===4){ %>Bitcoin's consensus mechanism solves the 'Double Spend' problem, ensuring coins cannot be spent twice at the same time.<% } else { %>Nick Szabo first conceived smart contracts in 1994, comparing them to digital vending machines.<% } %>
 </div>
 
 <button class="complete-btn" id="completeBtn" onclick="completeLessonFlow(<%= lesson.id %>, <%= lesson.xp %>, <%= lesson.coins %>)">
@@ -72,7 +72,7 @@
 <div class="up-next-section">
   <h2>🏆 Final Lesson!</h2>
   <div class="up-next-card">
-    <span>Complete this to become a certified money master!</span>
+    <span>Complete this to become a certified blockchain expert!</span>
     <span>🎓</span>
   </div>
 </div>
@@ -140,7 +140,7 @@ function updateBookmarkUI(id) {
 function shareLesson(id) {
   if (navigator.share) {
     navigator.share({
-      title: 'Learn Financial Literacy with LittleInvestors!',
+      title: 'Learn Blockchain with LittleInvestors!',
       text: 'Check out this lesson on LittleInvestors!',
       url: window.location.href
     }).then(() => {
