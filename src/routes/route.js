@@ -4,6 +4,12 @@ const mainController = require('../controller/mainController');
 const chatController = require('../controller/chatController');
 const quizController = require('../controller/quizController');
 const stellarController = require('../controller/stellarController');
+const stellarRelayController = require('../controller/stellarRelayController');
+
+// Health & Metrics
+route.get('/health', stellarRelayController.healthCheck);
+route.get('/api/metrics', stellarRelayController.getMetrics);
+route.post('/api/relayer/relay', stellarRelayController.relayTransaction);
 
 // API routes
 route.post('/api/chat', chatController.handleChat);
