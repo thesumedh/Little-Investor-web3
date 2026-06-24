@@ -185,10 +185,7 @@ const StellarHelper = {
         if (!provider) {
           throw new Error('Freighter wallet extension not found! Please install it from freighter.app 🔐');
         }
-        // Sign transaction using Freighter
         const signedXdr = await provider.signTransaction(data.xdr, { network: 'TESTNET' });
-        
-        // Submit the signed transaction via backend
         const submitRes = await fetch('/api/stellar/transaction/submit', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -200,6 +197,26 @@ const StellarHelper = {
       }
     }
     return data;
+  },
+
+  // ── Gasless relay claim ──────────────────────────────────────────────────
+  // Calls the sponsor relay endpoint — no gas, no wallet extension needed.
+  // Sponsor sends XLM directly to the child wallet on Stellar Testnet.
+  claimRewardGasless: async (childAddress, coins, action) => {
+    try {
+      const res = await fetch('/api/relayer/relay', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          wallet: childAddress,
+          action: action || 'Claim Quiz Reward',
+          amount: coins
+        })
+      });
+      return await res.json();
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
   }
 };
 
