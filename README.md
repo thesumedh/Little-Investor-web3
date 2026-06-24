@@ -1,7 +1,7 @@
 # 🪙 LittleInvestors — Gasless Financial Education & Smart Allowance Vaults on Stellar
 ### ⚫ Black Belt Level 6 | Stellar Mastery Program Buildathon
 
-[![Black Belt Level 6](https://img.shields.io/badge/Level%206-Black%20Belt-black?style=for-the-badge)](https://github.com/thesumedh/Little-Investors)
+[![Black Belt Level 6](https://img.shields.io/badge/Level%206-Black%20Belt-black?style=for-the-badge)](https://github.com/thesumedh/Little-Investor-web3)
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg?style=for-the-badge)](LICENSE)
 [![Stellar Testnet](https://img.shields.io/badge/Stellar-Testnet-purple?style=for-the-badge)](https://stellar.expert/explorer/testnet)
 
@@ -11,7 +11,7 @@ LittleInvestors is a gamified financial education and smart allowance platform t
 
 ## ✅ Submission Checklist (Level 6 — Black Belt)
 
-- ✅ **Public GitHub Repository** — [github.com/thesumedh/Little-Investors](https://github.com/thesumedh/Little-Investors)
+- ✅ **Public GitHub Repository** — [github.com/thesumedh/Little-Investor-web3](https://github.com/thesumedh/Little-Investor-web3)
 - ✅ **Community Contribution** — Tweet by `@thesumedh_` on X
 - ✅ **Live Demo** — [little-investors.up.railway.app](https://little-investors.up.railway.app)
 - ✅ **Architecture Document** — 📄 [ARCHITECTURE.md](./ARCHITECTURE.md)
@@ -20,7 +20,7 @@ LittleInvestors is a gamified financial education and smart allowance platform t
 - ✅ **Black Belt Evidence Pack** — 📦 [docs/BLACK_BELT_EVIDENCE.md](./docs/BLACK_BELT_EVIDENCE.md)
 - ✅ **Demo Day Presentation Prepared** — 🎤 [docs/DEMO_DAY.md](./docs/DEMO_DAY.md)
 - ✅ **Security Checklist Completed** — 🔒 [SECURITY.md](./SECURITY.md)
-- ✅ **30+ Meaningful Commits** — [View commit history](https://github.com/thesumedh/Little-Investors/commits/main)
+- ✅ **30+ Meaningful Commits** — [View commit history](https://github.com/thesumedh/Little-Investor-web3/commits/main)
 - ✅ **30+ Verified Active Wallet Addresses** — See section below
 - ✅ **Live Metrics Dashboard** — `/api/metrics` endpoint
 - ✅ **Monitoring Active** — `/health` endpoint with uptime & tx count
