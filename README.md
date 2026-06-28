@@ -129,6 +129,32 @@ We gathered feedback from parents and young learners during the testnet MVP tria
 
 ---
 
+## 📸 Visual Previews & Screenshots
+
+Here is a visual walkthrough of the LittleInvestors application on desktop and mobile platforms:
+
+### 🏠 Landing Page
+Beautiful, modern entrance highlighting key course days and quick login hooks.
+![Landing Page](./littleinvestors_landing_page/screen.png)
+
+### 📚 Course Catalog
+Visual learning roadmap with modular card components guiding students Day by Day.
+![Course Catalog](./course_catalog_littleinvestors/screen.png)
+
+### 📖 Interactive Lessons Dashboard
+Day 3 Payment sandbox with real Freighter connection, live balance checks, and video deep dives.
+![Interactive Lesson Page](./lesson_1_intro_to_blockchain/screen.png)
+
+### 📊 Student Progress Dashboard
+Detailed breakdown of completed daily tasks, milestone tracking, and mock/live assets list.
+![Student Progress Dashboard](./student_dashboard/screen.png)
+
+### 🎓 Get Certified
+Certification test console and cryptographic certificate minting preview.
+![Get Certified Page](./get_certified_littleinvestors/screen.png)
+
+---
+
 ## 🛠 Local Setup & Running Instructions
 
 ### 1. Prerequisites
