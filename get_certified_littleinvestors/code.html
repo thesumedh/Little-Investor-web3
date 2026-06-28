@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Certification Milestone | LittleInvestors</title>
+<meta name="description" content="Mint your on-chain Stellar certificate after completing the 7-Day LittleInvestors blockchain course."/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500&family=Geist:wght@400;500;600&family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "primary": "#051635", "on-primary": "#ffffff",
+          "primary-container": "#1c2b4b", "on-primary-container": "#8493b8",
+          "secondary": "#006783", "on-secondary": "#ffffff",
+          "secondary-container": "#40ccfd", "on-secondary-container": "#00546c",
+          "secondary-fixed": "#bde9ff", "on-secondary-fixed": "#001f2a",
+          "tertiary": "#20004f", "on-tertiary": "#ffffff",
+          "tertiary-container": "#390082", "on-tertiary-container": "#a67aff",
+          "surface": "#fbf8fc", "on-surface": "#1b1b1e",
+          "surface-variant": "#e4e2e5", "on-surface-variant": "#45464e",
+          "surface-container-low": "#f5f3f6", "surface-container": "#efedf0",
+          "surface-container-high": "#eae7eb", "surface-container-highest": "#e4e2e5",
+          "outline": "#75777f", "outline-variant": "#c5c6cf",
+          "background": "#fbf8fc", "on-background": "#1b1b1e",
+          "error": "#ba1a1a", "on-error": "#ffffff",
+          "inverse-surface": "#303033",
+        },
+        spacing: {
+          "base": "8px", "margin-mobile": "16px", "gutter": "24px",
+          "section-gap": "80px", "container-max": "1280px", "margin-desktop": "40px"
+        },
+        fontFamily: {
+          "body-md": ["Inter", "sans-serif"],
+          "label-md": ["Geist", "sans-serif"],
+          "headline-md": ["Plus Jakarta Sans", "sans-serif"],
+        },
+        fontSize: {
+          "label-sm": ["12px", { lineHeight: "1.2", fontWeight: "600" }],
+          "label-md": ["14px", { lineHeight: "1.4", letterSpacing: "0.02em", fontWeight: "500" }],
+          "body-md": ["16px", { lineHeight: "1.6", fontWeight: "400" }],
+          "body-lg": ["18px", { lineHeight: "1.6", fontWeight: "400" }],
+          "headline-md": ["24px", { lineHeight: "1.4", fontWeight: "600" }],
+          "headline-lg": ["32px", { lineHeight: "1.3", letterSpacing: "-0.01em", fontWeight: "700" }],
+          "headline-xl": ["48px", { lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "700" }],
+        },
+      },
+    },
+  }
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+  .glass-effect { backdrop-filter: blur(12px); background: rgba(255,255,255,0.72); border: 1px solid rgba(255,255,255,0.35); }
+  @keyframes shine { 0% { transform: translateX(-100%) rotate(45deg); } 100% { transform: translateX(200%) rotate(45deg); } }
+  .shimmer::after { content:''; position:absolute; top:-50%; left:-50%; width:200%; height:200%; background:linear-gradient(to right,transparent,rgba(255,255,255,0.28),transparent); transform:rotate(45deg); animation:shine 3s infinite; }
+  @keyframes pulse-glow { 0%,100% { box-shadow: 0 0 20px rgba(64,204,253,0.3); } 50% { box-shadow: 0 0 40px rgba(64,204,253,0.6); } }
+  .glow-pulse { animation: pulse-glow 2s ease-in-out infinite; }
+</style>
+
+<!-- Stellar SDK + our helper (loaded before body scripts) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stellar-sdk/12.3.0/stellar-sdk.min.js"></script>
+<script src="../freighter-api.js"></script>
+<script src="../stellar-helper.js"></script>
+</head>
+
+<body class="bg-background text-on-surface font-body-md">
+
+<!-- ── Nav ─────────────────────────────────────────────────────────────────── -->
+<nav class="sticky top-0 w-full z-50 flex justify-between items-center px-4 md:px-margin-desktop h-16 bg-surface/90 backdrop-blur-md border-b border-outline-variant/30 shadow-sm">
+  <a href="../index.html" class="text-headline-md font-bold text-primary hover:opacity-80 transition-opacity">LittleInvestors</a>
+
+  <div class="hidden md:flex items-center gap-8">
+    <a class="text-on-surface-variant hover:text-primary transition-colors text-label-md" href="../course_catalog_littleinvestors/code.html">Lessons</a>
+    <a class="text-on-surface-variant hover:text-primary transition-colors text-label-md" href="../student_dashboard/code.html">Dashboard</a>
+    <a class="text-primary border-b-2 border-primary pb-0.5 font-bold text-label-md" href="code.html">Certification</a>
+  </div>
+
+  <div class="flex items-center gap-3">
+    <!-- Wallet address pill -->
+    <div onclick="window.connectStellarWallet()" class="hidden sm:flex items-center gap-2 bg-surface-container-low px-4 py-2 rounded-full border border-outline-variant/20 shadow-sm cursor-pointer hover:bg-surface-container transition-colors">
+      <div id="wallet-dot" class="w-2 h-2 rounded-full bg-gray-300 transition-colors"></div>
+      <span id="stellar-address-nav" class="text-label-sm text-on-surface-variant font-mono">No Wallet</span>
+    </div>
+    <!-- Connect / Disconnect button -->
+    <button onclick="window.connectStellarWallet()" id="connect-wallet-btn"
+      class="bg-primary text-on-primary px-4 py-2 rounded-xl text-label-md flex items-center gap-2 hover:opacity-90 active:scale-95 transition-all">
+      <span class="material-symbols-outlined text-[18px]">account_balance_wallet</span>
+      <span class="hidden sm:inline">Connect Wallet</span>
+      <span class="sm:hidden text-xs">Connect</span>
+    </button>
+    <div class="md:hidden">
+      <span onclick="toggleMobileMenu()" class="material-symbols-outlined text-primary cursor-pointer text-2xl">menu</span>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Navigation Drawer -->
+<div id="mobile-menu" class="hidden md:hidden fixed inset-x-0 top-16 bg-surface/95 backdrop-blur-md border-b border-outline-variant/30 z-40 p-6 flex flex-col gap-4 shadow-lg">
+  <a class="text-primary font-bold text-label-md" href="../course_catalog_littleinvestors/code.html">Lessons</a>
+  <a class="text-primary font-bold text-label-md" href="../student_dashboard/code.html">Dashboard</a>
+  <a class="text-primary font-bold text-label-md" href="code.html">Certification</a>
+</div>
+
+<!-- Freighter install banner (hidden if Freighter is detected) -->
+<div id="freighter-install-banner" style="display:none"
+  class="bg-amber-50 border-b border-amber-200 px-10 py-3 flex items-center justify-between gap-4">
+  <div class="flex items-center gap-3 text-amber-800 text-label-md">
+    <span class="material-symbols-outlined text-amber-600">extension</span>
+    <span>Install <strong>Freighter Wallet</strong> for the full Stellar experience</span>
+  </div>
+  <a href="https://www.freighter.app/" target="_blank" rel="noopener"
+    class="bg-amber-600 text-white px-4 py-1.5 rounded-lg text-label-sm hover:bg-amber-700 transition-colors whitespace-nowrap">
+    Install Freighter
+  </a>
+</div>
+
+<!-- ── Main ─────────────────────────────────────────────────────────────────── -->
+<main class="max-w-7xl mx-auto px-6 md:px-10 pt-12 pb-20">
+
+  <!-- Hero -->
+  <div class="text-center mb-16 space-y-4">
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-secondary-container/20 text-secondary border border-secondary/20 rounded-full">
+      <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'FILL' 1">stars</span>
+      <span class="text-label-sm uppercase tracking-wider">Milestone Reached</span>
+    </div>
+    <h1 class="text-headline-xl font-bold text-primary">Congratulations! You are a Stellar Expert.</h1>
+    <p class="text-body-lg text-on-surface-variant max-w-2xl mx-auto">Your education is now verifiable forever on the Stellar blockchain. Your credential is permanent and publicly verifiable.</p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+    <!-- ── Left: Certificate Preview ─────────────────────────────────────── -->
+    <div class="lg:col-span-7 space-y-6">
+      <div class="relative group">
+        <!-- Glow -->
+        <div class="absolute -inset-1 bg-gradient-to-r from-amber-200 via-secondary to-purple-400 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-700"></div>
+
+        <!-- Certificate Card -->
+        <div class="relative glass-effect rounded-2xl p-8 md:p-12 shadow-2xl overflow-hidden min-h-[480px] flex flex-col justify-between">
+          <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-secondary/5 rounded-full blur-3xl"></div>
+          <div class="absolute bottom-0 left-0 -ml-16 -mb-16 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
+
+          <div class="flex justify-between items-start relative z-10">
+            <div>
+              <p class="text-label-md text-on-surface-variant uppercase tracking-[0.2em]">Official Certification</p>
+              <div class="mt-2 w-16 h-1 bg-gradient-to-r from-amber-400 to-secondary rounded-full"></div>
+            </div>
+            <span class="material-symbols-outlined text-4xl text-amber-500" style="font-variation-settings:'FILL' 1">verified</span>
+          </div>
+
+          <div class="text-center py-10 relative z-10">
+            <h2 class="text-headline-lg font-bold text-primary mb-2 italic">Verifiable Certificate</h2>
+            <p class="text-body-md text-on-surface-variant">This acknowledges that</p>
+            <p id="cert-wallet-address" class="text-headline-md font-bold text-primary mt-2 font-mono tracking-wide">
+              Connect Wallet
+            </p>
+            <p class="text-body-md text-on-surface-variant mt-4">has successfully completed the</p>
+            <p class="text-headline-md font-bold text-secondary mt-1">7-Day Stellar Developer Journey</p>
+
+            <!-- On-chain badge (appears after minting) -->
+            <div id="cert-onchain-badge" class="hidden mt-6 inline-flex items-center gap-2 px-4 py-2 bg-emerald-100 text-emerald-800 border border-emerald-300 rounded-full text-label-sm">
+              <span class="material-symbols-outlined text-[16px]" style="font-variation-settings:'FILL' 1">verified</span>
+              On-chain Verified
+            </div>
+          </div>
+
+          <div class="flex flex-col md:flex-row justify-between items-end border-t border-outline-variant/30 pt-6 gap-4 relative z-10">
+            <div class="space-y-1">
+              <p class="text-label-sm text-on-surface-variant uppercase tracking-widest">Date of Issue</p>
+              <p id="cert-issue-date" class="text-body-md font-bold text-primary">—</p>
+            </div>
+            <div class="flex items-center gap-4">
+              <div class="text-right">
+                <p class="text-label-sm text-on-surface-variant uppercase tracking-widest">Network</p>
+                <p class="text-body-md font-bold text-primary">Stellar Testnet</p>
+              </div>
+              <div class="w-16 h-16 bg-white p-1.5 rounded-lg shadow-sm border border-outline-variant/20 flex items-center justify-center">
+                <span class="material-symbols-outlined text-primary text-3xl" style="font-variation-settings:'FILL' 1">qr_code_2</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- View on Stellar Expert link (appears after minting) -->
+      <div id="explorer-link-wrapper" class="hidden flex justify-center">
+        <a id="explorer-link" href="#" target="_blank" rel="noopener"
+          class="inline-flex items-center gap-2 text-secondary font-semibold hover:gap-3 transition-all text-label-md">
+          <span class="material-symbols-outlined text-[18px]">open_in_new</span>
+          View Transaction on Stellar Expert
+        </a>
+      </div>
+    </div>
+
+    <!-- ── Right: Mint Actions ─────────────────────────────────────────── -->
+    <div class="lg:col-span-5 flex flex-col gap-6">
+
+      <!-- Badge section -->
+      <div class="bg-surface-container rounded-2xl p-8 shadow-sm border border-outline-variant/10">
+        <p class="text-label-md text-on-surface-variant mb-6 uppercase tracking-wider">New Badge Unlocked</p>
+        <div class="flex items-center gap-6">
+          <div class="relative shrink-0">
+            <div class="absolute inset-0 bg-amber-400 blur-xl opacity-25 animate-pulse rounded-full"></div>
+            <div class="relative w-24 h-24 rounded-full bg-gradient-to-br from-amber-300 via-amber-500 to-amber-700 flex items-center justify-center shadow-lg shimmer border-2 border-white/30 overflow-hidden">
+              <span class="material-symbols-outlined text-white text-5xl" style="font-variation-settings:'FILL' 1">workspace_premium</span>
+            </div>
+          </div>
+          <div>
+            <h3 class="text-headline-md font-bold text-primary">Master of Stellar</h3>
+            <p class="text-body-md text-on-surface-variant mt-1">Earned for completing all 7 core modules.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Minting action card -->
+      <div class="bg-primary text-on-primary rounded-2xl p-8 shadow-xl relative overflow-hidden">
+        <div class="absolute top-0 right-0 opacity-10 pointer-events-none select-none">
+          <span class="material-symbols-outlined text-[120px]" style="font-variation-settings:'FILL' 0;font-weight:100">token</span>
+        </div>
+
+        <div class="relative z-10">
+          <h3 class="text-headline-md font-bold mb-2">Mint Your On-Chain Certificate</h3>
+          <p class="text-on-primary-container text-body-md mb-8 opacity-75">
+            Anchor your achievement to the Stellar Testnet ledger with a real on-chain transaction.
+            <strong>1 XLM</strong> fee is required to record your certificate.
+          </p>
+
+          <!-- Fee breakdown -->
+          <div class="bg-white/10 rounded-xl p-5 mb-6 space-y-3">
+            <div class="flex justify-between items-center">
+              <span class="text-label-md opacity-70">Certification Fee</span>
+              <span class="font-bold text-headline-md">1 XLM</span>
+            </div>
+            <div class="flex justify-between items-center border-t border-white/10 pt-3">
+              <span class="text-label-sm opacity-50 italic">Network fee (sponsored by LittleInvestors)</span>
+              <span class="text-label-sm opacity-50">FREE</span>
+            </div>
+          </div>
+
+          <!-- Wallet check (shown when no wallet) -->
+          <div id="wallet-required-msg" class="mb-4 hidden p-4 bg-red-500/20 border border-red-400/30 rounded-xl text-label-md text-red-100 flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">warning</span>
+            Connect your wallet first to mint the certificate.
+          </div>
+
+          <!-- Mint button -->
+          <button id="mint-btn" onclick="handleMintCertificate()"
+            class="w-full bg-secondary-container text-on-secondary-container hover:bg-secondary-fixed transition-all py-4 px-6 rounded-xl font-bold flex items-center justify-center gap-3 active:scale-[0.98] shadow-lg text-body-md">
+            <span class="material-symbols-outlined">auto_fix_high</span>
+            Confirm Transaction in Freighter
+          </button>
+
+          <!-- Status message -->
+          <div id="status-msg" class="hidden mt-4 text-center">
+            <p id="status-text" class="text-label-md opacity-70"></p>
+          </div>
+
+          <!-- Success state (appears after mint) -->
+          <div id="mint-success" class="hidden mt-6 p-4 bg-emerald-500/20 border border-emerald-400/30 rounded-xl">
+            <div class="flex items-start gap-3">
+              <span class="material-symbols-outlined text-emerald-300 text-[20px]" style="font-variation-settings:'FILL' 1">check_circle</span>
+              <div>
+                <p class="text-label-md font-bold text-emerald-200">Certificate Minted! 🎉</p>
+                <p id="tx-hash-display" class="text-label-sm text-emerald-300 font-mono mt-1 break-all"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Info card -->
+      <div class="flex items-start gap-4 p-4 rounded-xl bg-surface-container border border-outline-variant/20">
+        <span class="material-symbols-outlined text-secondary mt-0.5">info</span>
+        <p class="text-label-md text-on-surface-variant leading-relaxed">
+          This certificate is minted as a real on-chain transaction. The transaction hash provides permanent, public proof of course completion on the Stellar Testnet.
+        </p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- ── Footer ───────────────────────────────────────────────────────────────── -->
+<footer class="w-full py-12 px-10 flex flex-col md:flex-row justify-between items-center gap-6 bg-primary text-on-primary mt-16">
+  <div>
+    <span class="text-headline-md font-bold">LittleInvestors</span>
+    <p class="text-label-sm opacity-60 mt-1">© 2024 LittleInvestors. Built on Stellar.</p>
+  </div>
+  <div class="flex gap-6 flex-wrap justify-center">
+    <a class="text-on-primary/60 hover:text-on-primary transition-colors text-label-sm" href="../course_catalog_littleinvestors/code.html">Lessons</a>
+    <a class="text-on-primary/60 hover:text-on-primary transition-colors text-label-sm" href="../student_dashboard/code.html">Dashboard</a>
+    <a class="text-on-primary/60 hover:text-on-primary transition-colors text-label-sm" href="https://stellar.expert/explorer/testnet" target="_blank" rel="noopener">Stellar Explorer</a>
+  </div>
+</footer>
+
+<!-- ── Page Script ──────────────────────────────────────────────────────────── -->
+<script>
+  // Listen for wallet updates to refresh certificate display and verify certificate
+  document.addEventListener('stellarWalletUpdated', async function(e) {
+    const wallet = e.detail;
+    const dot = document.getElementById('wallet-dot');
+    if (dot) dot.style.background = wallet.publicKey ? '#10b981' : '#9ca3af';
+
+    const certAddr = document.getElementById('cert-wallet-address');
+    if (certAddr) {
+      if (wallet.publicKey) {
+        certAddr.textContent = wallet.publicKey.slice(0, 8) + '...' + wallet.publicKey.slice(-8);
+        certAddr.title = wallet.publicKey;
+      } else {
+        certAddr.textContent = 'Connect Wallet';
+      }
+    }
+
+    const certDate = document.getElementById('cert-issue-date');
+    if (certDate) {
+      certDate.textContent = new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+    }
+
+    if (wallet.publicKey) {
+      try {
+        const res = await fetch('/api/stellar/verify-cert', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ publicKey: wallet.publicKey })
+        });
+        const data = await res.json();
+        if (data.hasCertificate) {
+          // Update UI to success state
+          const btn = document.getElementById('mint-btn');
+          btn.disabled = true;
+          btn.innerHTML = '<span class="material-symbols-outlined" style="font-variation-settings:\'FILL\' 1">check_circle</span> Certificate Minted!';
+          btn.classList.add('bg-emerald-500', 'text-white');
+          btn.classList.remove('bg-secondary-container', 'text-on-secondary-container');
+
+          document.getElementById('cert-onchain-badge').classList.remove('hidden');
+          
+          if (data.explorerUrl) {
+            const explorerWrapper = document.getElementById('explorer-link-wrapper');
+            const explorerLink = document.getElementById('explorer-link');
+            explorerWrapper.classList.remove('hidden');
+            explorerLink.href = data.explorerUrl;
+            explorerLink.textContent = data.verifiedVia === 'contract' 
+              ? 'View Contract on Stellar Expert'
+              : 'View Transaction on Stellar Expert';
+          }
+        }
+      } catch (err) {
+        console.warn('Failed to verify existing certificate', err);
+      }
+    }
+  });
+
+  // Handle mint certificate button
+  async function handleMintCertificate() {
+    const btn = document.getElementById('mint-btn');
+    const statusMsg = document.getElementById('status-msg');
+    const statusText = document.getElementById('status-text');
+    const mintSuccess = document.getElementById('mint-success');
+    const walletMsg = document.getElementById('wallet-required-msg');
+
+    // Check wallet
+    if (!window.stellarWallet.publicKey) {
+      walletMsg.classList.remove('hidden');
+      window.showStellarAlert('Please connect your wallet first.', 'error');
+      await window.connectStellarWallet();
+      return;
+    }
+
+    walletMsg.classList.add('hidden');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="material-symbols-outlined animate-spin">progress_activity</span> Minting Certificate...';
+    statusMsg.classList.remove('hidden');
+    statusText.textContent = 'Building transaction...';
+
+    try {
+      const result = await window.mintCertificate();
+
+      if (result && result.txHash) {
+        // Success!
+        btn.innerHTML = '<span class="material-symbols-outlined" style="font-variation-settings:\'FILL\' 1">check_circle</span> Certificate Minted!';
+        btn.classList.add('bg-emerald-500', 'text-white');
+        btn.classList.remove('bg-secondary-container', 'text-on-secondary-container');
+
+        // Show success panel
+        mintSuccess.classList.remove('hidden');
+        document.getElementById('tx-hash-display').textContent = `TX: ${result.txHash}`;
+
+        // Show explorer link
+        const explorerWrapper = document.getElementById('explorer-link-wrapper');
+        const explorerLink = document.getElementById('explorer-link');
+        explorerWrapper.classList.remove('hidden');
+        explorerLink.href = result.explorerUrl;
+
+        // Show on-chain badge on certificate
+        document.getElementById('cert-onchain-badge').classList.remove('hidden');
+
+        statusMsg.classList.add('hidden');
+
+        // Confetti-like class pulse
+        document.querySelector('.glow-pulse') && document.querySelector('.glow-pulse').classList.add('active');
+
+      } else {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined">auto_fix_high</span> Retry Transaction';
+        statusText.textContent = 'Transaction failed. Please check your balance and try again.';
+      }
+    } catch (err) {
+      console.error(err);
+      btn.disabled = false;
+      btn.innerHTML = '<span class="material-symbols-outlined">auto_fix_high</span> Retry Transaction';
+      statusText.textContent = 'Error: ' + err.message;
+    }
+  }
+
+  function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    menu.classList.toggle('hidden');
+  }
+</script>
+
+</body>
+</html>

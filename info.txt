@@ -1,0 +1,425 @@
+LittleInvestors — Learn Blockchain in 7 Days
+Vision
+LittleInvestors is an interactive blockchain education platform built on Stellar that teaches users blockchain concepts through real on-chain experiences instead of passive reading or videos.
+Most blockchain courses teach theory.
+LittleInvestors teaches by doing.
+Users connect a real Stellar wallet, complete lessons, pass quizzes, perform blockchain interactions, and earn a verifiable on-chain certificate upon course completion.
+The goal is to make blockchain education practical, engaging, and accessible while driving real adoption of the Stellar ecosystem.
+Problem Statement
+Learning blockchain is difficult for beginners.
+Most courses:
+
+
+Focus heavily on theory
+
+Require reading long articles
+
+Do not provide hands-on experience
+
+Never expose learners to real blockchain interactions
+As a result, many users finish courses without ever:
+
+
+Connecting a wallet
+
+Sending a transaction
+
+Understanding digital ownership
+
+Interacting with a smart contract
+There is a gap between learning blockchain and actually using blockchain.
+Solution
+LittleInvestors provides a structured learning journey where users:
+
+
+Learn blockchain concepts through short lessons
+
+Complete quizzes after each lesson
+
+Connect a real Stellar wallet using Freighter
+
+Interact with Stellar Testnet and Mainnet
+
+Earn rewards for learning milestones
+
+Receive a verifiable on-chain certificate after completing the course
+Every learning milestone is tied to a blockchain interaction.
+Why Stellar?
+Stellar is ideal because it provides:
+
+
+Fast transaction finality
+
+Extremely low fees
+
+Excellent developer experience
+
+Freighter wallet integration
+
+Soroban smart contracts
+
+Simple onboarding for new users
+The project demonstrates real usage of:
+
+
+Wallet connections
+
+Account balances
+
+Transactions
+
+Smart contracts
+
+Asset issuance
+
+Mainnet deployment
+Target Users
+Primary Users
+
+
+Students
+
+College learners
+
+Beginners entering Web3
+
+Blockchain enthusiasts
+Secondary Users
+
+
+Coding clubs
+
+Developer communities
+
+Educational organizations
+
+Blockchain workshops
+User Journey
+Step 1
+User visits LittleInvestors.
+Step 2
+User connects Freighter Wallet.
+Step 3
+User begins the 7-Day Blockchain Journey.
+Step 4
+User completes lessons and quizzes.
+Step 5
+User passes the final assessment.
+Step 6
+User submits a 1 XLM payment.
+Step 7
+Soroban smart contract verifies completion.
+Step 8
+Certificate is issued on-chain.
+Step 9
+User receives a verifiable credential linked to their wallet.
+Course Structure
+Day 1
+Introduction to Blockchain
+Topics:
+
+
+What is money
+
+What is blockchain
+
+Why decentralization matters
+Day 2
+Wallets & Digital Ownership
+Topics:
+
+
+Public keys
+
+Private keys
+
+Wallets
+Day 3
+Transactions
+Topics:
+
+
+Sending assets
+
+Transaction hashes
+
+Blockchain explorers
+Day 4
+Consensus
+Topics:
+
+
+How networks agree
+
+Validators
+
+Security
+Day 5
+Stellar Network
+Topics:
+
+
+XLM
+
+Accounts
+
+Assets
+
+Ecosystem
+Day 6
+Smart Contracts
+Topics:
+
+
+Soroban
+
+Contract execution
+
+Real-world use cases
+Day 7
+Final Assessment
+Topics:
+
+
+Comprehensive evaluation
+
+Certification eligibility
+Core Features
+Wallet Integration
+
+
+Freighter Connect
+
+Freighter Disconnect
+
+Wallet Address Display
+
+XLM Balance Display
+Learning System
+
+
+Lessons
+
+Quizzes
+
+Progress Tracking
+
+Streak Tracking
+
+Achievement Badges
+AI Learning Coach
+Powered by Google Gemini.
+Capabilities:
+
+
+Explain blockchain concepts
+
+Answer user questions
+
+Guide beginners
+
+Provide learning assistance
+Certificate System
+After successful completion:
+
+
+User pays 1 XLM
+
+Certificate is issued
+
+Certificate linked to wallet
+
+Certificate becomes publicly verifiable
+Smart Contract Architecture
+Soroban Certificate Contract
+Stores:
+
+
+Wallet Address
+
+Completion Status
+
+Certificate ID
+
+Issue Timestamp
+Functions:
+issue_certificate()
+verify_certificate()
+get_certificate()
+
+Purpose:
+Issue and verify certificates on-chain.
+Blockchain Architecture
+Freighter Wallet
+        ↓
+LittleInvestors Frontend
+        ↓
+Stellar SDK
+        ↓
+Soroban Certificate Contract
+        ↓
+Stellar Mainnet
+
+Technology Stack
+Frontend
+
+
+EJS
+
+HTML
+
+CSS
+
+Vanilla JavaScript
+Backend
+
+
+Node.js
+
+Express.js
+Blockchain
+
+
+Stellar SDK
+
+Soroban
+
+Stellar Mainnet
+
+Stellar Testnet
+Wallet
+
+
+Freighter Wallet
+AI
+
+
+Google Gemini 2.5 Flash
+Mainnet Adoption Strategy
+The project is designed to satisfy real-world adoption requirements.
+Every certificate issuance creates:
+
+
+Real wallet interaction
+
+Real on-chain transaction
+
+Real user onboarding
+
+Real ecosystem participation
+Goal:
+
+
+20+ verified users
+
+20+ certificate issuances
+
+20+ mainnet transactions
+Advanced Feature
+Fee Sponsorship
+The platform sponsors transaction fees for learning interactions.
+Benefits:
+
+
+Easier onboarding
+
+Better user experience
+
+Reduced friction for beginners
+Future Roadmap
+Phase 1
+
+
+Launch course
+
+Issue certificates
+
+Onboard first users
+Phase 2
+
+
+Multiple blockchain courses
+
+Smart Contract Development Track
+
+Stellar Developer Track
+Phase 3
+
+
+Educational reward token
+
+Skill badges
+
+Learning achievements
+Phase 4
+
+
+Community workshops
+
+University partnerships
+
+Ecosystem growth
+Why This Project Matters
+LittleInvestors is not just another blockchain tutorial platform.
+It bridges the gap between learning and using blockchain.
+Users do not simply read about wallets, transactions, and smart contracts—they interact with them directly on Stellar.
+The result is a practical learning experience that creates real blockchain users, real on-chain activity, and real ecosystem adoption.
+
+
+CI/CD Implementation is not present for both Frontend and Smartcontract
+AI assessment
+1. Connect Wallet Feature Check (mandatory)
+The solution uses @stellar/stellar-sdk for wallet interactions. The backend relay handles transaction signing and ephemeral key generation. While Freighter is not directly used, the gasless design intentionally bypasses it; Stellar wallet connection is achieved via SDK-integrated key management.
+2. Smart Contract Folder Structure Check (mandatory)
+Found `contracts/vault/Cargo.toml` and `contracts/vault/src/lib.rs`. Missing `test.rs` and `Makefile` in the judged files, but the core Soroban contract structure is present and valid.
+3. Smart Contract Code Validation (mandatory)
+The contract is `AllowanceVault` with custom functions: initialize, set_limit, save, spend, reset_spent, get_details. It uses instance storage, custom data structures, and business logic for daily limits, savings, and spending. This is not the default Hello World.
+4. README and Deployment Validation (mandatory)
+README includes project title, description, architecture, and deployed contract details (Stellar Testnet, FeeBump sponsorship, transaction links to Stellar Expert). The contract ID is implied through the vault contract mentioned.
+5. Smart Contract Integration Codebase Check (mandatory)
+Integration is implemented in `src/controller/stellarRelayController.js` and `js/stellar-helper.js`; uses @stellar/stellar-sdk for RPC, transaction building, and FeeBump. The relay endpoint sponsors gas via FeeBump, matching the described architecture.
+6. Cross-Check Contract and Frontend Function Matching (mandatory)
+The contract functions (save, spend, get_details) are invoked by the frontend relay flow. The relayer builds transactions targeting these contract methods. Real contract interaction is confirmed via on-chain transaction logs.
+
+
+✅ Submission Checklist (Level 6 — Black Belt)
+✅ Public GitHub Repository — github.com/thesumedh/Little-Investor-web3
+✅ Community Contribution — Tweet by @thesumedh_ on X
+✅ Live Demo — little-investors.up.railway.app
+✅ Architecture Document — 📄 ARCHITECTURE.md
+✅ Technical Documentation & User Guide — 📘 docs/USER_GUIDE.md
+✅ Operations & Monitoring Runbook — 🛠️ docs/MONITORING_RUNBOOK.md
+✅ Black Belt Evidence Pack — 📦 docs/BLACK_BELT_EVIDENCE.md
+✅ Demo Day Presentation Prepared — 🎤 docs/DEMO_DAY.md
+✅ Security Checklist Completed — 🔒 SECURITY.md
+✅ 30+ Meaningful Commits — View commit history
+✅ 30+ Verified Active Wallet Addresses — See section below
+✅ Live Metrics Dashboard — /api/metrics endpoint
+✅ Monitoring Active — /health endpoint with uptime & tx count
+✅ Advanced Feature Implemented — Fee Sponsorship via Relayer + FeeBump
+✅ Data Indexing Implemented — Live indexed endpoint at /api/metrics
+✅ User Feedback Collected — Google Form + iterated UI changes
+
+
+
+
+LittleInvestors is a gamified financial education and smart allowance platform that enables kids to learn about blockchain, complete savings goals, and earn reward coins — completely gaslessly. Through FeeBump transaction sponsorship, children interact with real Stellar Testnet transactions without needing a wallet extension, seed phrase, or any crypto knowledge.
+
+
+Submission Checklist
+Ensure your project meets all requirements before submitting.
+Required:
+Public GitHub repository
+README with complete documentation
+Minimum 10+ meaningful commits
+Live demo link (Vercel, Netlify, or similar)
+Contract deployment address
+Transaction hash for contract interaction
+Screenshot showing:
+Mobile responsive UI
+CI/CD pipeline running
+Test output with 3+ passing tests
+Demo video link (1–2 minutes)
+
+
+

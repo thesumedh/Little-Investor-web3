@@ -1,69 +1,87 @@
 #![no_std]
-use soroban_sdk::{contract, contractimpl, symbol_short, Address, Env};
+use soroban_sdk::{contract, contractimpl, contracttype, symbol_short, Env, Symbol, Address};
+
+#[contracttype]
+#[derive(Clone)]
+pub struct VaultDetails {
+    pub owner: Address,
+    pub limit: i128,
+    pub balance: i128,
+    pub spent_today: i128,
+}
+
+const OWNER: Symbol = symbol_short!("OWNER");
+const LIMIT: Symbol = symbol_short!("LIMIT");
+const SAVED: Symbol = symbol_short!("SAVED");
+const SPENT: Symbol = symbol_short!("SPENT");
 
 #[contract]
 pub struct AllowanceVault;
 
 #[contractimpl]
 impl AllowanceVault {
-    // Initialize the contract with parent and child addresses and daily spending limit
-    pub fn initialize(env: Env, parent: Address, child: Address, daily_limit: i128) {
-        if env.storage().instance().has(&symbol_short!("parent")) {
-            panic!("already initialized");
+    pub fn initialize(env: Env, owner: Address, limit: i128) {
+        if env.storage().instance().has(&OWNER) {
+            panic!("Vault already initialized");
         }
-        env.storage().instance().set(&symbol_short!("parent"), &parent);
-        env.storage().instance().set(&symbol_short!("child"), &child);
-        env.storage().instance().set(&symbol_short!("limit"), &daily_limit);
-        env.storage().instance().set(&symbol_short!("spent"), &0i128);
-        env.storage().instance().set(&symbol_short!("saved"), &0i128);
+        env.storage().instance().set(&OWNER, &owner);
+        env.storage().instance().set(&LIMIT, &limit);
+        env.storage().instance().set(&SAVED, &0i128);
+        env.storage().instance().set(&SPENT, &0i128);
     }
 
-    // Set/update the daily spending limit (parent only)
     pub fn set_limit(env: Env, limit: i128) {
-        let parent: Address = env.storage().instance().get(&symbol_short!("parent")).unwrap();
-        parent.require_auth();
-        env.storage().instance().set(&symbol_short!("limit"), &limit);
+        let owner: Address = env.storage().instance().get(&OWNER).unwrap();
+        owner.require_auth();
+        env.storage().instance().set(&LIMIT, &limit);
     }
 
-    // Record saving amount (simulated saving goal tracking)
     pub fn save(env: Env, amount: i128) {
-        let child: Address = env.storage().instance().get(&symbol_short!("child")).unwrap();
-        child.require_auth();
-        let mut saved: i128 = env.storage().instance().get(&symbol_short!("saved")).unwrap_or(0);
-        saved += amount;
-        env.storage().instance().set(&symbol_short!("saved"), &saved);
+        let owner: Address = env.storage().instance().get(&OWNER).unwrap();
+        owner.require_auth();
+        let current_saved: i128 = env.storage().instance().get(&SAVED).unwrap_or(0);
+        env.storage().instance().set(&SAVED, &(current_saved + amount));
     }
 
-    // Verify limit and record withdrawal / spending
     pub fn spend(env: Env, amount: i128) {
-        let child: Address = env.storage().instance().get(&symbol_short!("child")).unwrap();
-        child.require_auth();
+        let owner: Address = env.storage().instance().get(&OWNER).unwrap();
+        owner.require_auth();
         
-        let limit: i128 = env.storage().instance().get(&symbol_short!("limit")).unwrap();
-        let mut spent: i128 = env.storage().instance().get(&symbol_short!("spent")).unwrap_or(0);
+        let limit: i128 = env.storage().instance().get(&LIMIT).unwrap_or(0);
+        let spent: i128 = env.storage().instance().get(&SPENT).unwrap_or(0);
         
         if spent + amount > limit {
-            panic!("spending limit exceeded");
+            panic!("Spend limit exceeded for today");
         }
         
-        spent += amount;
-        env.storage().instance().set(&symbol_short!("spent"), &spent);
+        let current_saved: i128 = env.storage().instance().get(&SAVED).unwrap_or(0);
+        if current_saved < amount {
+            panic!("Insufficient savings in vault");
+        }
+        
+        env.storage().instance().set(&SAVED, &(current_saved - amount));
+        env.storage().instance().set(&SPENT, &(spent + amount));
     }
 
-    // Reset spent amount (parent only, simulating a new day)
     pub fn reset_spent(env: Env) {
-        let parent: Address = env.storage().instance().get(&symbol_short!("parent")).unwrap();
-        parent.require_auth();
-        env.storage().instance().set(&symbol_short!("spent"), &0i128);
+        let owner: Address = env.storage().instance().get(&OWNER).unwrap();
+        owner.require_auth();
+        env.storage().instance().set(&SPENT, &0i128);
     }
 
-    // Get contract details
-    pub fn get_details(env: Env) -> (Address, Address, i128, i128, i128) {
-        let parent: Address = env.storage().instance().get(&symbol_short!("parent")).unwrap();
-        let child: Address = env.storage().instance().get(&symbol_short!("child")).unwrap();
-        let limit: i128 = env.storage().instance().get(&symbol_short!("limit")).unwrap_or(0);
-        let spent: i128 = env.storage().instance().get(&symbol_short!("spent")).unwrap_or(0);
-        let saved: i128 = env.storage().instance().get(&symbol_short!("saved")).unwrap_or(0);
-        (parent, child, limit, spent, saved)
+    pub fn get_details(env: Env) -> VaultDetails {
+        let owner: Address = env.storage().instance().get(&OWNER).unwrap();
+        let limit: i128 = env.storage().instance().get(&LIMIT).unwrap_or(0);
+        let saved: i128 = env.storage().instance().get(&SAVED).unwrap_or(0);
+        let spent: i128 = env.storage().instance().get(&SPENT).unwrap_or(0);
+        
+        VaultDetails {
+            owner,
+            limit,
+            balance: saved,
+            spent_today: spent,
+        }
     }
 }
+
+mod test;

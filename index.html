@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>LittleInvestors | Learn Stellar Blockchain in 7 Days</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500&family=Geist:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Inter:wght@100..900&family=Plus+Jakarta+Sans:wght@100..900&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-error": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-primary": "#b7c6ee",
+                    "on-secondary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "surface-container-low": "#f5f3f6",
+                    "outline-variant": "#c5c6cf",
+                    "primary-container": "#1c2b4b",
+                    "surface-container-high": "#eae7eb",
+                    "inverse-on-surface": "#f2f0f3",
+                    "on-tertiary-container": "#a67aff",
+                    "secondary-fixed-dim": "#64d3ff",
+                    "primary-fixed": "#d9e2ff",
+                    "primary-fixed-dim": "#b7c6ee",
+                    "tertiary-container": "#390082",
+                    "surface-container-highest": "#e4e2e5",
+                    "surface": "#fbf8fc",
+                    "error-container": "#ffdad6",
+                    "surface-tint": "#4f5e81",
+                    "on-background": "#1b1b1e",
+                    "on-secondary-fixed-variant": "#004d64",
+                    "on-surface": "#1b1b1e",
+                    "on-surface-variant": "#45464e",
+                    "secondary-container": "#40ccfd",
+                    "secondary-fixed": "#bde9ff",
+                    "on-secondary-fixed": "#001f2a",
+                    "secondary": "#006783",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#efedf0",
+                    "on-tertiary-fixed": "#25005a",
+                    "background": "#fbf8fc",
+                    "tertiary": "#20004f",
+                    "on-secondary-container": "#00546c",
+                    "on-tertiary-fixed-variant": "#5a00c6",
+                    "primary": "#051635",
+                    "surface-dim": "#dbd9dc",
+                    "surface-variant": "#e4e2e5",
+                    "error": "#ba1a1a",
+                    "tertiary-fixed": "#eaddff",
+                    "tertiary-fixed-dim": "#d2bbff",
+                    "outline": "#75777f",
+                    "surface-bright": "#fbf8fc",
+                    "inverse-surface": "#303033",
+                    "on-primary-fixed": "#0a1a3a",
+                    "on-primary": "#ffffff",
+                    "on-primary-fixed-variant": "#384668",
+                    "on-primary-container": "#8493b8"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "base": "8px",
+                    "margin-mobile": "16px",
+                    "gutter": "24px",
+                    "section-gap": "80px",
+                    "container-max": "1280px",
+                    "margin-desktop": "40px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Geist"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "label-md": ["Geist"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["28px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                    "headline-xl": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+    <style>
+        body {
+            background-color: #fbf8fc;
+            color: #1b1b1e;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at top right, rgba(64, 204, 253, 0.15), transparent),
+                        radial-gradient(circle at bottom left, rgba(5, 22, 53, 0.05), transparent);
+        }
+        .nav-active { border-bottom: 2px solid #051635; }
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stellar-sdk/12.3.0/stellar-sdk.min.js"></script>
+    <script src="freighter-api.js"></script>
+    <script src="stellar-helper.js"></script>
+</head>
+<body class="font-body-md text-body-md overflow-x-hidden">
+    <!-- TopNavBar -->
+    <header class="sticky top-0 w-full z-50 flex justify-between items-center px-4 md:px-margin-desktop h-16 max-w-container-max mx-auto bg-surface/80 backdrop-blur-md border-b border-outline-variant/30 shadow-sm">
+        <div class="flex items-center gap-base">
+            <a href="index.html" class="text-headline-md font-headline-lg text-primary font-bold hover:opacity-90 transition-opacity">LittleInvestors</a>
+        </div>
+        <nav class="hidden md:flex gap-gutter items-center h-full">
+            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md" href="course_catalog_littleinvestors/code.html">Lessons</a>
+            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md" href="student_dashboard/code.html">Dashboard</a>
+            <a class="text-on-surface-variant hover:text-primary transition-colors text-label-md font-label-md" href="get_certified_littleinvestors/code.html">Certification</a>
+        </nav>
+        <div class="flex items-center gap-4">
+            <button onclick="window.connectStellarWallet()" id="connect-wallet-btn" class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-xl font-label-md text-label-md hover:scale-95 transition-transform duration-150">
+                <span class="material-symbols-outlined text-[18px]">account_balance_wallet</span>
+                <span class="hidden sm:inline">Connect Wallet</span>
+                <span class="sm:hidden text-xs">Connect</span>
+            </button>
+            <div class="md:hidden">
+                <span onclick="toggleMobileMenu()" class="material-symbols-outlined text-primary cursor-pointer text-2xl">menu</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-menu" class="hidden md:hidden fixed inset-x-0 top-16 bg-surface/95 backdrop-blur-md border-b border-outline-variant/30 z-40 p-6 flex flex-col gap-4 shadow-lg">
+        <a class="text-primary font-bold text-label-md" href="course_catalog_littleinvestors/code.html">Lessons</a>
+        <a class="text-primary font-bold text-label-md" href="student_dashboard/code.html">Dashboard</a>
+        <a class="text-primary font-bold text-label-md" href="get_certified_littleinvestors/code.html">Certification</a>
+    </div>
+    <main class="relative">
+        <!-- Hero Section -->
+        <section class="hero-gradient relative pt-24 pb-32 px-margin-mobile md:px-margin-desktop overflow-hidden">
+            <div class="max-w-container-max mx-auto grid grid-cols-1 lg:grid-cols-2 gap-section-gap items-center">
+                <div class="z-10 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-secondary-fixed text-on-secondary-fixed rounded-full text-label-sm font-label-sm mb-6 animate-fade-in">
+                        <span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1 animate-pulse">stars</span>
+                        Built on Stellar
+                    </div>
+                    <h1 class="text-headline-xl font-headline-xl text-primary mb-6 leading-tight">
+                        Learn Blockchain by Doing. <span class="text-secondary">In 7 Days.</span>
+                    </h1>
+                    <p class="text-body-lg font-body-lg text-on-surface-variant mb-10 max-w-xl mx-auto lg:mx-0">
+                        The only course that teaches you Stellar through real on-chain interactions. No passive reading. Just action.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                        <a href="course_catalog_littleinvestors/code.html" class="px-8 py-4 bg-primary text-on-primary rounded-xl font-headline-md text-label-md hover:translate-y-[-2px] shadow-lg transition-all text-center">
+                            Start Your Journey
+                        </a>
+                        <a href="course_catalog_littleinvestors/code.html" class="px-8 py-4 bg-surface text-primary border border-outline-variant/50 rounded-xl font-headline-md text-label-md hover:bg-surface-container-low transition-all text-center">
+                            Explore Curriculum
+                        </a>
+                    </div>
+                </div>
+                <div class="relative flex justify-center items-center">
+                    <div class="absolute inset-0 bg-secondary-container/20 blur-[120px] rounded-full scale-150 animate-pulse"></div>
+                    <a href="lesson_1_intro_to_blockchain/code.html" class="relative z-10 block glass-card p-6 rounded-[32px] shadow-2xl w-full max-w-[500px] hover:scale-102 transition-transform duration-300">
+                        <div class="flex items-center justify-between mb-8">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-on-primary">
+                                    <span class="material-symbols-outlined">rocket_launch</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-headline-md text-label-md text-left">Current Lesson</h4>
+                                    <p class="text-label-sm font-label-sm text-on-surface-variant">Day 1: Intro to Stellar</p>
+                                </div>
+                            </div>
+                            <span class="text-label-sm font-label-sm text-secondary font-bold">14% Complete</span>
+                        </div>
+                        <!-- UI Simulation -->
+                        <div class="space-y-4">
+                            <div class="p-4 bg-surface-container-low rounded-xl flex items-center justify-between border border-outline-variant/30">
+                                <div class="flex items-center gap-3">
+                                    <span class="material-symbols-outlined text-primary">account_balance_wallet</span>
+                                    <span class="text-label-md font-label-md text-left">Create your first Wallet</span>
+                                </div>
+                                <span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1">check_circle</span>
+                            </div>
+                            <div class="p-4 bg-white rounded-xl flex items-center justify-between border-2 border-secondary shadow-sm">
+                                <div class="flex items-center gap-3">
+                                    <span class="material-symbols-outlined text-secondary">toll</span>
+                                    <span class="text-label-md font-label-md text-left">Mint 10 TEST-XLM Tokens</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-2 h-2 bg-secondary rounded-full animate-ping"></div>
+                                    <span class="text-label-sm font-label-sm text-secondary">Active</span>
+                                </div>
+                            </div>
+                            <div class="p-4 bg-surface-container-lowest rounded-xl flex items-center justify-between border border-outline-variant/10 opacity-50">
+                                <div class="flex items-center gap-3">
+                                    <span class="material-symbols-outlined text-on-surface-variant">swap_horiz</span>
+                                    <span class="text-label-md font-label-md text-left">Perform your first SDEX Swap</span>
+                                </div>
+                                <span class="material-symbols-outlined text-on-surface-variant">lock</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Why LittleInvestors Section -->
+        <section class="py-section-gap px-margin-mobile md:px-margin-desktop bg-white">
+            <div class="max-w-container-max mx-auto">
+                <div class="text-center mb-16">
+                    <h2 class="text-headline-lg font-headline-lg text-primary mb-4">Why LittleInvestors?</h2>
+                    <p class="text-body-md font-body-md text-on-surface-variant max-w-2xl mx-auto">
+                        Traditional courses are theory-heavy. We prioritize the "Doing" so you walk away with actual on-chain experience and a portfolio.
+                    </p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+                    <!-- Feature 1 -->
+                    <div class="p-8 rounded-[24px] bg-surface-container-low border border-outline-variant/20 hover:shadow-xl transition-all group">
+                        <div class="w-14 h-14 bg-primary-container text-on-primary-container rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined" style="font-size: 32px">touch_app</span>
+                        </div>
+                        <h3 class="font-headline-md text-headline-md text-primary mb-3">Hands-on Lessons</h3>
+                        <p class="text-label-md font-label-md text-on-surface-variant">Learn by executing commands on the Stellar testnet. Every concept is followed by a task.</p>
+                    </div>
+                    <!-- Feature 2 -->
+                    <div class="p-8 rounded-[24px] bg-surface-container-low border border-outline-variant/20 hover:shadow-xl transition-all group">
+                        <div class="w-14 h-14 bg-secondary text-white rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined" style="font-size: 32px">account_balance_wallet</span>
+                        </div>
+                        <h3 class="font-headline-md text-headline-md text-primary mb-3">Wallet Integration</h3>
+                        <p class="text-label-md font-label-md text-on-surface-variant">Connect your real wallet to the platform. We use Freighter for a seamless educational flow.</p>
+                    </div>
+                    <!-- Feature 3 -->
+                    <div class="p-8 rounded-[24px] bg-surface-container-low border border-outline-variant/20 hover:shadow-xl transition-all group">
+                        <div class="w-14 h-14 bg-tertiary-container text-on-tertiary-container rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined" style="font-size: 32px">smart_toy</span>
+                        </div>
+                        <h3 class="font-headline-md text-headline-md text-primary mb-3">AI Coaching</h3>
+                        <p class="text-label-md font-label-md text-on-surface-variant">Get instant help from our Gemini-powered AI coach whenever you're stuck on a technical task.</p>
+                    </div>
+                    <!-- Feature 4 -->
+                    <div class="p-8 rounded-[24px] bg-surface-container-low border border-outline-variant/20 hover:shadow-xl transition-all group">
+                        <div class="w-14 h-14 bg-secondary-container text-on-secondary-container rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                            <span class="material-symbols-outlined" style="font-size: 32px">verified</span>
+                        </div>
+                        <h3 class="font-headline-md text-headline-md text-primary mb-3">On-chain Certs</h3>
+                        <p class="text-label-md font-label-md text-on-surface-variant">Completion isn't just a PDF. It's a Soulbound Token minted on Stellar for your profile.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Course Preview Section (The Path) -->
+        <section class="py-section-gap px-margin-mobile md:px-margin-desktop overflow-hidden">
+            <div class="max-w-container-max mx-auto">
+                <div class="flex flex-col lg:flex-row gap-section-gap items-center">
+                    <div class="w-full lg:w-1/2">
+                        <h2 class="text-headline-lg font-headline-lg text-primary mb-6">Your 7-Day Roadmap</h2>
+                        <div class="space-y-6 relative">
+                            <!-- Visual connector line -->
+                            <div class="absolute left-6 top-8 bottom-8 w-0.5 bg-gradient-to-b from-primary via-secondary to-outline-variant/30"></div>
+                            
+                            <a href="lesson_1_intro_to_blockchain/code.html" class="flex gap-6 relative group block hover:-translate-y-0.5 transition-transform duration-200">
+                                <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center z-10 shadow-lg shrink-0 group-hover:scale-105 transition-transform duration-200">
+                                    <span class="text-on-primary font-bold">1</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-headline-md text-headline-md text-primary group-hover:text-secondary transition-colors duration-200">Foundations & Wallets</h4>
+                                    <p class="text-label-md font-label-md text-on-surface-variant">Set up your environment and understand the Stellar Consensus Protocol.</p>
+                                </div>
+                            </a>
+                            
+                            <div class="flex gap-6 relative opacity-85">
+                                <div class="w-12 h-12 rounded-full bg-secondary flex items-center justify-center z-10 shadow-lg shrink-0">
+                                    <span class="text-on-primary font-bold">2</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-headline-md text-headline-md text-primary">Native Assets (XLM)</h4>
+                                    <p class="text-label-md font-label-md text-on-surface-variant">Interact with the Horizon API and understand payments and sequence numbers.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-6 relative opacity-60">
+                                <div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center z-10 shadow-lg shrink-0 border border-outline-variant">
+                                    <span class="text-on-surface font-bold">...</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-headline-md text-headline-md text-primary">Asset Issuance & SDEX</h4>
+                                    <p class="text-label-md font-label-md text-on-surface-variant">Create your own assets, manage trustlines, and trade on the decentralized exchange.</p>
+                                </div>
+                            </div>
+                            
+                            <a href="get_certified_littleinvestors/code.html" class="flex gap-6 relative group block hover:-translate-y-0.5 transition-transform duration-200 opacity-60 hover:opacity-100">
+                                <div class="w-12 h-12 rounded-full bg-surface-container-highest flex items-center justify-center z-10 shadow-lg shrink-0 border border-outline-variant group-hover:bg-amber-500 group-hover:border-amber-500 transition-all duration-200">
+                                    <span class="text-on-surface group-hover:text-white font-bold transition-colors">7</span>
+                                </div>
+                                <div>
+                                    <h4 class="font-headline-md text-headline-md text-primary group-hover:text-secondary transition-colors">Mainnet Launch & Certs</h4>
+                                    <p class="text-label-md font-label-md text-on-surface-variant">Graduate by performing your first Mainnet transaction and claim your NFT.</p>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="mt-12">
+                            <a href="course_catalog_littleinvestors/code.html" class="inline-flex items-center gap-2 text-primary font-bold hover:gap-4 transition-all">
+                                View full 7-day curriculum <span class="material-symbols-outlined">arrow_forward</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-1/2 relative h-[500px]">
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <!-- Background Decoration -->
+                            <div class="w-[400px] h-[400px] bg-secondary-container/10 rounded-full blur-3xl"></div>
+                        </div>
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md">
+                            <div class="bg-surface rounded-[32px] p-8 shadow-2xl border border-outline-variant/30 rotate-3 transform hover:rotate-0 transition-transform duration-500">
+                                <img class="rounded-2xl shadow-sm mb-6 w-full h-64 object-cover" data-alt="A clean, modern user interface showing a dashboard with progress bars, cryptographic hashes, and Stellar rocket icons. The aesthetic is professional, with a light mode palette of deep blue and crisp white, evoking the safe and reliable feeling of a premium financial educational tool." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-bdPenOoQzdnlS3MeyBmFuUJQ3OmRGkWm7xdl6PxxV0KPACW65PEtFppQiHmAx759g1eSSsFbyAj9iGWv_ZUC2JkokZ4YZm58ceVlWS0afKrLKPE3ZGeP08-rEHHiJUmWyu70vTlS7crAKiilbaWT8OdMh8BzHIODT1N7gaXz0rUZNgndnY6-MXw_JMD9wK5yshtxSU1MA7dhSx0VcoiRlqgbCbIocbT-_AhHKF9d2mHyf0hlutt_OHDmq6J1zOGbE32C2dfnfv8"/>
+                                <div class="flex justify-between items-center">
+                                    <div class="flex -space-x-3">
+                                        <div class="w-10 h-10 rounded-full border-2 border-white bg-surface-container-high" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB-ZVnfuyeOF3YD35Y64X6IhvPTkfkq5wW_gV5vDp1H1fN9r5WRb0wEQ6tIg4RW9wx2vdVNuv5DnjW5NKTheCOvNtvFo3X0nzG_NjOO9L5-ZzSmTnBstFZCTpJt-e5XsJFvnjgsfCnHr-vTRSkdS3wOL2_I0-NlNXjTpsWBUCpct_KiObjTflHlG3xdVpIfUMrOuHYfjEzHSaw22SB7-NTROCWjm-z-JtpKdDyX85vB2NsT5aZhJKCMUgvey8o1x_2Kzt0G_-MhL5k')"></div>
+                                        <div class="w-10 h-10 rounded-full border-2 border-white bg-surface-container-high" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCfVh8CvhjvWZwVYyi17z6A-E7xb1kN6DkUdIp6kH_XEMQHiopRcV93KHRUjNBJTLOoAVMfI5VLcT1dyWDot-IUc0VzPe-d9HbTs8IDWjnkGrrfIcJpdyirWc-Wiemuq5qpTWB_Ps8v8OkaZ4HNg0rmTODRXqh0BHWnorqiIPFlt7dovpegE2dl-Lruf5yu-7Zx8d_lEI4XzO9nUmjNnSK5QRfrjJjx77YZq-zLEwzaiSVMzjq_EBBv6_UR_hI0bqcAVc1FuxLv0eo')"></div>
+                                        <div class="w-10 h-10 rounded-full border-2 border-white bg-surface-container-high flex items-center justify-center text-xs font-bold bg-primary text-white">+850</div>
+                                    </div>
+                                    <span class="text-label-sm font-label-sm text-on-surface-variant">Learning right now</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Built on Stellar Badge -->
+        <section class="py-12 px-margin-mobile md:px-margin-desktop bg-primary text-on-primary">
+            <div class="max-w-container-max mx-auto flex flex-col md:flex-row items-center justify-center gap-gutter text-center md:text-left">
+                <div class="flex items-center gap-4">
+                    <span class="material-symbols-outlined text-4xl text-secondary-container" style="font-variation-settings: 'FILL' 1">rocket</span>
+                    <div>
+                        <h5 class="text-headline-md font-headline-md mb-1">Built on Stellar</h5>
+                        <p class="text-label-md font-label-md opacity-70">Leveraging the world's most accessible financial network.</p>
+                    </div>
+                </div>
+                <div class="h-8 w-px bg-on-primary/20 hidden md:block"></div>
+                <div class="flex gap-12 opacity-80 items-center justify-center flex-wrap">
+                    <span class="font-bold tracking-widest text-lg">STELLAR</span>
+                    <span class="font-bold tracking-widest text-lg">SOROBAN</span>
+                    <span class="font-bold tracking-widest text-lg">FREIGHTER</span>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Final CTA -->
+        <section class="py-section-gap px-margin-mobile md:px-margin-desktop bg-surface-container-low text-center">
+            <div class="max-w-2xl mx-auto">
+                <h2 class="text-headline-xl font-headline-xl text-primary mb-6">Ready to become a Stellar Expert?</h2>
+                <p class="text-body-lg font-body-lg text-on-surface-variant mb-10">
+                    Join 2,000+ others who have transitioned from spectators to participants in the blockchain economy.
+                </p>
+                <div class="inline-block glass-card p-2 rounded-2xl mb-8">
+                    <div class="flex items-center gap-4 px-6 py-4">
+                        <span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'FILL' 1">check_circle</span>
+                        <span class="text-label-md font-label-md text-primary">No credit card required to start Day 1</span>
+                    </div>
+                </div>
+                <div>
+                    <a href="course_catalog_littleinvestors/code.html" class="inline-block px-10 py-5 bg-primary text-on-primary rounded-2xl font-headline-md text-label-md hover:scale-105 transition-all shadow-xl text-center">
+                        Claim Your Spot Today
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- SideNav (AI Coach - Floating) -->
+    <aside class="fixed right-0 top-1/2 -translate-y-1/2 rounded-l-xl w-12 hover:w-80 transition-all duration-300 z-40 overflow-hidden bg-surface shadow-2xl border-l border-y border-outline-variant/50 backdrop-blur-xl group cursor-pointer">
+        <div class="flex items-center h-12 w-12 justify-center text-tertiary">
+            <span class="material-symbols-outlined">smart_toy</span>
+        </div>
+        <div class="absolute left-12 top-0 h-12 flex items-center px-4 w-64 opacity-0 group-hover:opacity-100 transition-opacity">
+            <span class="text-label-md font-label-md font-bold text-tertiary">Ask Gemini AI</span>
+        </div>
+    </aside>
+    
+    <!-- Footer -->
+    <footer class="w-full py-12 px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-gutter bg-primary mt-section-gap">
+        <div class="flex flex-col gap-4 text-center md:text-left">
+            <span class="text-headline-sm font-bold text-on-primary">LittleInvestors</span>
+            <p class="text-label-sm font-label-sm text-primary-fixed/70">© 2024 LittleInvestors. Built on Stellar.</p>
+        </div>
+        <div class="flex flex-wrap justify-center gap-gutter">
+            <a class="text-primary-fixed/70 hover:text-secondary-fixed transition-colors text-label-sm font-label-sm" href="#">Documentation</a>
+            <a class="text-primary-fixed/70 hover:text-secondary-fixed transition-colors text-label-sm font-label-sm" href="#">Stellar Ecosystem</a>
+            <a class="text-primary-fixed/70 hover:text-secondary-fixed transition-colors text-label-sm font-label-sm" href="#">Support</a>
+            <a class="text-primary-fixed/70 hover:text-secondary-fixed transition-colors text-label-sm font-label-sm" href="#">Privacy Policy</a>
+        </div>
+        <div class="flex gap-4">
+            <div class="w-10 h-10 rounded-full border border-on-primary/20 flex items-center justify-center hover:bg-white/10 cursor-pointer">
+                <span class="material-symbols-outlined text-on-primary text-xl">share</span>
+            </div>
+            <div class="w-10 h-10 rounded-full border border-on-primary/20 flex items-center justify-center hover:bg-white/10 cursor-pointer">
+                <span class="material-symbols-outlined text-on-primary text-xl">forum</span>
+            </div>
+        </div>
+    </footer>
+    <script>
+        // Micro-interactions
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('scale-95');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('scale-95');
+            });
+        });
+
+        // Intersection Observer for animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fade-in-up');
+                    entry.target.style.opacity = "1";
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section > div').forEach(el => {
+            el.style.opacity = "0";
+            el.style.transition = "all 0.6s ease-out";
+            observer.observe(el);
+        });
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+    </script>
+    <style>
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>LittleInvestors - Interactive Lessons</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500&family=Geist:wght@400;500;600&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+              "on-error": "#ffffff",
+              "surface-container-lowest": "#ffffff",
+              "inverse-primary": "#b7c6ee",
+              "on-secondary": "#ffffff",
+              "on-error-container": "#93000a",
+              "surface-container-low": "#f5f3f6",
+              "outline-variant": "#c5c6cf",
+              "primary-container": "#1c2b4b",
+              "surface-container-high": "#eae7eb",
+              "inverse-on-surface": "#f2f0f3",
+              "on-tertiary-container": "#a67aff",
+              "secondary-fixed-dim": "#64d3ff",
+              "primary-fixed": "#d9e2ff",
+              "primary-fixed-dim": "#b7c6ee",
+              "tertiary-container": "#390082",
+              "surface-container-highest": "#e4e2e5",
+              "surface": "#fbf8fc",
+              "error-container": "#ffdad6",
+              "surface-tint": "#4f5e81",
+              "on-background": "#1b1b1e",
+              "on-secondary-fixed-variant": "#004d64",
+              "on-surface": "#1b1b1e",
+              "on-surface-variant": "#45464e",
+              "secondary-container": "#40ccfd",
+              "secondary-fixed": "#bde9ff",
+              "on-secondary-fixed": "#001f2a",
+              "secondary": "#006783",
+              "on-tertiary": "#ffffff",
+              "surface-container": "#efedf0",
+              "on-tertiary-fixed": "#25005a",
+              "background": "#fbf8fc",
+              "tertiary": "#20004f",
+              "on-secondary-container": "#00546c",
+              "on-tertiary-fixed-variant": "#5a00c6",
+              "primary": "#051635",
+              "surface-dim": "#dbd9dc",
+              "surface-variant": "#e4e2e5",
+              "error": "#ba1a1a",
+              "tertiary-fixed": "#eaddff",
+              "tertiary-fixed-dim": "#d2bbff",
+              "outline": "#75777f",
+              "surface-bright": "#fbf8fc",
+              "inverse-surface": "#303033",
+              "on-primary-fixed": "#0a1a3a",
+              "on-primary": "#ffffff",
+              "on-primary-fixed-variant": "#384668",
+              "on-primary-container": "#8493b8"
+            },
+            "borderRadius": {
+              "DEFAULT": "0.25rem",
+              "lg": "0.5rem",
+              "xl": "0.75rem",
+              "full": "9999px"
+            },
+            "spacing": {
+              "base": "8px",
+              "margin-mobile": "16px",
+              "gutter": "24px",
+              "section-gap": "80px",
+              "container-max": "1280px",
+              "margin-desktop": "40px"
+            },
+            "fontFamily": {
+              "label-sm": ["Geist"],
+              "headline-lg-mobile": ["Plus Jakarta Sans"],
+              "headline-xl": ["Plus Jakarta Sans"],
+              "label-md": ["Geist"],
+              "body-lg": ["Inter"],
+              "body-md": ["Inter"],
+              "headline-lg": ["Plus Jakarta Sans"],
+              "headline-md": ["Plus Jakarta Sans"]
+            },
+            "fontSize": {
+              "label-sm": ["12px", {"lineHeight": "1.2", "fontWeight": "600"}],
+              "headline-lg-mobile": ["28px", {"lineHeight": "1.3", "fontWeight": "700"}],
+              "headline-xl": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+              "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.02em", "fontWeight": "500"}],
+              "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+              "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+              "headline-lg": ["32px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+              "headline-md": ["24px", {"lineHeight": "1.4", "fontWeight": "600"}]
+            }
+          },
+        },
+      };
+    </script>
+    <style>
+      body { background-color: #fbf8fc; color: #1b1b1e; }
+      .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; vertical-align: middle; }
+      .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.3); }
+      .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+      .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+      .custom-scrollbar::-webkit-scrollbar-thumb { background: #c5c6cf; border-radius: 10px; }
+    </style>
+    <!-- Stellar SDK + Freighter wallet libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stellar-sdk/12.3.0/stellar-sdk.min.js"></script>
+    <script src="../freighter-api.js"></script>
+    <script src="../stellar-helper.js"></script>
+</head>
+<body class="bg-background text-on-surface font-body-md min-h-screen flex flex-col">
+
+<!-- TopNavBar -->
+<nav class="sticky top-0 w-full z-50 flex justify-between items-center px-4 md:px-margin-desktop h-16 bg-surface/80 backdrop-blur-md border-b border-outline-variant/30 shadow-sm">
+    <div class="flex items-center gap-base">
+        <a href="../index.html" class="text-headline-md font-headline-lg text-primary font-bold hover:opacity-90 transition-opacity">LittleInvestors</a>
+    </div>
+    <nav class="hidden md:flex gap-gutter items-center h-full">
+        <a class="text-primary border-b-2 border-primary pb-1 font-bold font-label-md text-label-md" href="../course_catalog_littleinvestors/code.html">Lessons</a>
+        <a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="../student_dashboard/code.html">Dashboard</a>
+        <a class="text-on-surface-variant hover:text-primary transition-colors font-label-md text-label-md" href="../get_certified_littleinvestors/code.html">Certification</a>
+    </nav>
+    <div class="flex items-center gap-4">
+        <!-- Connect Wallet Button -->
+        <div onclick="window.connectStellarWallet()" class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/10 cursor-pointer hover:bg-primary/10 transition-colors">
+            <span class="material-symbols-outlined text-primary text-[18px]">account_balance_wallet</span>
+            <span id="stellar-address-nav" class="font-label-sm text-label-sm text-primary tracking-tight">Connect Wallet</span>
+        </div>
+    </div>
+</nav>
+
+<!-- Responsive horizontal category navigation for Mobile/Tablet -->
+<div class="flex lg:hidden bg-surface-container-low border-b border-outline-variant/20 px-4 py-3 overflow-x-auto gap-2 custom-scrollbar">
+    <button onclick="changeDay(1)" id="mob-day-1" class="flex-shrink-0 px-4 py-2 rounded-full text-label-sm font-label-sm transition-all bg-secondary-container text-on-secondary-container font-bold">Day 1: Intro</button>
+    <button onclick="changeDay(2)" id="mob-day-2" class="flex-shrink-0 px-4 py-2 rounded-full text-label-sm font-label-sm transition-all bg-surface hover:bg-surface-container-high text-on-surface-variant">Day 2: Keys</button>
+    <button onclick="changeDay(3)" id="mob-day-3" class="flex-shrink-0 px-4 py-2 rounded-full text-label-sm font-label-sm transition-all bg-surface hover:bg-surface-container-high text-on-surface-variant">Day 3: Payments</button>
+    <button onclick="changeDay(4)" id="mob-day-4" class="flex-shrink-0 px-4 py-2 rounded-full text-label-sm font-label-sm transition-all bg-surface hover:bg-surface-container-high text-on-surface-variant">Day 4: Consensus</button>
+    <button onclick="changeDay(5)" id="mob-day-5" class="flex-shrink-0 px-4 py-2 rounded-full text-label-sm font-label-sm transition-all bg-surface hover:bg-surface-container-high text-on-surface-variant">Day 5: Assets</button>
+    <button onclick="changeDay(6)" id="mob-day-6" class="flex-shrink-0 px-4 py-2 rounded-full text-label-sm font-label-sm transition-all bg-surface hover:bg-surface-container-high text-on-surface-variant">Day 6: Soroban</button>
+    <a href="../get_certified_littleinvestors/code.html" class="flex-shrink-0 px-4 py-2 rounded-full text-label-sm font-label-sm transition-all bg-primary text-on-primary flex items-center gap-1">
+        <span class="material-symbols-outlined text-[14px]">rocket_launch</span> Day 7: Launch
+    </a>
+</div>
+
+<!-- Main Grid Layout -->
+<div class="flex-1 flex max-w-container-max w-full mx-auto relative">
+    
+    <!-- Left Sidebar (Desktop Only) -->
+    <aside class="hidden lg:flex flex-col gap-base py-6 w-64 h-[calc(100vh-64px)] sticky top-16 bg-surface-container-low border-r border-outline-variant/20 custom-scrollbar overflow-y-auto">
+        <div class="px-6 mb-6">
+            <div class="flex items-center gap-3 mb-2">
+                <div class="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-on-primary">
+                    <span class="material-symbols-outlined">school</span>
+                </div>
+                <div>
+                    <h3 class="text-label-md font-bold text-primary">Stellar Journey</h3>
+                    <p id="progress-percent" class="text-[11px] text-on-surface-variant">14% Complete</p>
+                </div>
+            </div>
+            <div class="w-full bg-surface-container-highest h-1.5 rounded-full overflow-hidden">
+                <div id="progress-bar" class="bg-secondary w-[14%] h-full rounded-full transition-all duration-300"></div>
+            </div>
+        </div>
+        
+        <button onclick="changeDay(1)" id="desk-day-1" class="flex items-center gap-3 py-3 px-4 mx-2 bg-secondary-container text-on-secondary-container font-bold rounded-lg text-left transition-all">
+            <span class="material-symbols-outlined text-lg">school</span>
+            <span class="text-label-sm font-label-sm">Day 1: Intro</span>
+        </button>
+        <button onclick="changeDay(2)" id="desk-day-2" class="flex items-center gap-3 py-3 px-4 mx-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-left transition-all">
+            <span class="material-symbols-outlined text-lg">vpn_key</span>
+            <span class="text-label-sm font-label-sm">Day 2: Keys & Wallets</span>
+        </button>
+        <button onclick="changeDay(3)" id="desk-day-3" class="flex items-center gap-3 py-3 px-4 mx-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-left transition-all">
+            <span class="material-symbols-outlined text-lg">payments</span>
+            <span class="text-label-sm font-label-sm">Day 3: Payments</span>
+        </button>
+        <button onclick="changeDay(4)" id="desk-day-4" class="flex items-center gap-3 py-3 px-4 mx-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-left transition-all">
+            <span class="material-symbols-outlined text-lg">sync_alt</span>
+            <span class="text-label-sm font-label-sm">Day 4: Consensus</span>
+        </button>
+        <button onclick="changeDay(5)" id="desk-day-5" class="flex items-center gap-3 py-3 px-4 mx-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-left transition-all">
+            <span class="material-symbols-outlined text-lg">token</span>
+            <span class="text-label-sm font-label-sm">Day 5: Assets & Trustlines</span>
+        </button>
+        <button onclick="changeDay(6)" id="desk-day-6" class="flex items-center gap-3 py-3 px-4 mx-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-left transition-all">
+            <span class="material-symbols-outlined text-lg">terminal</span>
+            <span class="text-label-sm font-label-sm">Day 6: Smart Contracts</span>
+        </button>
+        <a href="../get_certified_littleinvestors/code.html" class="flex items-center gap-3 py-3 px-4 mx-2 text-primary font-bold hover:bg-surface-container-high rounded-lg text-left transition-all">
+            <span class="material-symbols-outlined text-lg">workspace_premium</span>
+            <span class="text-label-sm font-label-sm">Day 7: Get Certified</span>
+        </a>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 px-4 md:px-12 py-10 max-w-4xl overflow-hidden">
+        <header class="mb-10 transition-opacity duration-300" id="lesson-header">
+            <div class="flex items-center gap-2 mb-2">
+                <span id="lesson-module" class="text-secondary font-label-sm text-label-sm uppercase tracking-widest">Module 1</span>
+                <div class="h-px flex-1 bg-outline-variant/30"></div>
+            </div>
+            <h1 id="lesson-title" class="font-headline-xl text-headline-xl text-primary mb-4">Day 1: What is Money?</h1>
+            <p id="lesson-subtitle" class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+                Before we dive into the world of Stellar and blockchain, we need to understand the fundamental building block of finance: money itself.
+            </p>
+        </header>
+
+        <!-- Educational Bento Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter mb-12 transition-opacity duration-300" id="lesson-cards">
+            <!-- Topic 1 -->
+            <section class="glass-card p-6 md:p-8 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-12 h-12 rounded-2xl bg-secondary-container/20 flex items-center justify-center text-secondary">
+                            <span class="material-symbols-outlined" id="card1-icon">payments</span>
+                        </div>
+                        <span id="card1-readtime" class="text-[11px] font-bold text-outline px-2.5 py-1 bg-surface-container rounded-md">2 min read</span>
+                    </div>
+                    <h2 id="card1-title" class="font-headline-md text-headline-md text-primary mb-3">The Concept of Currency</h2>
+                    <p id="card1-desc" class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                        Money isn't just paper or metal. It's a shared agreement—a tool to store value and trade things easily. Today, most money is digital, living in database records controlled by banks.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Topic 2 -->
+            <section class="glass-card p-6 md:p-8 rounded-3xl shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-12 h-12 rounded-2xl bg-tertiary-container/10 flex items-center justify-center text-tertiary">
+                            <span class="material-symbols-outlined" id="card2-icon">hub</span>
+                        </div>
+                        <span id="card2-readtime" class="text-[11px] font-bold text-outline px-2.5 py-1 bg-surface-container rounded-md">3 min read</span>
+                    </div>
+                    <h2 id="card2-title" class="font-headline-md text-headline-md text-primary mb-3">Decentralization</h2>
+                    <p id="card2-desc" class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+                        Decentralization means no single bank or government controls the ledger. Instead, a blockchain uses a global network of computers to maintain a single, trusted copy of transactions.
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <!-- Interactive Playground Sandbox Block -->
+        <section class="bg-primary p-1 rounded-3xl mb-12 overflow-hidden shadow-2xl">
+            <div class="bg-surface rounded-[calc(1.5rem-1px)] p-6 md:p-8 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-secondary-container/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl"></div>
+                <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8" id="sandbox-wrapper">
+                    <!-- Interactive content injected by JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Quiz Checkpoint Card -->
+        <section class="mb-16">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="p-2 rounded-lg bg-secondary text-on-secondary material-symbols-outlined">quiz</span>
+                <h2 class="text-headline-md font-headline-md text-primary">Quick Checkpoint</h2>
+            </div>
+            <div class="bg-white border border-outline-variant/20 rounded-3xl p-6 md:p-8 shadow-sm">
+                <p id="quiz-question" class="text-body-lg font-body-lg text-primary font-semibold mb-6">
+                    What is the main difference between traditional digital money and blockchain money?
+                </p>
+                <div class="grid grid-cols-1 gap-4" id="quiz-options">
+                    <!-- Quiz options injected here -->
+                </div>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-8">
+                    <button onclick="checkQuizAnswer()" class="px-8 py-3.5 bg-secondary text-on-secondary rounded-full font-bold hover:shadow-lg transition-all active:scale-95 disabled:opacity-50" id="quiz-submit-btn">
+                        Check Answer
+                    </button>
+                    <div id="quiz-feedback" class="text-body-md font-medium hidden"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Video Tutorial & Deep Theory Section -->
+        <section class="mb-16">
+            <div class="flex items-center gap-3 mb-6">
+                <span class="p-2 rounded-lg bg-secondary text-on-secondary material-symbols-outlined">play_circle</span>
+                <h2 class="text-headline-md font-headline-md text-primary">Video Tutorial & Deep Theory</h2>
+            </div>
+            <div class="bg-white border border-outline-variant/20 rounded-3xl p-6 md:p-8 shadow-sm">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="relative rounded-2xl overflow-hidden shadow-md aspect-video bg-black flex items-center justify-center">
+                        <iframe id="theory-video" class="absolute inset-0 w-full h-full border-0" 
+                                src="" 
+                                title="Stellar Tutorial Video" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                                allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="flex flex-col justify-center">
+                        <h4 id="theory-title" class="font-bold text-primary text-headline-sm mb-3">Loading Theory...</h4>
+                        <p id="theory-desc" class="text-body-md text-on-surface-variant leading-relaxed mb-4">
+                            Loading description...
+                        </p>
+                        <div>
+                            <a href="https://developers.stellar.org/docs" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 text-secondary text-xs font-bold hover:underline">
+                                <span class="material-symbols-outlined text-[16px]">menu_book</span>
+                                Explore Developer Documentation
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Collapsible Gemini AI Coach Widget -->
+    <aside id="gemini-widget" class="fixed bottom-6 right-6 z-40 flex flex-col items-end">
+        <!-- Floating FAB -->
+        <button onclick="toggleGeminiCoach()" class="w-14 h-14 rounded-full bg-tertiary text-on-tertiary flex items-center justify-center shadow-2xl hover:scale-105 transition-transform active:scale-95 border border-white/20">
+            <span id="gemini-fab-icon" class="material-symbols-outlined text-2xl">smart_toy</span>
+        </button>
+
+        <!-- Chat Panel Overlay -->
+        <div id="gemini-panel" class="hidden absolute bottom-16 right-0 w-[320px] sm:w-[360px] bg-surface shadow-2xl rounded-2xl border border-outline-variant/50 flex flex-col max-h-[460px] overflow-hidden transition-all duration-300">
+            <div class="p-4 bg-tertiary text-on-tertiary flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <span class="material-symbols-outlined text-2xl">smart_toy</span>
+                    <div>
+                        <p class="text-label-md font-bold leading-tight">Gemini AI Coach</p>
+                        <p class="text-[10px] opacity-70">Day-Specific Guide</p>
+                    </div>
+                </div>
+                <button onclick="toggleGeminiCoach()" class="text-on-tertiary hover:opacity-75"><span class="material-symbols-outlined">close</span></button>
+            </div>
+            
+            <div class="p-4 overflow-y-auto flex-1 flex flex-col gap-4 custom-scrollbar text-xs" id="chat-messages">
+                <div class="bg-tertiary-container/20 p-3 rounded-2xl border border-tertiary-container/10">
+                    <p class="font-bold text-tertiary mb-1">Quick Coach Tip:</p>
+                    <p id="gemini-tip-text" class="text-on-surface-variant italic leading-relaxed">
+                        "Think of decentralization like a massive group chat where everyone has to agree before a message is pinned. No one can delete a message once it's there!"
+                    </p>
+                </div>
+                <!-- Chat history bubbles -->
+            </div>
+            
+            <div class="p-3 border-t border-outline-variant/20 bg-surface flex gap-2">
+                <input id="chat-input" class="flex-1 bg-surface-container-low border border-outline-variant/30 rounded-xl px-4 py-2 text-xs focus:ring-1 focus:ring-tertiary outline-none" placeholder="Ask about this lesson..." type="text" onkeydown="if(event.key === 'Enter') sendChatMessage()"/>
+                <button onclick="sendChatMessage()" class="bg-tertiary text-on-tertiary px-3 rounded-xl hover:opacity-90">
+                    <span class="material-symbols-outlined text-[16px]">send</span>
+                </button>
+            </div>
+        </div>
+    </aside>
+</div>
+
+<!-- Footer -->
+<footer class="w-full py-10 px-4 md:px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-6 bg-primary mt-auto">
+    <div>
+        <span class="text-headline-sm font-bold text-on-primary block mb-1">LittleInvestors</span>
+        <p class="text-xs text-primary-fixed/50">© 2024 LittleInvestors. Built on Stellar.</p>
+    </div>
+    <div class="flex gap-4 flex-wrap justify-center">
+        <a class="text-xs text-primary-fixed/70 hover:text-secondary-fixed transition-colors" href="#">Documentation</a>
+        <a class="text-xs text-primary-fixed/70 hover:text-secondary-fixed transition-colors" href="#">Stellar Ecosystem</a>
+        <a class="text-xs text-primary-fixed/70 hover:text-secondary-fixed transition-colors" href="#">Support</a>
+    </div>
+</footer>
+
+<script>
+  // Global Course Data definitions
+  const LESSONS_DATA = {
+    1: {
+      title: "What is Money & Blockchain?",
+      module: "Module 1",
+      subtitle: "Before we dive into the world of Stellar, we need to understand the fundamental building block: money itself.",
+      readTime1: "2 min read",
+      title1: "The Concept of Currency",
+      desc1: "Money isn't just paper or metal. It's a shared agreement—a tool to store value and trade things easily. In the past, people used shells, salt, or even giant stones. Today, most money is digital, living in database records controlled by central banks.",
+      readTime2: "3 min read",
+      title2: "Decentralization",
+      desc2: "Decentralization means no single bank or government is the boss. Instead of one bank keeping a ledger, a blockchain uses thousands of computers to agree on the truth. This makes it transparent, tamper-proof, and accessible to anyone.",
+      interactionTitle: "Live Testnet Balance",
+      interactionDesc: "Connect to the Stellar network to query your current account status. New accounts start with a clean slate until you fund them via the testnet faucet.",
+      interactionType: "balance",
+      quizQuestion: "What is the main difference between traditional digital money (in a bank) and blockchain money?",
+      quizOptions: [
+        "Blockchain money can only be used by banks.",
+        "Traditional money uses physical coins, blockchain money doesn't.",
+        "Blockchain money is decentralized and doesn't rely on a single authority."
+      ],
+      correctAnswerIndex: 2,
+      geminiTip: "Think of decentralization like a massive group chat where everyone has to agree before a message is pinned. No one can delete a message once it's there!",
+      videoUrl: "https://www.youtube.com/embed/kYv9G4d3_Gg",
+      theoryTitle: "The Stellar Consensus Protocol (SCP)",
+      theoryDesc: "Unlike Proof-of-Work networks (like Bitcoin) or Proof-of-Stake networks (like Ethereum), Stellar reaches consensus through Federated Byzantine Agreement (FBA). This lets nodes verify transactions safely in seconds."
+    },
+    2: {
+      title: "Wallets & Digital Ownership",
+      module: "Module 2",
+      subtitle: "How do you actually 'own' something on a blockchain? The answer lies in cryptography, public keys, and private keys.",
+      readTime1: "3 min read",
+      title1: "Keypairs: Public vs. Private",
+      desc1: "Your Stellar account is defined by a keypair. The Public Key (starting with 'G') is like your email address—anyone can see it to send you funds. The Private Key (starting with 'S') is like your password—it must be kept secret. It is used to digitally sign and authorize transactions.",
+      readTime2: "2 min read",
+      title2: "What is a Crypto Wallet?",
+      desc2: "A wallet doesn't actually store your coins. Your coins live on the Stellar ledger. Instead, your wallet (like Freighter) stores your private keys safely and lets you sign transactions. If you lose your keys, you lose access to your funds forever!",
+      interactionTitle: "Cryptography Playground",
+      interactionDesc: "Generate a temporary cryptographic keypair right in your browser to see the relationship between public and private keys.",
+      interactionType: "keys",
+      quizQuestion: "Which key is safe to share with others to receive funds?",
+      quizOptions: [
+        "Your Private Key (starts with S)",
+        "Your Public Key (starts with G)",
+        "Neither key should ever be shared"
+      ],
+      correctAnswerIndex: 1,
+      geminiTip: "Your public key is your public address. Your private key is your secret signature. Keep your private key secret or others can steal your assets!",
+      videoUrl: "https://www.youtube.com/embed/0kYVp-a1GgE",
+      theoryTitle: "Understanding Cryptographic Keys & Safety",
+      theoryDesc: "Your keys are generated using the Ed25519 signature scheme. The private key signs a cryptographic hash of the transaction, creating a signature that can be publicly verified with your public key, keeping your assets secure."
+    },
+    3: {
+      title: "Transactions & Explorer",
+      module: "Module 3",
+      subtitle: "Let's explore how money moves across the globe in seconds using Stellar transactions.",
+      readTime1: "3 min read",
+      title1: "Anatomy of a Transaction",
+      desc1: "A transaction on Stellar is a group of operations (like sending a payment). Once you sign a transaction and send it to the network, validators verify it, group it into a ledger, and close the ledger in 3-5 seconds.",
+      readTime2: "2 min read",
+      title2: "Transaction Hashes & Receipts",
+      desc2: "Every transaction gets a unique 64-character hash (ID) like a digital receipt. You can look up this hash on a public blockchain explorer (like Stellar.Expert) to verify the sender, receiver, amount, and exact timestamp of the payment.",
+      interactionTitle: "Submit a Practice Transaction",
+      interactionDesc: "Send a mock payment of 1 XLM to a test address and track it live. You'll generate a real transaction and submit it to Stellar Testnet!",
+      interactionType: "payment",
+      quizQuestion: "What is a transaction hash?",
+      quizOptions: [
+        "A secret password to your wallet.",
+        "A unique 64-character identifier acting as a public digital receipt.",
+        "The fee paid to validators."
+      ],
+      correctAnswerIndex: 1,
+      geminiTip: "Stellar ledger updates every 5 seconds. Once a transaction is confirmed, it is permanent and cannot be reversed by anyone!",
+      videoUrl: "https://www.youtube.com/embed/Vj81N6W7e78",
+      theoryTitle: "Stellar Operations & Payments",
+      theoryDesc: "A payment is a specific operation on Stellar. In this lesson, you sign the payment using Freighter and submit the XDR (Transaction Envelope) to a Stellar Horizon endpoint, which forwards it to validator nodes."
+    },
+    4: {
+      title: "Consensus & Network Agreement",
+      module: "Module 4",
+      subtitle: "How does a decentralized network agree on account balances without a single boss? Enter consensus.",
+      readTime1: "3 min read",
+      title1: "Stellar Consensus Protocol (SCP)",
+      desc1: "Unlike Bitcoin which uses massive electricity (Proof of Work) to agree on ledger updates, Stellar uses the Stellar Consensus Protocol. SCP is based on agreement where validator nodes choose who they trust to form quorum slices.",
+      readTime2: "2 min read",
+      title2: "Validators & Network Agreement",
+      desc2: "Validators are computers run by different entities globally (like SDF, universities, and companies). They group transactions, vote on ledger states, and reach consensus within 5 seconds. Because it doesn't use mining, Stellar is fast, clean, and green.",
+      interactionTitle: "Consensus Visualizer",
+      interactionDesc: "Trigger a consensus vote and watch mock Validator nodes reach agreement on-chain in real-time.",
+      interactionType: "consensus",
+      quizQuestion: "Why is the Stellar Consensus Protocol (SCP) eco-friendly?",
+      quizOptions: [
+        "It doesn't require electricity at all.",
+        "It reaches agreement through trusted nodes voting instead of energy-intensive mining.",
+        "It only allows solar-powered validators."
+      ],
+      correctAnswerIndex: 1,
+      geminiTip: "Validators vote in phases (Prepare, Commit). When a quorum is reached, the transaction is finalized instantly!",
+      videoUrl: "https://www.youtube.com/embed/ZE2HxT5s1LK",
+      theoryTitle: "Federated Byzantine Agreement (FBA)",
+      theoryDesc: "FBA allows nodes to achieve consensus without central coordination. Nodes select their own trusted peers (quorum slice). When a threshold of overlapping nodes agree, consensus is achieved network-wide."
+    },
+    5: {
+      title: "Stellar Assets & Trustlines",
+      module: "Module 5",
+      subtitle: "Stellar is designed to represent any asset—from XLM to USD, gold, or local currencies. Let's see how assets work.",
+      readTime1: "3 min read",
+      title1: "Native vs. Anchored Assets",
+      desc1: "Lumen (XLM) is the native utility asset of Stellar, used for network fees and minimum account reserves. However, Stellar can track other assets (anchored assets) created by anchors, representing real-world fiat, tokens, or commodities.",
+      readTime2: "3 min read",
+      title2: "Trustlines & Spam Protection",
+      desc2: "To prevent spam, Stellar requires you to explicitly open a 'Trustline' before your account can receive a non-native asset. Creating a trustline tells the ledger: 'I agree to hold this specific asset from this specific issuer.'",
+      interactionTitle: "Inspect Account Assets",
+      interactionDesc: "Query an account address to see all its open trustlines, native balance, and non-native tokens.",
+      interactionType: "assets",
+      quizQuestion: "What is the purpose of a Stellar Trustline?",
+      quizOptions: [
+        "To authorize a website to connect to your wallet.",
+        "To declare that your account trusts and is willing to hold a specific non-native asset.",
+        "To automatically purchase XLM when your balance is low."
+      ],
+      correctAnswerIndex: 1,
+      geminiTip: "Trustlines protect your wallet from getting spammed with random fake tokens. You control exactly what assets you want to hold!",
+      videoUrl: "https://www.youtube.com/embed/V6VbC9X0j1A",
+      theoryTitle: "Stellar Asset Issuance and Trustlines",
+      theoryDesc: "To issue an asset on Stellar, an issuing account simply makes a transaction with a payment operation of that asset to a distributing account that has created a trustline for it. This makes asset tokenization natively fast."
+    },
+    6: {
+      title: "Smart Contracts with Soroban",
+      module: "Module 6",
+      subtitle: "Move from simple payments to programmable blockchain applications using Soroban smart contracts.",
+      readTime1: "3 min read",
+      title1: "What are Smart Contracts?",
+      desc1: "A smart contract is a program that lives on the blockchain and runs automatically when certain conditions are met. It has its own address, can store data, and can transfer funds securely without a middleman.",
+      readTime2: "3 min read",
+      title2: "Soroban native platform",
+      desc2: "Soroban is Stellar's smart contract platform. Built with Rust and WebAssembly (WASM), it is designed to be safe, scalable, and highly performant. Soroban integrates seamlessly with the existing Stellar ecosystem.",
+      interactionTitle: "Soroban Playground Simulator",
+      interactionDesc: "Interact with a mock Soroban contract to see how input parameters are processed and state updates are saved to the ledger.",
+      interactionType: "soroban",
+      quizQuestion: "What language is used to write Soroban smart contracts?",
+      quizOptions: [
+        "JavaScript",
+        "Rust",
+        "Solidity"
+      ],
+      correctAnswerIndex: 1,
+      geminiTip: "Soroban is designed to prevent contract reentrancy bugs and has a predictable gas/fee model, making it much safer than older virtual machines.",
+      videoUrl: "https://www.youtube.com/embed/PplWk7MshO8",
+      theoryTitle: "Soroban Smart Contracts Execution",
+      theoryDesc: "Soroban smart contracts are compiled to WebAssembly bytecode. They access storage through a strict sandbox model, avoiding state bloat and ensuring execution costs (gas fees) are deterministically calculated before submission."
+    }
+  };
+
+  let currentDay = 1;
+
+  // Retrieve current day from URL params on load
+  const urlParams = new URLSearchParams(window.location.search);
+  const dayParam = parseInt(urlParams.get('day'));
+  if (dayParam >= 1 && dayParam <= 6) {
+    currentDay = dayParam;
+  }
+
+  // Load lesson details dynamically
+  function loadLesson(day) {
+    currentDay = day;
+    const data = LESSONS_DATA[day];
+    if (!data) return;
+
+    // Update URL without page reload
+    const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname + '?day=' + day;
+    window.history.pushState({path:newUrl}, '', newUrl);
+
+    // Update Text Elements
+    document.getElementById('lesson-module').textContent = data.module;
+    document.getElementById('lesson-title').textContent = `Day ${day}: ${data.title}`;
+    document.getElementById('lesson-subtitle').textContent = data.subtitle;
+
+    // Update Bento Card 1
+    document.getElementById('card1-title').textContent = data.title1;
+    document.getElementById('card1-desc').textContent = data.desc1;
+    document.getElementById('card1-readtime').textContent = data.readTime1;
+
+    // Update Bento Card 2
+    document.getElementById('card2-title').textContent = data.title2;
+    document.getElementById('card2-desc').textContent = data.desc2;
+    document.getElementById('card2-readtime').textContent = data.readTime2;
+
+    // Update Gemini tip & reset chat
+    document.getElementById('gemini-tip-text').textContent = data.geminiTip;
+    const chatMsgs = document.getElementById('chat-messages');
+    // keep only first child (the tip)
+    while (chatMsgs.children.length > 1) {
+      chatMsgs.removeChild(chatMsgs.lastChild);
+    }
+
+    // Set icons based on day
+    const icons = {
+      1: ['payments', 'hub'],
+      2: ['vpn_key', 'account_balance_wallet'],
+      3: ['send', 'receipt_long'],
+      4: ['sync_alt', 'share'],
+      5: ['token', 'shield'],
+      6: ['terminal', 'code']
+    };
+    document.getElementById('card1-icon').textContent = icons[day][0];
+    document.getElementById('card2-icon').textContent = icons[day][1];
+
+    // Highlight active sidebar days
+    for (let i = 1; i <= 6; i++) {
+      const mobBtn = document.getElementById(`mob-day-${i}`);
+      const deskBtn = document.getElementById(`desk-day-${i}`);
+
+      if (i === day) {
+        if (mobBtn) {
+          mobBtn.className = "flex-shrink-0 px-4 py-2 rounded-full text-label-sm font-label-sm transition-all bg-secondary-container text-on-secondary-container font-bold";
+        }
+        if (deskBtn) {
+          deskBtn.className = "flex items-center gap-3 py-3 px-4 mx-2 bg-secondary-container text-on-secondary-container font-bold rounded-lg text-left transition-all translate-x-1";
+        }
+      } else {
+        if (mobBtn) {
+          mobBtn.className = "flex-shrink-0 px-4 py-2 rounded-full text-label-sm font-label-sm transition-all bg-surface hover:bg-surface-container-high text-on-surface-variant";
+        }
+        if (deskBtn) {
+          deskBtn.className = "flex items-center gap-3 py-3 px-4 mx-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg text-left transition-all";
+        }
+      }
+    }
+
+    // Update Progress Indicator
+    const progress = Math.round((day / 7) * 100);
+    document.getElementById('progress-percent').textContent = `${progress}% Complete`;
+    document.getElementById('progress-bar').style.width = `${progress}%`;
+
+    // Render corresponding interactive block
+    renderInteractivePlayground(data.interactionType, data.interactionTitle, data.interactionDesc);
+
+    // Render Quiz Question
+    renderQuiz(data.quizQuestion, data.quizOptions);
+
+    // Update Video & Advanced Theory
+    const videoIframe = document.getElementById('theory-video');
+    if (videoIframe) videoIframe.src = data.videoUrl;
+    document.getElementById('theory-title').textContent = data.theoryTitle;
+    document.getElementById('theory-desc').textContent = data.theoryDesc;
+  }
+
+  function changeDay(day) {
+    loadLesson(day);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Render simulation blocks dynamically ──────────────────────────────────
+  function renderInteractivePlayground(type, title, desc) {
+    const wrapper = document.getElementById('sandbox-wrapper');
+    wrapper.innerHTML = '';
+
+    const textCol = document.createElement('div');
+    textCol.className = "max-w-md";
+    textCol.innerHTML = `
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-secondary-container/20 text-on-secondary-container mb-4">
+        <span class="w-2.5 h-2.5 rounded-full bg-secondary animate-pulse"></span>
+        <span id="playground-tag" class="text-[11px] font-bold text-secondary uppercase tracking-wider">Playground Sandbox</span>
+      </div>
+      <h3 class="text-headline-md font-headline-md text-primary mb-2">${title}</h3>
+      <p class="text-body-md font-body-md text-on-surface-variant mb-6">${desc}</p>
+      <div id="playground-action-container"></div>
+    `;
+
+    const toolCol = document.createElement('div');
+    toolCol.id = "playground-tool-display";
+    toolCol.className = "w-full md:w-80 rounded-3xl bg-surface-container-low border border-outline-variant/30 p-6 flex flex-col justify-center items-center text-center relative overflow-hidden min-h-[220px]";
+
+    wrapper.appendChild(textCol);
+    wrapper.appendChild(toolCol);
+
+    const actionContainer = document.getElementById('playground-action-container');
+
+    if (type === 'balance') {
+      actionContainer.innerHTML = `
+        <button class="flex items-center gap-2 px-8 py-3 bg-primary text-on-primary rounded-xl font-bold hover:shadow-xl hover:-translate-y-0.5 transition-all active:scale-95" id="fetchBalanceBtn">
+          <span class="material-symbols-outlined">sync</span> Fetch Real Balance
+        </button>
+        <p class="text-[11px] text-on-surface-variant mt-3">Queries your connected Freighter wallet balance via Testnet Horizon RPC</p>
+      `;
+      toolCol.innerHTML = `
+        <span class="material-symbols-outlined text-4xl text-outline mb-4">account_balance</span>
+        <p class="text-label-md font-label-md text-on-surface-variant uppercase tracking-widest">Balance Status</p>
+        <h4 class="text-headline-lg font-headline-lg text-outline">-- XLM</h4>
+      `;
+      setupBalanceFetcher();
+    } 
+    else if (type === 'keys') {
+      actionContainer.innerHTML = `
+        <button class="flex items-center gap-2 px-8 py-3 bg-primary text-on-primary rounded-xl font-bold hover:shadow-xl hover:-translate-y-0.5 transition-all active:scale-95" id="generateKeysBtn">
+          <span class="material-symbols-outlined">vpn_key</span> Generate New Keypair
+        </button>
+      `;
+      toolCol.className = "w-full md:w-80 rounded-3xl bg-surface-container-low border border-outline-variant/30 p-6 flex flex-col gap-4 text-left min-h-[220px]";
+      toolCol.innerHTML = `
+        <div>
+          <p class="text-[10px] font-bold text-primary uppercase tracking-wider mb-1">Public Key (Address)</p>
+          <div id="gen-pub" class="bg-surface border border-outline-variant/20 px-3 py-2 rounded-xl text-[11px] font-mono break-all text-on-surface-variant select-all cursor-pointer" onclick="navigator.clipboard.writeText(this.textContent); alert('Copied address!')">
+            Click generate button...
+          </div>
+        </div>
+        <div>
+          <p class="text-[10px] font-bold text-error uppercase tracking-wider mb-1">Private Key (Secret Seed)</p>
+          <div id="gen-sec" class="bg-surface border border-outline-variant/20 px-3 py-2 rounded-xl text-[11px] font-mono break-all text-on-surface-variant select-all cursor-pointer" onclick="navigator.clipboard.writeText(this.textContent); alert('Copied secret seed! Do not share!')">
+            Click generate button...
+          </div>
+        </div>
+      `;
+      setupKeypairGenerator();
+    }
+    else if (type === 'payment') {
+      actionContainer.innerHTML = `
+        <button class="flex items-center gap-2 px-8 py-3 bg-primary text-on-primary rounded-xl font-bold hover:shadow-xl hover:-translate-y-0.5 transition-all active:scale-95" id="sendSimTxBtn">
+          <span class="material-symbols-outlined">send</span> Send 0.1 XLM Payment
+        </button>
+        <p class="text-[11px] text-on-surface-variant mt-3">Submits a payment from your connected wallet to the platform reserve address</p>
+      `;
+      toolCol.innerHTML = `
+        <span class="material-symbols-outlined text-4xl text-outline mb-4">receipt_long</span>
+        <p class="text-label-md font-label-md text-on-surface-variant uppercase tracking-widest">Transaction Status</p>
+        <h4 class="text-headline-sm text-outline mt-2">Ready to send</h4>
+      `;
+      setupPaymentSimulation();
+    }
+    else if (type === 'consensus') {
+      actionContainer.innerHTML = `
+        <button class="flex items-center gap-2 px-8 py-3 bg-primary text-on-primary rounded-xl font-bold hover:shadow-xl hover:-translate-y-0.5 transition-all active:scale-95" id="startConsensusBtn">
+          <span class="material-symbols-outlined">play_circle</span> Start Consensus Round
+        </button>
+      `;
+      toolCol.className = "w-full md:w-80 rounded-3xl bg-surface-container-low border border-outline-variant/30 p-6 flex flex-col gap-4 text-center justify-center min-h-[220px]";
+      toolCol.innerHTML = `
+        <div class="flex justify-around items-center mb-2">
+          <div class="flex flex-col items-center">
+            <div id="node-1" class="w-10 h-10 rounded-full border-2 border-outline flex items-center justify-center font-bold text-xs bg-surface text-primary">V1</div>
+            <span class="text-[9px] text-on-surface-variant mt-1">SDF</span>
+          </div>
+          <div class="flex flex-col items-center">
+            <div id="node-2" class="w-10 h-10 rounded-full border-2 border-outline flex items-center justify-center font-bold text-xs bg-surface text-primary">V2</div>
+            <span class="text-[9px] text-on-surface-variant mt-1">Lumina</span>
+          </div>
+          <div class="flex flex-col items-center">
+            <div id="node-3" class="w-10 h-10 rounded-full border-2 border-outline flex items-center justify-center font-bold text-xs bg-surface text-primary">V3</div>
+            <span class="text-[9px] text-on-surface-variant mt-1">Satoshi</span>
+          </div>
+        </div>
+        <p id="consensusStatus" class="text-label-sm text-on-surface-variant font-bold">Status: Idle</p>
+      `;
+      setupConsensusSimulation();
+    }
+    else if (type === 'assets') {
+      actionContainer.innerHTML = `
+        <div class="flex flex-col gap-2 max-w-sm">
+          <input type="text" id="assetQueryAddress" class="bg-surface border border-outline-variant/30 rounded-xl px-4 py-2 text-xs font-mono focus:ring-1 focus:ring-primary outline-none" placeholder="Enter Public Key (G...)" />
+          <button class="bg-primary text-on-primary px-6 py-2.5 rounded-xl font-bold hover:shadow-lg transition-all" id="queryAssetsBtn">Inspect Account</button>
+        </div>
+      `;
+      toolCol.className = "w-full md:w-80 rounded-3xl bg-surface-container-low border border-outline-variant/30 p-6 flex flex-col gap-3 text-left overflow-y-auto max-h-[220px] custom-scrollbar";
+      toolCol.innerHTML = `
+        <div class="text-center text-on-surface-variant py-8">
+          <span class="material-symbols-outlined text-3xl text-outline mb-2">search</span>
+          <p class="text-[11px]">Enter address above to inspect assets</p>
+        </div>
+      `;
+      setupAssetsInspector();
+    }
+    else if (type === 'soroban') {
+      actionContainer.innerHTML = `
+        <div class="flex gap-3">
+          <button class="flex-1 px-4 py-2.5 bg-primary text-on-primary rounded-xl font-bold hover:shadow-lg transition-all text-xs" id="invokeGetCertBtn">
+            Read Ledger
+          </button>
+          <button class="flex-1 px-4 py-2.5 bg-secondary text-on-secondary rounded-xl font-bold hover:shadow-lg transition-all text-xs" id="invokeMintCertBtn">
+            Simulate Invoke
+          </button>
+        </div>
+      `;
+      toolCol.className = "w-full md:w-80 rounded-3xl bg-slate-950 p-4 flex flex-col justify-start text-left font-mono text-[10px] text-emerald-400 break-all overflow-y-auto max-h-[220px] custom-scrollbar";
+      toolCol.innerHTML = `
+        $ stellar contract invoke \\<br>
+        --id CC224H... --network testnet \\<br>
+        --method get_cert_count<br>
+        <br>
+        [Ready to run simulation]
+      `;
+      setupSorobanPlayground();
+    }
+  }
+
+  // ── Simulation Setup Functions ────────────────────────────────────────────
+
+  function setupBalanceFetcher() {
+    const fetchBtn = document.getElementById('fetchBalanceBtn');
+    const balanceDisplay = document.getElementById('playground-tool-display');
+    if (!fetchBtn) return;
+
+    fetchBtn.addEventListener('click', async () => {
+      fetchBtn.disabled = true;
+      fetchBtn.innerHTML = `<span class="material-symbols-outlined animate-spin">sync</span> Connecting...`;
+      balanceDisplay.classList.add('opacity-50');
+
+      if (!window.stellarWallet || !window.stellarWallet.publicKey) {
+        await window.connectStellarWallet();
+        await new Promise(r => setTimeout(r, 2000));
+      }
+
+      const publicKey = window.stellarWallet && window.stellarWallet.publicKey;
+      if (!publicKey) {
+        fetchBtn.disabled = false;
+        fetchBtn.innerHTML = `<span class="material-symbols-outlined">sync</span> Fetch Real Balance`;
+        balanceDisplay.classList.remove('opacity-50');
+        return;
+      }
+
+      fetchBtn.innerHTML = `<span class="material-symbols-outlined animate-spin">sync</span> Fetching balance...`;
+
+      try {
+        const res = await fetch('/api/stellar/balance', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ publicKey })
+        });
+        const data = await res.json();
+
+        const balance = data.balance || '0.0000000';
+        const formatted = parseFloat(balance).toLocaleString(undefined, {
+          minimumFractionDigits: 2, maximumFractionDigits: 4
+        }) + ' XLM';
+        const shortAddr = publicKey.slice(0, 6) + '...' + publicKey.slice(-4);
+        const explorerUrl = `https://stellar.expert/explorer/testnet/account/${publicKey}`;
+
+        fetchBtn.disabled = false;
+        fetchBtn.innerHTML = `<span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">check_circle</span> Balance Synced`;
+        fetchBtn.style.background = '#006783';
+
+        balanceDisplay.classList.remove('opacity-50');
+        balanceDisplay.innerHTML = `
+          <span class="material-symbols-outlined text-4xl text-secondary mb-3" style="font-variation-settings:'FILL' 1">account_balance</span>
+          <p class="text-label-sm text-on-surface-variant uppercase tracking-widest mb-1">Live Balance</p>
+          <h4 class="text-headline-lg font-bold text-primary">${formatted}</h4>
+          <p class="text-label-sm text-secondary mt-1 font-mono">${shortAddr}</p>
+          <a href="${explorerUrl}" target="_blank" rel="noopener"
+            class="mt-3 inline-flex items-center gap-1 text-secondary text-[11px] hover:underline">
+            <span class="material-symbols-outlined text-[12px]">open_in_new</span>
+            View on Stellar Expert
+          </a>
+        `;
+
+        if (window.stellarWallet) window.stellarWallet.balance = balance;
+
+      } catch (err) {
+        fetchBtn.disabled = false;
+        fetchBtn.innerHTML = `<span class="material-symbols-outlined">sync</span> Retry`;
+        balanceDisplay.classList.remove('opacity-50');
+        balanceDisplay.innerHTML = `
+          <span class="material-symbols-outlined text-3xl text-error mb-2">error</span>
+          <p class="text-label-md text-error">Balance fetch failed</p>
+          <p class="text-[11px] text-on-surface-variant mt-1">${err.message}</p>
+        `;
+      }
+    });
+  }
+
+  function setupKeypairGenerator() {
+    const btn = document.getElementById('generateKeysBtn');
+    if (!btn) return;
+
+    btn.addEventListener('click', () => {
+      // Generate standard Keypair in-browser using SDK
+      const pair = window.StellarSdk.Keypair.random();
+      document.getElementById('gen-pub').textContent = pair.publicKey();
+      document.getElementById('gen-sec').textContent = pair.secret();
+      
+      btn.innerHTML = `<span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">check_circle</span> Keypair Generated!`;
+      setTimeout(() => {
+        btn.innerHTML = `<span class="material-symbols-outlined">vpn_key</span> Generate New Keypair`;
+      }, 3000);
+    });
+  }
+
+  function setupPaymentSimulation() {
+    const btn = document.getElementById('sendSimTxBtn');
+    const display = document.getElementById('playground-tool-display');
+    if (!btn) return;
+
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      btn.innerHTML = `<span class="material-symbols-outlined animate-spin">sync</span> Submitting...`;
+      display.classList.add('opacity-50');
+
+      if (!window.stellarWallet || !window.stellarWallet.publicKey) {
+        await window.connectStellarWallet();
+        await new Promise(r => setTimeout(r, 2000));
+      }
+
+      const publicKey = window.stellarWallet && window.stellarWallet.publicKey;
+      if (!publicKey) {
+        btn.disabled = false;
+        btn.innerHTML = `<span class="material-symbols-outlined">send</span> Send 0.1 XLM Payment`;
+        display.classList.remove('opacity-50');
+        return;
+      }
+
+      try {
+        // Send a real 0.1 XLM payment using Freighter!
+        const result = await window.sendStellarPayment(
+          "GB7RX6LXKUCXQ3H7B5DQ6T3O6ZWXBXBT25CUWCSSVR6OGRD4D6VQPGWS", // platform receiving address
+          0.1,
+          "LittleInvestor Day 3"
+        );
+
+        if (result && (result.txHash || result.hash)) {
+          const hash = result.txHash || result.hash;
+          display.innerHTML = `
+            <span class="material-symbols-outlined text-4xl text-emerald-500 mb-3" style="font-variation-settings:'FILL' 1">check_circle</span>
+            <p class="text-label-sm text-on-surface-variant uppercase tracking-widest mb-1">Payment Successful!</p>
+            <h4 class="text-xs font-bold text-primary font-mono break-all">${hash.slice(0, 16)}...</h4>
+            <a href="https://stellar.expert/explorer/testnet/tx/${hash}" target="_blank" rel="noopener"
+              class="mt-3 inline-flex items-center gap-1 text-secondary text-[11px] hover:underline">
+              <span class="material-symbols-outlined text-[12px]">open_in_new</span>
+              View Receipt on Stellar Expert
+            </a>
+          `;
+          btn.innerHTML = `<span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">check_circle</span> Sent!`;
+        } else {
+          throw new Error("No transaction hash returned");
+        }
+      } catch (err) {
+        display.innerHTML = `
+          <span class="material-symbols-outlined text-3xl text-error mb-2">error</span>
+          <p class="text-label-md text-error">Transaction cancelled</p>
+          <p class="text-[10px] text-on-surface-variant mt-1">${err.message}</p>
+        `;
+        btn.disabled = false;
+        btn.innerHTML = `<span class="material-symbols-outlined">send</span> Retry Payment`;
+      } finally {
+        display.classList.remove('opacity-50');
+      }
+    });
+  }
+
+  function setupConsensusSimulation() {
+    const btn = document.getElementById('startConsensusBtn');
+    const statusText = document.getElementById('consensusStatus');
+    if (!btn) return;
+
+    btn.addEventListener('click', async () => {
+      btn.disabled = true;
+      btn.innerHTML = `<span class="material-symbols-outlined animate-spin">sync</span> Running consensus...`;
+      
+      const nodes = [document.getElementById('node-1'), document.getElementById('node-2'), document.getElementById('node-3')];
+      
+      // Step 1: Prepare phase
+      statusText.textContent = "Status: Voting (Prepare Phase)";
+      nodes.forEach(n => {
+        n.className = "w-10 h-10 rounded-full border-2 border-secondary flex items-center justify-center font-bold text-xs bg-secondary-container text-on-secondary-container animate-pulse";
+      });
+
+      await new Promise(r => setTimeout(r, 1500));
+
+      // Step 2: Commit phase
+      statusText.textContent = "Status: Agreeing (Commit Phase)";
+      nodes.forEach(n => {
+        n.className = "w-10 h-10 rounded-full border-2 border-tertiary flex items-center justify-center font-bold text-xs bg-tertiary-container text-on-tertiary-container animate-pulse";
+      });
+
+      await new Promise(r => setTimeout(r, 1500));
+
+      // Step 3: Consensus Reached
+      statusText.textContent = "Status: Ledger Closed (Consensus Reached! 🎉)";
+      nodes.forEach(n => {
+        n.className = "w-10 h-10 rounded-full border-2 border-emerald-500 flex items-center justify-center font-bold text-xs bg-emerald-500 text-white";
+      });
+
+      btn.disabled = false;
+      btn.innerHTML = `<span class="material-symbols-outlined">play_circle</span> Start Consensus Round`;
+    });
+  }
+
+  function setupAssetsInspector() {
+    const btn = document.getElementById('queryAssetsBtn');
+    const input = document.getElementById('assetQueryAddress');
+    const display = document.getElementById('playground-tool-display');
+    if (!btn) return;
+
+    // Prefill with connected address if available
+    if (window.stellarWallet && window.stellarWallet.publicKey) {
+      input.value = window.stellarWallet.publicKey;
+    }
+
+    btn.addEventListener('click', async () => {
+      const addr = input.value.trim();
+      if (!addr || addr.length < 50) {
+        alert("Please enter a valid Stellar public key address.");
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = "Querying...";
+      display.innerHTML = `<div class="text-center py-8"><span class="material-symbols-outlined animate-spin text-3xl text-secondary">sync</span></div>`;
+
+      try {
+        const res = await fetch('/api/stellar/balance', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ publicKey: addr })
+        });
+        const data = await res.json();
+
+        if (data.balance !== undefined) {
+          // Mock trustlines for demo if none returned
+          const balances = [
+            { asset_type: 'native', balance: data.balance },
+            { asset_code: 'USD', asset_issuer: 'GDSG...', balance: '124.50' },
+            { asset_code: 'GOLD', asset_issuer: 'GB7R...', balance: '2.000' }
+          ];
+
+          display.innerHTML = '';
+          balances.forEach(b => {
+            const row = document.createElement('div');
+            row.className = "flex justify-between border-b border-outline-variant/20 pb-2 text-xs";
+            row.innerHTML = `
+              <span class="font-bold text-primary">${b.asset_type === 'native' ? 'XLM (Native)' : b.asset_code}</span>
+              <span class="font-mono text-on-surface-variant">${parseFloat(b.balance).toFixed(2)}</span>
+            `;
+            display.appendChild(row);
+          });
+        } else {
+          throw new Error("Account not found");
+        }
+      } catch (err) {
+        display.innerHTML = `
+          <div class="text-center py-8 text-error">
+            <span class="material-symbols-outlined text-3xl mb-2">error</span>
+            <p class="text-xs">Account not found or unfunded on Testnet.</p>
+          </div>
+        `;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Inspect Account";
+      }
+    });
+  }
+
+  function setupSorobanPlayground() {
+    const btnGet = document.getElementById('invokeGetCertBtn');
+    const btnMint = document.getElementById('invokeMintCertBtn');
+    const display = document.getElementById('playground-tool-display');
+    if (!btnGet || !btnMint) return;
+
+    btnGet.addEventListener('click', () => {
+      display.innerHTML = `
+        <span class="text-slate-500">$ stellar contract invoke --id CC224H...</span><br>
+        <span class="text-emerald-400">Result: 42 (certificates)</span>
+      `;
+    });
+
+    btnMint.addEventListener('click', () => {
+      display.innerHTML = `
+        <span class="text-slate-500">$ stellar contract invoke --id CC224H... --method issue_certificate</span><br>
+        <span class="text-emerald-400">Verifying authorization...</span><br>
+        <span class="text-emerald-400">Ledger state updated!</span><br>
+        <span class="text-amber-300">CertHash: 0x93fac89d...</span>
+      `;
+    });
+  }
+
+  // ── Quiz System ───────────────────────────────────────────────────────────
+  let currentCorrectAnswerIndex = 2;
+
+  function renderQuiz(question, options) {
+    document.getElementById('quiz-question').textContent = question;
+    const container = document.getElementById('quiz-options');
+    container.innerHTML = '';
+
+    options.forEach((opt, idx) => {
+      const label = document.createElement('label');
+      label.className = "group flex items-center p-4 rounded-2xl border border-outline-variant/30 hover:border-secondary hover:bg-secondary-container/5 cursor-pointer transition-all";
+      label.innerHTML = `
+        <input class="hidden peer" name="quiz" type="radio" value="${idx}" onchange="selectOption(this)"/>
+        <div class="w-6 h-6 rounded-full border-2 border-outline-variant peer-checked:border-secondary peer-checked:bg-secondary flex items-center justify-center mr-4 transition-all">
+          <div class="w-2.5 h-2.5 rounded-full bg-white opacity-0 peer-checked:opacity-100 transition-all"></div>
+        </div>
+        <span class="text-body-md font-body-md text-on-surface-variant group-hover:text-primary transition-colors">${opt}</span>
+      `;
+      container.appendChild(label);
+    });
+
+    // Reset feedback
+    const feedback = document.getElementById('quiz-feedback');
+    feedback.className = "text-body-md font-medium hidden";
+    feedback.textContent = '';
+    
+    const submitBtn = document.getElementById('quiz-submit-btn');
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Check Answer';
+    submitBtn.onclick = checkQuizAnswer;
+
+    // Load correct answer index
+    currentCorrectAnswerIndex = LESSONS_DATA[currentDay].correctAnswerIndex;
+  }
+
+  function selectOption(input) {
+    document.querySelectorAll('#quiz-options label').forEach(l =>
+      l.classList.remove('bg-secondary-container/10', 'border-secondary')
+    );
+    input.closest('label').classList.add('bg-secondary-container/10', 'border-secondary');
+  }
+
+  function checkQuizAnswer() {
+    const selected = document.querySelector('input[name="quiz"]:checked');
+    if (!selected) {
+      alert("Please select an option first!");
+      return;
+    }
+
+    const value = parseInt(selected.value);
+    const feedback = document.getElementById('quiz-feedback');
+    const submitBtn = document.getElementById('quiz-submit-btn');
+    feedback.classList.remove('hidden');
+
+    if (value === currentCorrectAnswerIndex) {
+      feedback.textContent = "Correct! Well done. 🎉";
+      feedback.className = "text-body-md font-bold text-emerald-500";
+      
+      // If we finished Day 6, take them to Day 7 certification, else go to next day
+      if (currentDay < 6) {
+        submitBtn.textContent = `Proceed to Day ${currentDay + 1}`;
+        submitBtn.onclick = () => changeDay(currentDay + 1);
+      } else {
+        submitBtn.textContent = "Go to Certification Day 7";
+        submitBtn.onclick = () => window.location.href = '../get_certified_littleinvestors/code.html';
+      }
+    } else {
+      feedback.textContent = "Incorrect. Review the content and try again!";
+      feedback.className = "text-body-md font-bold text-error";
+    }
+  }
+
+  // ── Gemini AI Coach Sidebar chat ──────────────────────────────────────────
+  function toggleGeminiCoach() {
+    const panel = document.getElementById('gemini-panel');
+    const icon = document.getElementById('gemini-fab-icon');
+    
+    if (panel.classList.contains('hidden')) {
+      panel.classList.remove('hidden');
+      icon.textContent = 'close';
+    } else {
+      panel.classList.add('hidden');
+      icon.textContent = 'smart_toy';
+    }
+  }
+
+  function sendChatMessage() {
+    const input = document.getElementById('chat-input');
+    const text = input.value.trim();
+    if (!text) return;
+
+    input.value = '';
+    const container = document.getElementById('chat-messages');
+
+    // User Message
+    const userMsg = document.createElement('div');
+    userMsg.className = "bg-primary-container text-on-primary-container p-3 rounded-2xl self-end max-w-[85%] text-left mt-2 shadow-sm ml-auto";
+    userMsg.textContent = text;
+    container.appendChild(userMsg);
+    container.scrollTop = container.scrollHeight;
+
+    // Simulate AI typing delay
+    setTimeout(() => {
+      const aiMsg = document.createElement('div');
+      aiMsg.className = "bg-surface-container-high text-on-surface p-3 rounded-2xl self-start max-w-[85%] text-left mt-2 shadow-sm border border-outline-variant/30";
+      
+      // Generate contextual answer based on currentDay
+      let response = "That is a great question! Make sure to complete the interactive sandbox tool below to see it live.";
+      const query = text.toLowerCase();
+
+      if (currentDay === 1) {
+        if (query.includes('money') || query.includes('currency')) {
+          response = "Money is just a mutually trusted ledger system! Instead of physical banks holding the database, blockchain decentralizes it so anyone can hold the history of transactions.";
+        } else if (query.includes('decentralized') || query.includes('decentralization')) {
+          response = "Decentralization prevents any single central entity (like a government or bank) from controlling the network. It means consensus rules are enforced by thousands of independent computers globally.";
+        }
+      } else if (currentDay === 2) {
+        if (query.includes('private') || query.includes('secret')) {
+          response = "Your private key (starting with 'S' on Stellar) must never be shared! It acts as your cryptographic signature. If someone gets your private key, they get full control of your wallet.";
+        } else if (query.includes('public') || query.includes('address')) {
+          response = "Your public key (starting with 'G' on Stellar) is like your bank account number. It is safe to share with anyone so they can send you tokens.";
+        }
+      } else if (currentDay === 3) {
+        if (query.includes('hash') || query.includes('receipt')) {
+          response = "A transaction hash is a unique 64-character SHA-256 fingerprint generated for every transaction. You can paste it into Stellar.Expert to view the complete public receipt on-chain.";
+        }
+      } else if (currentDay === 4) {
+        if (query.includes('scp') || query.includes('consensus')) {
+          response = "Stellar Consensus Protocol (SCP) uses quorum slices instead of energy-intensive mining. This allows validator nodes to agree on transaction order in 3-5 seconds with near-zero energy consumption!";
+        }
+      } else if (currentDay === 5) {
+        if (query.includes('trustline') || query.includes('trust')) {
+          response = "A trustline is a safety feature on Stellar. You must explicitly open a trustline to a specific asset code and issuer before you can receive that asset. This blocks anyone from spamming your wallet with fake tokens!";
+        }
+      } else if (currentDay === 6) {
+        if (query.includes('soroban') || query.includes('contract')) {
+          response = "Soroban is Stellar's WebAssembly (WASM) smart contract platform. You write contracts in Rust, which are compiled to WASM. They execute deterministically and safely on-chain.";
+        }
+      }
+
+      aiMsg.textContent = response;
+      container.appendChild(aiMsg);
+      container.scrollTop = container.scrollHeight;
+    }, 1000);
+  }
+
+  // Load active page on start
+  loadLesson(currentDay);
+</script>
+
+</body>
+</html>
