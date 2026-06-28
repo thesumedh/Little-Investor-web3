@@ -681,7 +681,7 @@
     else if (type === 'payment') {
       actionContainer.innerHTML = `
         <button class="flex items-center gap-2 px-8 py-3 bg-primary text-on-primary rounded-xl font-bold hover:shadow-xl hover:-translate-y-0.5 transition-all active:scale-95" id="sendSimTxBtn">
-          <span class="material-symbols-outlined">send</span> Send 0.1 XLM Payment
+          <span class="material-symbols-outlined">send</span> Send 1 XLM Payment
         </button>
         <p class="text-[11px] text-on-surface-variant mt-3">Submits a payment from your connected wallet to the platform reserve address</p>
       `;
@@ -866,16 +866,16 @@
       const publicKey = window.stellarWallet && window.stellarWallet.publicKey;
       if (!publicKey) {
         btn.disabled = false;
-        btn.innerHTML = `<span class="material-symbols-outlined">send</span> Send 0.1 XLM Payment`;
+        btn.innerHTML = `<span class="material-symbols-outlined">send</span> Send 1 XLM Payment`;
         display.classList.remove('opacity-50');
         return;
       }
 
       try {
-        // Send a real 0.1 XLM payment using Freighter!
+        // Send a real 1 XLM payment using Freighter!
         const result = await window.sendStellarPayment(
           "GB7RX6LXKUCXQ3H7B5DQ6T3O6ZWXBXBT25CUWCSSVR6OGRD4D6VQPGWS", // platform receiving address
-          0.1,
+          1,
           "LittleInvestor Day 3"
         );
 
