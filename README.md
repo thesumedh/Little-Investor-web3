@@ -132,11 +132,6 @@ We gathered feedback from parents and young learners during the testnet MVP tria
 ## 📸 Visual Previews & Screenshots
 
 Here is a visual walkthrough of the LittleInvestors application on desktop and mobile platforms:
-
-### 🏠 Landing Page
-Beautiful, modern entrance highlighting key course days and quick login hooks.
-![Landing Page](./littleinvestors_landing_page/screen.png)
-
 ### 📚 Course Catalog
 Visual learning roadmap with modular card components guiding students Day by Day.
 ![Course Catalog](./course_catalog_littleinvestors/screen.png)
