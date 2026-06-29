@@ -723,9 +723,7 @@
           <div class="text-left">
             <label class="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Send To</label>
             <select id="card-pay-to" class="w-full bg-surface-container-low text-primary rounded-xl border border-outline-variant/30 px-3 py-2 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-secondary">
-              <option value="Emma">👤 Emma (Default Reserve)</option>
-              <option value="Liam">👤 Liam (Default Reserve)</option>
-              <option value="Sophia">👤 Sophia (Default Reserve)</option>
+              <option value="Sumedh">👤 Sumedh (Default Reserve)</option>
               <option value="custom">🌐 Custom Address...</option>
             </select>
             <div id="custom-receiver-wrapper" class="hidden mt-3 text-left">
@@ -920,18 +918,7 @@
     });
   }
 
-  let mockStudentKeys = null;
-  function getMockStudentKeys() {
-    if (!mockStudentKeys) {
-      const SDK = window.StellarSdk || StellarSdk;
-      mockStudentKeys = {
-        Emma: SDK.Keypair.random().publicKey(),
-        Liam: SDK.Keypair.random().publicKey(),
-        Sophia: SDK.Keypair.random().publicKey()
-      };
-    }
-    return mockStudentKeys;
-  }
+
 
   function setupPaymentSimulation() {
     const btn = document.getElementById('sendSimTxBtn');
