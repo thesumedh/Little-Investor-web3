@@ -3,7 +3,18 @@
   "builds": [
     {
       "src": "server.js",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "index.html",
+          "stellar-helper.js",
+          "freighter-api.js",
+          "course_catalog_littleinvestors/**",
+          "get_certified_littleinvestors/**",
+          "lesson_1_intro_to_blockchain/**",
+          "student_dashboard/**"
+        ]
+      }
     }
   ],
   "routes": [

@@ -78,7 +78,7 @@ const metrics = {
 const app = express();
 app.use(cors({ origin: '*', methods: ['GET','POST','OPTIONS'] }));
 app.use(express.json({ limit: '1mb' }));
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(process.cwd()));
 
 // ─── Routes ──────────────────────────────────────────────────────────────────
 
