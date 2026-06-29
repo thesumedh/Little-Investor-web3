@@ -396,11 +396,11 @@
       readTime1: "3 min read",
       title1: "Keypairs: Public vs. Private",
       desc1: "Your Stellar account is defined by a keypair. The Public Key (starting with 'G') is like your email address—anyone can see it to send you funds. The Private Key (starting with 'S') is like your password—it must be kept secret. It is used to digitally sign and authorize transactions.",
-      readTime2: "2 min read",
-      title2: "What is a Crypto Wallet?",
-      desc2: "A wallet doesn't actually store your coins. Your coins live on the Stellar ledger. Instead, your wallet (like Freighter) stores your private keys safely and lets you sign transactions. If you lose your keys, you lose access to your funds forever!",
-      interactionTitle: "Cryptography Playground",
-      interactionDesc: "Generate a temporary cryptographic keypair right in your browser to see the relationship between public and private keys.",
+      readTime2: "3 min read",
+      title2: "How to Create & Fund your Wallet",
+      desc2: "Getting started with Stellar is easy! First, install the Freighter Wallet extension from freighter.app. Create a new wallet and write down your 12-word recovery phrase safely. Next, copy your Public Address (starts with 'G'). Before an account can exist on the ledger, it must be activated. On the Testnet, you can use Stellar's Friendbot faucet below to instantly fund your address with 10,000 free testnet XLM!",
+      interactionTitle: "Wallet Creator & Faucet",
+      interactionDesc: "Generate a temporary cryptographic keypair below to see key relationships, or input any public key (like your Freighter address) to fund it instantly via Stellar's Friendbot Faucet!",
       interactionType: "keys",
       quizQuestion: "Which key is safe to share with others to receive funds?",
       quizOptions: [
@@ -657,21 +657,37 @@
     } 
     else if (type === 'keys') {
       actionContainer.innerHTML = `
-        <button class="flex items-center gap-2 px-8 py-3 bg-primary text-on-primary rounded-xl font-bold hover:shadow-xl hover:-translate-y-0.5 transition-all active:scale-95" id="generateKeysBtn">
-          <span class="material-symbols-outlined">vpn_key</span> Generate New Keypair
-        </button>
+        <div class="space-y-5 text-left max-w-sm w-full">
+          <div class="flex flex-col gap-2">
+            <button class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-on-primary rounded-xl font-bold hover:shadow-xl hover:-translate-y-0.5 transition-all active:scale-95" id="generateKeysBtn">
+              <span class="material-symbols-outlined text-[18px]">vpn_key</span> Generate New Keypair
+            </button>
+            <p class="text-[10px] text-on-surface-variant text-center">Generates a browser-based public/private keypair for practice.</p>
+          </div>
+
+          <div class="border-t border-outline-variant/30 pt-4">
+            <label class="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Fund Wallet on Testnet (Friendbot)</label>
+            <div class="flex gap-2">
+              <input type="text" id="fund-address-input" placeholder="Paste your G... public key" class="flex-1 min-w-0 bg-surface-container-low text-primary rounded-xl border border-outline-variant/30 px-3 py-2 text-xs font-mono focus:outline-none focus:ring-1 focus:ring-secondary" />
+              <button class="flex items-center gap-1 px-4 py-2 bg-secondary text-on-secondary rounded-xl font-bold text-xs hover:shadow-md transition-all active:scale-95 whitespace-nowrap" id="fundWalletBtn">
+                <span class="material-symbols-outlined text-[14px]">local_fire_department</span> Fund
+              </button>
+            </div>
+            <p class="text-[10px] text-on-surface-variant mt-1.5 leading-relaxed">Piles of free XLM! Friendbot sends 10,000 Testnet XLM instantly to establish the account on-chain.</p>
+          </div>
+        </div>
       `;
       toolCol.className = "w-full md:w-80 rounded-3xl bg-surface-container-low border border-outline-variant/30 p-6 flex flex-col gap-4 text-left min-h-[220px]";
       toolCol.innerHTML = `
         <div>
           <p class="text-[10px] font-bold text-primary uppercase tracking-wider mb-1">Public Key (Address)</p>
-          <div id="gen-pub" class="bg-surface border border-outline-variant/20 px-3 py-2 rounded-xl text-[11px] font-mono break-all text-on-surface-variant select-all cursor-pointer" onclick="navigator.clipboard.writeText(this.textContent); alert('Copied address!')">
+          <div id="gen-pub" class="bg-surface border border-outline-variant/20 px-3 py-2 rounded-xl text-[11px] font-mono break-all text-on-surface-variant select-all cursor-pointer" onclick="navigator.clipboard.writeText(this.textContent); window.showStellarAlert('Address copied!', 'success')">
             Click generate button...
           </div>
         </div>
         <div>
           <p class="text-[10px] font-bold text-error uppercase tracking-wider mb-1">Private Key (Secret Seed)</p>
-          <div id="gen-sec" class="bg-surface border border-outline-variant/20 px-3 py-2 rounded-xl text-[11px] font-mono break-all text-on-surface-variant select-all cursor-pointer" onclick="navigator.clipboard.writeText(this.textContent); alert('Copied secret seed! Do not share!')">
+          <div id="gen-sec" class="bg-surface border border-outline-variant/20 px-3 py-2 rounded-xl text-[11px] font-mono break-all text-on-surface-variant select-all cursor-pointer" onclick="navigator.clipboard.writeText(this.textContent); window.showStellarAlert('Secret seed copied! Keep it secret!', 'success')">
             Click generate button...
           </div>
         </div>
@@ -903,19 +919,56 @@
 
   function setupKeypairGenerator() {
     const btn = document.getElementById('generateKeysBtn');
-    if (!btn) return;
+    const fundBtn = document.getElementById('fundWalletBtn');
+    const fundInput = document.getElementById('fund-address-input');
+    
+    if (btn) {
+      btn.addEventListener('click', () => {
+        // Generate standard Keypair in-browser using SDK
+        const pair = window.StellarSdk.Keypair.random();
+        const pubKey = pair.publicKey();
+        document.getElementById('gen-pub').textContent = pubKey;
+        document.getElementById('gen-sec').textContent = pair.secret();
+        
+        // Auto-fill fund input for convenience
+        if (fundInput) {
+          fundInput.value = pubKey;
+        }
 
-    btn.addEventListener('click', () => {
-      // Generate standard Keypair in-browser using SDK
-      const pair = window.StellarSdk.Keypair.random();
-      document.getElementById('gen-pub').textContent = pair.publicKey();
-      document.getElementById('gen-sec').textContent = pair.secret();
-      
-      btn.innerHTML = `<span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">check_circle</span> Keypair Generated!`;
-      setTimeout(() => {
-        btn.innerHTML = `<span class="material-symbols-outlined">vpn_key</span> Generate New Keypair`;
-      }, 3000);
-    });
+        btn.innerHTML = `<span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">check_circle</span> Keypair Generated!`;
+        setTimeout(() => {
+          btn.innerHTML = `<span class="material-symbols-outlined">vpn_key</span> Generate New Keypair`;
+        }, 3000);
+      });
+    }
+
+    if (fundBtn && fundInput) {
+      fundBtn.addEventListener('click', async () => {
+        const address = fundInput.value.trim();
+        if (!address.startsWith('G') || address.length !== 56) {
+          window.showStellarAlert("Invalid Stellar public key format. Must be 56 characters and start with 'G'.", "error");
+          return;
+        }
+
+        fundBtn.disabled = true;
+        fundBtn.innerHTML = `<span class="material-symbols-outlined animate-spin text-[12px]">sync</span> Funding...`;
+
+        try {
+          const res = await fetch(`https://friendbot.stellar.org/?addr=${address}`);
+          if (!res.ok) {
+            throw new Error(`Friendbot failed with status ${res.status}`);
+          }
+          window.showStellarAlert("Wallet successfully funded with 10,000 Testnet XLM!", "success");
+          fundBtn.innerHTML = `<span class="material-symbols-outlined text-[12px]">check_circle</span> Funded!`;
+        } catch (err) {
+          console.error(err);
+          window.showStellarAlert(`Funding failed: ${err.message}`, "error");
+          fundBtn.innerHTML = `Fund Wallet`;
+        } finally {
+          fundBtn.disabled = false;
+        }
+      });
+    }
   }
 
 
