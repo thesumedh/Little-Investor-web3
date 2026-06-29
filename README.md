@@ -25,6 +25,7 @@ Use this quick index to verify graduation requirements for **Level 5 (Testnet Ad
 
 > [!IMPORTANT]  
 > To fulfill the user growth requirements, we maintain a public log of unique student wallets, emails, names, and feedback ratings in the database:
+>
 > * **Google Form Link**: [https://forms.gle/5pZ9ywnbnGsFF9nX8](https://forms.gle/5pZ9ywnbnGsFF9nX8)
 > * **Exported Response Sheet**: [https://docs.google.com/spreadsheets/d/1SmA8JxcP_lYtaardUW0RpZCmN8j0x7sb_uVy5LHYpEg/edit?usp=sharing](https://docs.google.com/spreadsheets/d/1SmA8JxcP_lYtaardUW0RpZCmN8j0x7sb_uVy5LHYpEg/edit?usp=sharing)
 
@@ -91,7 +92,6 @@ All accounts and transactions are publicly queryable, live, and verifiable on th
 | 49 | Pallavi | `GAUYC5ZOSQHJHDNNTVILH7MLYKHH5J25OBXIYMOWXMDARBPPAKRECNZR` | 9993.50 XLM | [View on Stellar.Expert](https://stellar.expert/explorer/testnet/account/GAUYC5ZOSQHJHDNNTVILH7MLYKHH5J25OBXIYMOWXMDARBPPAKRECNZR) |
 | 50 | Gaurav | `GCTIWYZOWLF2DXXPSRQINLWZLFGYV5JZHPWAYIGYZKYVEJGPK4D55E5G` | 9998.15 XLM | [View on Stellar.Expert](https://stellar.expert/explorer/testnet/account/GCTIWYZOWLF2DXXPSRQINLWZLFGYV5JZHPWAYIGYZKYVEJGPK4D55E5G) |
 
-
 ### 📡 2. On-Chain Practice Transaction Logs (50 Transactions)
 
 | # | Sender | Recipient | Amount Sent | On-Chain Memo | Transaction Hash | Verification Link |
@@ -147,7 +147,6 @@ All accounts and transactions are publicly queryable, live, and verifiable on th
 | 49 | Pallavi | Isha | 6.50 XLM | `LI-Day3` | `cd678298004e9fd75aaf69628be1c1f4df4593293c85d79f893806ed34178332` | [View Transaction](https://stellar.expert/explorer/testnet/tx/cd678298004e9fd75aaf69628be1c1f4df4593293c85d79f893806ed34178332) |
 | 50 | Gaurav | Swati | 8.92 XLM | `LI-Day3` | `08fa0f4bc1bb2f79deb4068f1087ff747fb566ffd5e96a7cb0dbbe8e52243a7e` | [View Transaction](https://stellar.expert/explorer/testnet/tx/08fa0f4bc1bb2f79deb4068f1087ff747fb566ffd5e96a7cb0dbbe8e52243a7e) |
 
-
 ---
 
 ## 🔄 Product Evolution Based on User Feedback
@@ -155,19 +154,31 @@ All accounts and transactions are publicly queryable, live, and verifiable on th
 Here are the key improvements implemented in this version to resolve issues reported by our beta testers:
 
 ### 💳 1. Day 3 Debit Card Visual Simulator
+
 * **Feedback**: Raw inputs (Recipient address strings, raw decimals) were intimidating for young learners.
 * **Solution**: Developed a glassmorphic **LittleInvestors Pay** debit card UI simulating traditional bank card checkouts while explaining blockchain milestones.
 * **Commit Link**: [Git Commit: e377708](https://github.com/thesumedh/Little-Investor-web3/commit/e377708c351f044709d73d4e8c56fa769f3fa3be)
 
 ### 🗺️ 2. Failsafe Recipient Routing
+
 * **Feedback**: Transactions failed with error 400 (`op_no_destination`) when kids tried to pay generated mock addresses that weren't active on the ledger.
 * **Solution**: Configured the default recipient option to pay **Sumedh**, routing under the hood to the platform's funded reserve address: `GCHYTBPLSN53ECSKTOA6GSGDE2Z4DBF4LT6FMSGY2R27HEKYRP33H4ZG`. Added a custom toggle for advanced users.
 * **Commit Link**: [Git Commit: 8409e0f](https://github.com/thesumedh/Little-Investor-web3/commit/8409e0f39162e24cf8c42a22549e5d4cb058e5f7)
 
 ### 🚰 3. Integrated Friendbot Faucet on Day 2
+
 * **Feedback**: Kids wanted to fund their Freighter wallets directly on-page without searching for external Stellar faucets.
 * **Solution**: Embedded a **Friendbot Faucet widget** directly into Day 2 keys playground.
 * **Commit Link**: [Git Commit: e377708](https://github.com/thesumedh/Little-Investor-web3/commit/e377708c351f044709d73d4e8c56fa769f3fa3be)
+
+### 🔮 Future Evolution & Next-Phase Roadmap
+
+Based on the feedback collected from our onboarding cohort of 50+ students in our response database, we plan to implement the following improvements in the next phase:
+
+* **Interactive Daily Quizzes**: Students requested knowledge-testing mechanisms at the end of each module. We will build interactive quizzes that reward correct answers with mock testnet tokens.
+* **Parent Monitoring Dashboard**: Parents will have a view-only console to monitor their child's progress, configure smart allowance caps, and authorize token transfers.
+* **Multi-Asset Sandbox**: Extend Day 5 to allow students to mint their own custom reward tokens, teaching them tokenomics and trustline management.
+* **UX/UI Gamification Cues**: Add interactive sound effects and micro-animations to transaction confirmations (Day 3 card simulator) to make the learning experience even more engaging.
 
 ---
 
@@ -197,6 +208,7 @@ graph TD
 ```
 
 ### Stack Detail
+
 * **Frontend**: HTML5, Vanilla JavaScript, CSS3 (using Glassmorphic variables, fluid typography, and responsive grid layouts).
 * **Web3 SDK**: Integration via `@stellar/freighter-api` and `@stellar/stellar-sdk`.
 * **Backend**: Node.js + Express (handling transaction proxying, metrics, and contract calls).
@@ -235,12 +247,15 @@ graph TD
 ## 💻 Local Setup & Running Instructions
 
 ### 1. Install Dependencies
+
 ```bash
 npm install
 ```
 
 ### 2. Configure Environment Variables
+
 Create a `.env` file in the root directory:
+
 ```env
 CONTRACT_ID=CC224HOAT5CHJ7SBHTRR7IGAZ5DTAKCU6WPOSMC5ZJ6I3Y4JR47SRB3K
 ADMIN_SECRET=S_YOUR_ADMIN_SECRET_KEY_HERE_STARTS_WITH_S_LENGTH_56
@@ -250,6 +265,7 @@ NETWORK=testnet
 ```
 
 ### 3. Build & Test Smart Contracts
+
 ```bash
 # Build contracts to WASM targets
 make build
@@ -259,7 +275,9 @@ make test
 ```
 
 ### 4. Run Development Server
+
 ```bash
 npm run start
 ```
+
 Open `http://localhost:3000` to interact with the platform.
