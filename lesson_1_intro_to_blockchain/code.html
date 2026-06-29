@@ -680,15 +680,82 @@
     }
     else if (type === 'payment') {
       actionContainer.innerHTML = `
-        <button class="flex items-center gap-2 px-8 py-3 bg-primary text-on-primary rounded-xl font-bold hover:shadow-xl hover:-translate-y-0.5 transition-all active:scale-95" id="sendSimTxBtn">
-          <span class="material-symbols-outlined">send</span> Send 1 XLM Payment
-        </button>
-        <p class="text-[11px] text-on-surface-variant mt-3">Submits a payment from your connected wallet to the platform reserve address</p>
+        <!-- Virtual Debit Card -->
+        <div class="relative w-full max-w-sm rounded-3xl bg-gradient-to-br from-indigo-950 via-slate-900 to-primary text-white p-6 shadow-2xl overflow-hidden mb-6 border border-white/10 hover:scale-[1.02] transition-transform duration-300">
+          <div class="absolute -right-16 -top-16 w-32 h-32 bg-secondary/30 rounded-full blur-2xl"></div>
+          <div class="absolute -left-16 -bottom-16 w-32 h-32 bg-indigo-500/20 rounded-full blur-2xl"></div>
+
+          <div class="flex justify-between items-start mb-8">
+            <div class="flex flex-col">
+              <span class="text-[10px] font-mono tracking-widest text-secondary-fixed-dim/70 uppercase">Debit Card</span>
+              <h4 class="text-xs font-bold tracking-tight">LittleInvestors Pay</h4>
+            </div>
+            <span class="material-symbols-outlined text-2xl text-secondary-fixed-dim">contactless</span>
+          </div>
+
+          <div class="flex justify-between items-center mb-6">
+            <div class="w-10 h-7 bg-gradient-to-br from-yellow-300 to-yellow-600 rounded-md border border-yellow-700/20 shadow-inner flex items-center justify-center overflow-hidden">
+              <div class="w-full h-full border-t border-b border-black/10 flex justify-around">
+                <div class="w-[1px] h-full bg-black/10"></div>
+                <div class="w-[1px] h-full bg-black/10"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-5">
+            <span class="text-md font-mono tracking-[0.25em]">•••• •••• •••• 2026</span>
+          </div>
+
+          <div class="flex justify-between items-end">
+            <div>
+              <span class="block text-[7px] font-mono text-slate-400 uppercase">Card Holder</span>
+              <span id="card-holder-address" class="text-[10px] font-mono tracking-wider text-slate-200">LEARNER CARD</span>
+            </div>
+            <div class="text-right">
+              <span class="block text-[7px] font-mono text-slate-400 uppercase">Expires</span>
+              <span class="text-[10px] font-mono text-slate-200">12/30</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Inputs Form -->
+        <div class="space-y-4 max-w-sm">
+          <div class="text-left">
+            <label class="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Send To</label>
+            <select id="card-pay-to" class="w-full bg-surface-container-low text-primary rounded-xl border border-outline-variant/30 px-3 py-2 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-secondary">
+              <option value="Emma">👤 Emma (GBK7...DK83)</option>
+              <option value="Liam">👤 Liam (GCSD...K482)</option>
+              <option value="Sophia">👤 Sophia (GDT4...E9FG)</option>
+            </select>
+          </div>
+          
+          <div class="flex gap-4">
+            <div class="flex-1 text-left">
+              <label class="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Amount</label>
+              <div class="relative">
+                <input type="number" id="card-pay-amount" min="1" max="100" value="5" class="w-full bg-surface-container-low text-primary rounded-xl border border-outline-variant/30 pl-3 pr-10 py-2 text-xs font-bold focus:outline-none focus:ring-1 focus:ring-secondary" />
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-bold text-on-surface-variant">XLM</span>
+              </div>
+            </div>
+            
+            <div class="flex-1 text-left">
+              <label class="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Memo</label>
+              <input type="text" id="card-pay-memo" value="Lunch" class="w-full bg-surface-container-low text-primary rounded-xl border border-outline-variant/30 px-3 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-secondary" />
+            </div>
+          </div>
+
+          <button class="w-full flex items-center justify-center gap-2 px-6 py-3 bg-primary text-on-primary rounded-xl font-bold hover:shadow-xl hover:-translate-y-0.5 transition-all active:scale-95" id="sendSimTxBtn">
+            <span class="material-symbols-outlined text-[18px]">credit_card</span> Pay with Virtual Card
+          </button>
+          <p class="text-[10px] text-on-surface-variant text-center">Submits a payment from your connected Freighter wallet</p>
+        </div>
       `;
       toolCol.innerHTML = `
-        <span class="material-symbols-outlined text-4xl text-outline mb-4">receipt_long</span>
-        <p class="text-label-md font-label-md text-on-surface-variant uppercase tracking-widest">Transaction Status</p>
-        <h4 class="text-headline-sm text-outline mt-2">Ready to send</h4>
+        <div class="flex flex-col items-center justify-center text-center w-full min-h-[220px]" id="payment-status-box">
+          <span class="material-symbols-outlined text-4xl text-outline mb-4">credit_card_heart</span>
+          <p class="text-label-md font-label-md text-on-surface-variant uppercase tracking-widest">Virtual Card Reader</p>
+          <h4 class="text-headline-sm text-outline mt-2">Ready to Pay</h4>
+        </div>
       `;
       setupPaymentSimulation();
     }
@@ -848,63 +915,191 @@
     });
   }
 
+  let mockStudentKeys = null;
+  function getMockStudentKeys() {
+    if (!mockStudentKeys) {
+      const SDK = window.StellarSdk || StellarSdk;
+      mockStudentKeys = {
+        Emma: SDK.Keypair.random().publicKey(),
+        Liam: SDK.Keypair.random().publicKey(),
+        Sophia: SDK.Keypair.random().publicKey()
+      };
+    }
+    return mockStudentKeys;
+  }
+
   function setupPaymentSimulation() {
     const btn = document.getElementById('sendSimTxBtn');
     const display = document.getElementById('playground-tool-display');
     if (!btn) return;
 
-    btn.addEventListener('click', async () => {
-      btn.disabled = true;
-      btn.innerHTML = `<span class="material-symbols-outlined animate-spin">sync</span> Submitting...`;
-      display.classList.add('opacity-50');
+    // Listen to changes in selector or inputs to dynamically update the card visual
+    const updateCardHolder = () => {
+      const cardHolder = document.getElementById('card-holder-address');
+      if (cardHolder) {
+        const addr = window.stellarWallet && window.stellarWallet.publicKey;
+        cardHolder.textContent = addr ? (addr.slice(0, 8) + '...' + addr.slice(-8)) : 'LEARNER CARD';
+      }
+    };
+    
+    // Listen to wallet connection events to update card address
+    document.addEventListener('stellarWalletUpdated', updateCardHolder);
+    updateCardHolder();
 
+    btn.addEventListener('click', async () => {
       if (!window.stellarWallet || !window.stellarWallet.publicKey) {
         await window.connectStellarWallet();
-        await new Promise(r => setTimeout(r, 2000));
+        updateCardHolder();
+        if (!window.stellarWallet.publicKey) return;
       }
 
-      const publicKey = window.stellarWallet && window.stellarWallet.publicKey;
-      if (!publicKey) {
-        btn.disabled = false;
-        btn.innerHTML = `<span class="material-symbols-outlined">send</span> Send 1 XLM Payment`;
-        display.classList.remove('opacity-50');
-        return;
-      }
+      const name = document.getElementById('card-pay-to').value;
+      const amountVal = parseFloat(document.getElementById('card-pay-amount').value) || 5;
+      const memoText = document.getElementById('card-pay-memo').value || "Lunch";
+      
+      const destinationPK = getMockStudentKeys()[name];
+
+      btn.disabled = true;
+      btn.innerHTML = `<span class="material-symbols-outlined animate-spin text-[16px]">sync</span> Processing...`;
+      
+      // Initialize Step-by-Step progress panel on the right
+      display.innerHTML = `
+        <div class="w-full text-left font-mono text-xs space-y-3">
+          <div class="flex items-center gap-2 font-bold text-primary mb-3 border-b border-outline-variant/30 pb-1.5">
+            <span class="material-symbols-outlined text-[18px] text-primary">credit_card</span>
+            <span>LittleInvestors Pay Terminal</span>
+          </div>
+          
+          <div id="status-step-1" class="flex items-center gap-2 text-primary font-bold">
+            <span class="material-symbols-outlined animate-spin text-[14px] text-primary">sync</span>
+            <span>Card Authorization...</span>
+          </div>
+          
+          <div id="status-step-2" class="flex items-center gap-2 text-outline opacity-40">
+            <span class="material-symbols-outlined text-[14px]">hourglass_empty</span>
+            <span>Awaiting signature...</span>
+          </div>
+
+          <div id="status-step-3" class="flex items-center gap-2 text-outline opacity-40">
+            <span class="material-symbols-outlined text-[14px]">hourglass_empty</span>
+            <span>Submitting to network...</span>
+          </div>
+
+          <div id="status-step-4" class="flex items-center gap-2 text-outline opacity-40">
+            <span class="material-symbols-outlined text-[14px]">hourglass_empty</span>
+            <span>Consensus round...</span>
+          </div>
+
+          <div id="status-step-5" class="flex items-center gap-2 text-outline opacity-40">
+            <span class="material-symbols-outlined text-[14px]">hourglass_empty</span>
+            <span>Confirming receipt...</span>
+          </div>
+        </div>
+      `;
 
       try {
-        // Send a real 1 XLM payment using Freighter!
-        const result = await window.sendStellarPayment(
-          "GB7RX6LXKUCXQ3H7B5DQ6T3O6ZWXBXBT25CUWCSSVR6OGRD4D6VQPGWS", // platform receiving address
-          1,
-          "LittleInvestor Day 3"
-        );
+        // Step 1: Card Authorization
+        await new Promise(r => setTimeout(r, 1000));
+        document.getElementById('status-step-1').innerHTML = `
+          <span class="material-symbols-outlined text-emerald-500 text-[16px]">check_circle</span>
+          <span class="text-on-surface-variant font-medium">Card Authorized</span>
+        `;
+        document.getElementById('status-step-1').className = "flex items-center gap-2 text-emerald-600 font-bold";
 
-        if (result && (result.txHash || result.hash)) {
-          const hash = result.txHash || result.hash;
-          display.innerHTML = `
-            <span class="material-symbols-outlined text-4xl text-emerald-500 mb-3" style="font-variation-settings:'FILL' 1">check_circle</span>
-            <p class="text-label-sm text-on-surface-variant uppercase tracking-widest mb-1">Payment Successful!</p>
-            <h4 class="text-xs font-bold text-primary font-mono break-all">${hash.slice(0, 16)}...</h4>
+        // Activate Step 2
+        const step2 = document.getElementById('status-step-2');
+        step2.className = "flex items-center gap-2 text-primary font-bold";
+        step2.innerHTML = `
+          <span class="material-symbols-outlined animate-spin text-[14px] text-primary">sync</span>
+          <span>Signing Transaction (Freighter)...</span>
+        `;
+
+        // Send payment and await signature
+        const result = await window.sendStellarPayment(destinationPK, amountVal.toString(), memoText);
+
+        // Step 2 Completed: Transaction Signed
+        step2.innerHTML = `
+          <span class="material-symbols-outlined text-emerald-500 text-[16px]">check_circle</span>
+          <span class="text-on-surface-variant font-medium">Transaction Signed</span>
+        `;
+        step2.className = "flex items-center gap-2 text-emerald-600 font-bold";
+
+        // Activate Step 3
+        const step3 = document.getElementById('status-step-3');
+        step3.className = "flex items-center gap-2 text-primary font-bold";
+        step3.innerHTML = `
+          <span class="material-symbols-outlined animate-spin text-[14px] text-primary">sync</span>
+          <span>Sent to Stellar network...</span>
+        `;
+
+        await new Promise(r => setTimeout(r, 1000));
+
+        // Step 3 Completed
+        step3.innerHTML = `
+          <span class="material-symbols-outlined text-emerald-500 text-[16px]">check_circle</span>
+          <span class="text-on-surface-variant font-medium">Sent to Stellar</span>
+        `;
+        step3.className = "flex items-center gap-2 text-emerald-600 font-bold";
+
+        // Activate Step 4
+        const step4 = document.getElementById('status-step-4');
+        step4.className = "flex items-center gap-2 text-primary font-bold";
+        step4.innerHTML = `
+          <span class="material-symbols-outlined animate-spin text-[14px] text-primary">sync</span>
+          <span>Adding to ledger consensus...</span>
+        `;
+
+        await new Promise(r => setTimeout(r, 1200));
+
+        // Step 4 Completed
+        step4.innerHTML = `
+          <span class="material-symbols-outlined text-emerald-500 text-[16px]">check_circle</span>
+          <span class="text-on-surface-variant font-medium">Added to Ledger</span>
+        `;
+        step4.className = "flex items-center gap-2 text-emerald-600 font-bold";
+
+        // Activate Step 5
+        const step5 = document.getElementById('status-step-5');
+        step5.className = "flex items-center gap-2 text-primary font-bold";
+        step5.innerHTML = `
+          <span class="material-symbols-outlined animate-spin text-[14px] text-primary">sync</span>
+          <span>Confirming receipt...</span>
+        `;
+
+        await new Promise(r => setTimeout(r, 800));
+
+        // Step 5 Completed
+        step5.innerHTML = `
+          <span class="material-symbols-outlined text-emerald-500 text-[16px]">check_circle</span>
+          <span class="text-on-surface-variant font-medium">${name} received ${amountVal} XLM</span>
+        `;
+        step5.className = "flex items-center gap-2 text-emerald-600 font-bold";
+
+        // Finish Success State
+        const hash = result.txHash || result.hash || "";
+        display.innerHTML += `
+          <div class="mt-4 pt-3 border-t border-outline-variant/30 text-center">
             <a href="https://stellar.expert/explorer/testnet/tx/${hash}" target="_blank" rel="noopener"
-              class="mt-3 inline-flex items-center gap-1 text-secondary text-[11px] hover:underline">
-              <span class="material-symbols-outlined text-[12px]">open_in_new</span>
-              View Receipt on Stellar Expert
+              class="w-full justify-center inline-flex items-center gap-1.5 px-4 py-2 bg-secondary text-on-secondary rounded-xl font-bold text-xs hover:shadow-lg hover:-translate-y-0.5 transition-all">
+              <span class="material-symbols-outlined text-[14px]">open_in_new</span>
+              View on Explorer
             </a>
-          `;
-          btn.innerHTML = `<span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">check_circle</span> Sent!`;
-        } else {
-          throw new Error("No transaction hash returned");
-        }
+          </div>
+        `;
+        btn.innerHTML = `<span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1">check_circle</span> Paid!`;
+
       } catch (err) {
+        console.error(err);
         display.innerHTML = `
-          <span class="material-symbols-outlined text-3xl text-error mb-2">error</span>
-          <p class="text-label-md text-error">Transaction cancelled</p>
-          <p class="text-[10px] text-on-surface-variant mt-1">${err.message}</p>
+          <div class="flex flex-col items-center justify-center text-center w-full min-h-[220px]">
+            <span class="material-symbols-outlined text-3xl text-error mb-2">error</span>
+            <p class="text-label-md font-label-md text-error uppercase tracking-widest">Payment Failed</p>
+            <p class="text-[10px] text-on-surface-variant mt-2 max-w-[200px] break-words">${err.message || 'Cancelled'}</p>
+            <button onclick="setupPaymentSimulation()" class="mt-4 px-3 py-1 bg-primary/10 text-primary text-[10px] font-bold rounded-lg hover:bg-primary/20">Reset Terminal</button>
+          </div>
         `;
         btn.disabled = false;
-        btn.innerHTML = `<span class="material-symbols-outlined">send</span> Retry Payment`;
-      } finally {
-        display.classList.remove('opacity-50');
+        btn.innerHTML = `<span class="material-symbols-outlined">credit_card</span> Pay with Virtual Card`;
       }
     });
   }
