@@ -16,8 +16,8 @@ This project is configured to meet all the checklist items for Level 5 and Level
 | **Public GitHub Repo** | [https://github.com/thesumedh/Little-Investor-web3](https://github.com/thesumedh/Little-Investor-web3) | Done |
 | **Meaningful Commits** | Over 30+ detailed commits tracking step-by-step modular improvements | Done |
 | **Live Deployed App** | Live production application served on Vercel | Done |
-| **Tester Onboarding Form** | [Google Form Registration & Feedback](https://forms.gle/4JvG2DsbW1vK7X5t7) | Done |
-| **Exported Responses Log** | [Excel / Google Sheets User Database](https://docs.google.com/spreadsheets/d/1t_3nJj_WigkXlXn7L37l454r61XnZl-7xJm7_U2b_0w/edit?usp=sharing) | Done |
+| **Tester Onboarding Form** | [Google Form Registration & Feedback](https://forms.gle/5pZ9ywnbnGsFF9nX8) | Done |
+| **Exported Responses Log** | [Excel / Google Sheets User Database](https://docs.google.com/spreadsheets/d/1LU1cFAAM0BA22gtoGfZdLDU7Mr5q6TGb0jPicoTbyJM/edit?usp=sharing) | Done |
 | **Pitch Deck / PPT** | [Link to Pitch Deck (Google Slides / PPT)](https://docs.google.com/presentation/d/1placeholder-deck-id/edit?usp=sharing) | Ready |
 | **Demo Walkthrough Video** | [Link to Product Walkthrough/Demo Video](https://www.youtube.com/watch?v=placeholder-video-id) | Ready |
 | **Rust Smart Contracts** | 2 Soroban contracts: Certificate Registry & Allowance Vault | Done |
@@ -29,8 +29,8 @@ This project is configured to meet all the checklist items for Level 5 and Level
 ## 👥 Onboarding & User Feedback Loop
 
 To satisfy the Level 5/6 user growth goals (minimum 50+ testnet users and 20+ mainnet users), we track user participation and feedback:
-*   **Onboarding Google Form**: [Complete Onboarding & Feedback Form](https://forms.gle/4JvG2DsbW1vK7X5t7) (collects user names, emails, wallet addresses, and rating reviews).
-*   **Exported User Log**: [Excel/Google Sheets Response Log](https://docs.google.com/spreadsheets/d/1t_3nJj_WigkXlXn7L37l454r61XnZl-7xJm7_U2b_0w/edit?usp=sharing) (attached to this repository to track transaction proof, account balances, and ratings).
+*   **Onboarding Google Form**: [Complete Onboarding & Feedback Form](https://forms.gle/5pZ9ywnbnGsFF9nX8) (collects user names, emails, wallet addresses, and rating reviews).
+*   **Exported User Log**: [Excel/Google Sheets Response Log](https://docs.google.com/spreadsheets/d/1LU1cFAAM0BA22gtoGfZdLDU7Mr5q6TGb0jPicoTbyJM/edit?usp=sharing) (attached to this repository to track transaction proof, account balances, and ratings).
 
 ---
 
