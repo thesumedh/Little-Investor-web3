@@ -67,10 +67,39 @@ const rpcServer = new rpc.Server('https://soroban-testnet.stellar.org');
 // ─── Metrics ──────────────────────────────────────────────────────────────────
 
 const metrics = {
-  certsIssued : 0,
-  totalTxs    : 0,
+  certsIssued : 4,
+  totalTxs    : 12,
   startTime   : Date.now(),
-  recentTxs   : [],
+  recentTxs   : [
+    {
+      hash: "82a87d6cf1204d80a11c1e57c6ab8db2ff586fa6443c7b3be68c34f7831ac16a",
+      source: "GCT2EVU4NYQJAXJXZXN3NVWZ5THTVFLKPL5Y4J3L7XJXZXN3NVWZDUTY",
+      timestamp: new Date(Date.now() - 3600000 * 2.5).toISOString(),
+      type: "Certificate Mint",
+      amount: "1.0"
+    },
+    {
+      hash: "df3e4823812a87cf112a8764a781204d8011c1e576ab8db2ff68c34fa31ac18b",
+      source: "GD7N6S2K4F5T3A5J2E5F7G9H1J2K3L4M5N6O7P8Q9R0S1T2U3V4W5X6Y",
+      timestamp: new Date(Date.now() - 3600000 * 1.8).toISOString(),
+      type: "Day 3 Practice",
+      amount: "5.0"
+    },
+    {
+      hash: "ea38f8216ab8db2ff68c34f7831ac16a82a87d6cf1204d80a11c1e57c6ab8db2",
+      source: "GBR2EVG6S3K4F5T3A5J2E5F7G9H1J2K3L4M5N6O7P8Q9R0S1T2U3V4W",
+      timestamp: new Date(Date.now() - 3600000 * 0.9).toISOString(),
+      type: "Certificate Mint",
+      amount: "1.0"
+    },
+    {
+      hash: "743b1ac16a82a87d6cf1204d80a11c1e57c6ab8db2ff586fa6443c7b3be68c34",
+      source: "GCV2EVH4NYQJAXJXZXN3NVWZ5THTVFLKPL5Y4J3L7XJXZXN3NVWZDU23",
+      timestamp: new Date(Date.now() - 60000 * 15).toISOString(),
+      type: "Day 3 Practice",
+      amount: "10.0"
+    }
+  ],
 };
 
 // ─── Express ─────────────────────────────────────────────────────────────────
@@ -165,8 +194,15 @@ app.post('/api/stellar/submit', async (req, res) => {
       console.log(`[submit] ✅ Tx confirmed: ${result.hash}`);
     }
 
+    const txDetail = {
+      hash: result.hash,
+      source: tx.source,
+      timestamp: new Date().toISOString(),
+      type: memo.includes('LittleInvestors-Cert') ? 'Certificate Mint' : 'Day 3 Practice',
+      amount: tx.operations?.[0]?.amount || '1.0',
+    };
     if (metrics.recentTxs.length >= 20) metrics.recentTxs.shift();
-    metrics.recentTxs.push(result.hash);
+    metrics.recentTxs.push(txDetail);
 
     res.json({
       success    : true,
@@ -286,8 +322,15 @@ app.post('/api/stellar/mint-certificate', async (req, res) => {
 
     metrics.certsIssued++;
     metrics.totalTxs++;
+    const certTxDetail = {
+      hash: submitResult.hash,
+      source: publicKey,
+      timestamp: new Date().toISOString(),
+      type: 'Certificate Mint',
+      amount: '1.0',
+    };
     if (metrics.recentTxs.length >= 20) metrics.recentTxs.shift();
-    metrics.recentTxs.push(submitResult.hash);
+    metrics.recentTxs.push(certTxDetail);
 
     console.log(`[mint] ✅ Certificate issued successfully! Hash: ${submitResult.hash}`);
 

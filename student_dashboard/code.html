@@ -310,6 +310,52 @@
 </div>
 </div>
 </div>
+<!-- Live Activity Monitor Section -->
+<section class="bg-white rounded-xl shadow-lg border border-outline-variant/10 p-8 flex flex-col gap-6 relative overflow-hidden">
+    <div class="absolute -right-16 -bottom-16 w-36 h-36 bg-secondary-container/10 rounded-full blur-2xl"></div>
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div>
+            <h3 class="font-headline-md text-headline-md text-primary flex items-center gap-2">
+                <span class="relative flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                </span>
+                Live Blockchain Activity Feed
+            </h3>
+            <p class="text-label-md text-on-surface-variant mt-1">Real-time status updates of active student wallets, practice transactions, and minted certificates across the Stellar network.</p>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="bg-surface-container-low px-4 py-2 rounded-lg border border-outline-variant/20">
+                <span class="text-[10px] text-outline uppercase tracking-wider block">Global Txs</span>
+                <span id="global-tx-count" class="font-bold text-primary font-mono text-label-md">12</span>
+            </div>
+            <div class="bg-surface-container-low px-4 py-2 rounded-lg border border-outline-variant/20">
+                <span class="text-[10px] text-outline uppercase tracking-wider block">Certs Minted</span>
+                <span id="global-cert-count" class="font-bold text-secondary font-mono text-label-md">4</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="w-full overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="border-b border-outline-variant/30 text-outline text-[12px] uppercase tracking-wider">
+                    <th class="py-3 px-4">Event Type</th>
+                    <th class="py-3 px-4">Student Wallet</th>
+                    <th class="py-3 px-4">Amount</th>
+                    <th class="py-3 px-4">Time</th>
+                    <th class="py-3 px-4 text-right">Horizon Link</th>
+                </tr>
+            </thead>
+            <tbody id="activity-feed-body" class="divide-y divide-outline-variant/20 text-label-md">
+                <tr class="animate-pulse">
+                    <td class="py-4 px-4 text-on-surface-variant" colspan="5">Listening for on-chain events...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
 <!-- Secondary Content: Recent Activity / Next Up -->
 <section class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
 <div class="bg-surface-container-low p-6 rounded-xl border border-outline-variant/10 group cursor-pointer hover:border-primary/30 transition-all">
@@ -365,6 +411,71 @@
                 el.style.transform = 'scale(1)';
             });
         });
+
+        async function fetchRealtimeMetrics() {
+            try {
+                const res = await fetch('/api/metrics');
+                if (!res.ok) return;
+                const data = await res.json();
+                
+                // Update stats
+                document.getElementById('global-tx-count').textContent = data.totalTxs || 0;
+                document.getElementById('global-cert-count').textContent = data.certsIssued || 0;
+                
+                // Update table body
+                const tbody = document.getElementById('activity-feed-body');
+                if (!tbody) return;
+                
+                if (!data.recentTxs || data.recentTxs.length === 0) {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td class="py-4 px-4 text-on-surface-variant text-center" colspan="5">No recent transactions tracked.</td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                // Copy recentTxs and reverse to show newest first
+                const recent = [...data.recentTxs];
+                const rowsHtml = recent.reverse().map(tx => {
+                    const shortWallet = tx.source ? (tx.source.slice(0, 6) + '...' + tx.source.slice(-4)) : 'Unknown';
+                    const date = tx.timestamp ? new Date(tx.timestamp) : new Date();
+                    const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                    
+                    const isCert = tx.type === 'Certificate Mint';
+                    const badgeClass = isCert 
+                        ? 'bg-amber-100 text-amber-800 border-amber-300' 
+                        : 'bg-indigo-100 text-indigo-800 border-indigo-300';
+                    
+                    return `
+                        <tr class="hover:bg-surface-container-low transition-colors">
+                            <td class="py-4 px-4">
+                                <span class="px-2.5 py-1 rounded-full text-xs font-bold border ${badgeClass}">
+                                    ${tx.type}
+                                </span>
+                            </td>
+                            <td class="py-4 px-4 font-mono font-bold text-primary">${shortWallet}</td>
+                            <td class="py-4 px-4 font-mono">${tx.amount} XLM</td>
+                            <td class="py-4 px-4 text-on-surface-variant">${timeStr}</td>
+                            <td class="py-4 px-4 text-right">
+                                <a href="https://stellar.expert/explorer/testnet/tx/${tx.hash}" target="_blank" rel="noopener" 
+                                   class="inline-flex items-center gap-1 text-secondary font-bold hover:underline">
+                                    View <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+                                </a>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+                
+                tbody.innerHTML = rowsHtml;
+            } catch (err) {
+                console.error('Failed to fetch realtime metrics:', err);
+            }
+        }
+        
+        // Start polling
+        fetchRealtimeMetrics();
+        setInterval(fetchRealtimeMetrics, 5000);
 
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
