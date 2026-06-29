@@ -723,10 +723,15 @@
           <div class="text-left">
             <label class="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Send To</label>
             <select id="card-pay-to" class="w-full bg-surface-container-low text-primary rounded-xl border border-outline-variant/30 px-3 py-2 text-xs font-medium focus:outline-none focus:ring-1 focus:ring-secondary">
-              <option value="Emma">👤 Emma (GBK7...DK83)</option>
-              <option value="Liam">👤 Liam (GCSD...K482)</option>
-              <option value="Sophia">👤 Sophia (GDT4...E9FG)</option>
+              <option value="Emma">👤 Emma (Default Reserve)</option>
+              <option value="Liam">👤 Liam (Default Reserve)</option>
+              <option value="Sophia">👤 Sophia (Default Reserve)</option>
+              <option value="custom">🌐 Custom Address...</option>
             </select>
+            <div id="custom-receiver-wrapper" class="hidden mt-3 text-left">
+              <label class="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Receiver Address</label>
+              <input type="text" id="card-pay-custom-to" placeholder="e.g. G..." class="w-full bg-surface-container-low text-primary rounded-xl border border-outline-variant/30 px-3 py-2 text-xs font-mono focus:outline-none focus:ring-1 focus:ring-secondary" />
+            </div>
           </div>
           
           <div class="flex gap-4">
@@ -933,6 +938,19 @@
     const display = document.getElementById('playground-tool-display');
     if (!btn) return;
 
+    // Toggle custom receiver field dynamically
+    const selectEl = document.getElementById('card-pay-to');
+    const customWrapper = document.getElementById('custom-receiver-wrapper');
+    if (selectEl && customWrapper) {
+      selectEl.addEventListener('change', () => {
+        if (selectEl.value === 'custom') {
+          customWrapper.classList.remove('hidden');
+        } else {
+          customWrapper.classList.add('hidden');
+        }
+      });
+    }
+
     // Listen to changes in selector or inputs to dynamically update the card visual
     const updateCardHolder = () => {
       const cardHolder = document.getElementById('card-holder-address');
@@ -953,11 +971,23 @@
         if (!window.stellarWallet.publicKey) return;
       }
 
-      const name = document.getElementById('card-pay-to').value;
+      const selectVal = document.getElementById('card-pay-to').value;
       const amountVal = parseFloat(document.getElementById('card-pay-amount').value) || 5;
       const memoText = document.getElementById('card-pay-memo').value || "Lunch";
       
-      const destinationPK = getMockStudentKeys()[name];
+      let destinationPK = "";
+      let displayName = selectVal;
+
+      if (selectVal === 'custom') {
+        destinationPK = (document.getElementById('card-pay-custom-to').value || "").trim();
+        displayName = "Receiver";
+        if (!destinationPK.startsWith('G') || destinationPK.length !== 56) {
+          window.showStellarAlert("Invalid Stellar public key format. Must be 56 characters and start with 'G'.", "error");
+          return;
+        }
+      } else {
+        destinationPK = "GCHYTBPLSN53ECSKTOA6GSGDE2Z4DBF4LT6FMSGY2R27HEKYRP33H4ZG"; // Real funded reserve address
+      }
 
       btn.disabled = true;
       btn.innerHTML = `<span class="material-symbols-outlined animate-spin text-[16px]">sync</span> Processing...`;
@@ -1071,7 +1101,7 @@
         // Step 5 Completed
         step5.innerHTML = `
           <span class="material-symbols-outlined text-emerald-500 text-[16px]">check_circle</span>
-          <span class="text-on-surface-variant font-medium">${name} received ${amountVal} XLM</span>
+          <span class="text-on-surface-variant font-medium">${displayName} received ${amountVal} XLM</span>
         `;
         step5.className = "flex items-center gap-2 text-emerald-600 font-bold";
 
