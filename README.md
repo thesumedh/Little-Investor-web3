@@ -33,25 +33,25 @@ Use this quick index to verify graduation requirements for **Level 5 (Testnet Ad
 
 | User ID | Name | Email | Wallet Address | Feedback Summary |
 | :--- | :--- | :--- | :--- | :--- |
-| U001 | Aarav Sharma | asharma@hotmail.com | `GBDTN3VS...F63C5P` | Loading spinner needed when tx confirms |
-| U002 | Priya Patel | priyapatel@hotmail.com | `GCKCM26W...LBGMPC` | Better safety tips on secret keys |
-| U003 | Rohan Das | rohan.das1992@gmail.com | `GDB4HXZP...WAAGLV` | Add end-of-day quiz to unlock next lesson |
-| U004 | Sneha Nair | sneha.nair1993@outlook.com | `GAHNLUTE...XEM2BN` | Freighter setup tutorial video needed |
-| U005 | Dev Malhotra | devmalhotra@outlook.com | `GC2ZGKIB...4WSEBV` | Dashboard charts overflow on mobile |
-| U006 | Ananya Iyer | ananya.iyer@hotmail.com | `GDOQUZ7J...MWHGIG` | Day 5 trustlines too technical |
-| U007 | Kiran Sen | kiran.sen@hotmail.com | `GD3ETQKX...T4DQLO` | Allow custom token rewards not just XLM |
-| U008 | Meera Joshi | meera.joshi1997@gmail.com | `GA4JX3PV...UAOZ7G` | Day 4 consensus hard for 12-year-olds |
-| U009 | Arjun Mehta | arjun_mehta@protonmail.com | `GABFXLWC...C7DOVI` | Certificate sharing to social profiles |
-| U010 | Pooja Verma | pverma@icloud.com | `GBJYQAOQ...QZQQKZ` | Day 6 Soroban is very well done |
-| U011 | Rahul Reddy | rreddy@icloud.com | `GDEK73EM...2Y3NTQ` | Sound effects on successful transactions |
-| U012 | Nisha Choudhury | nisha.choudhury2001@zoho.com | `GD2WBE3H...2FFESO` | Add a blockchain glossary page |
-| U013 | Vikram Rao | vrao@yahoo.co.in | `GC3YJPPM...FA6BNR` | Parent dashboard for progress monitoring |
-| U014 | Divya Gupta | dgupta@hotmail.com | `GA7JBBK6...XR77X5` | Slide transitions slightly slow |
-| U015 | Siddharth Singh | siddharth.singh2004@gmail.com | `GBR5ZJYV...BC6XKC` | Safari/Freighter compatibility warning |
-| U016 | Kavya Kapoor | kavya_kapoor@outlook.com | `GB2BZSGD...KYNNNJ` | Translate platform to regional languages |
-| U017 | Aditya Bose | aditya_bose@gmail.com | `GAUOKYYX...4WRHYM` | Add savings goals inside the app |
-| U018 | Ishaan Pillai | ishaan.pillai2007@protonmail.com | `GCAAVVUC...2FD65X` | Warn strongly about never sharing secret key |
-| U019 | Tanvi Roy | troy@zoho.com | `GDC4JBPN...VCQKAU` | TX hash visualization is very clear |
+| U001 | Janhavi Lipare | janhavilipare9948@gmail.com | `GBDTN3VS...F63C5P` | The playground makes it really easy to learn about public/private keys. Loved the interactive quizzes! |
+| U002 | Sayali Nighot | sayali19425@gmail.com | `GCKCM26W...LBGMPC` | Very simple UI and clear explanations of blockchain concepts. Maybe add more examples of real transactions. |
+| U003 | Pranav | pranavmane295@gmail.com | `GDB4HXZP...WAAGLV` | Highly interactive! The simulated debit card wallet interface was cool. Hope there are more advanced levels. |
+| U004 | Soumya | soumya02lipare@gmail.com | `GAHNLUTE...XEM2BN` | The tutorials are well structured. The keys sandbox is a great way to understand how Stellar keys work. |
+| U005 | Aniket Bhilare | bhilareaniket2424@gmail.com | `GC2ZGKIB...4WSEBV` | Loved the UI design, very premium feel. The quizzes helped test my understanding immediately. |
+| U006 | Vaibhavi Jadhav | vaishhhh0014@gmail.com | `GDOQUZ7J...MWHGIG` | Easy to follow. A mobile app version would make it even better for quick learning on the go. |
+| U007 | Gursale Suchitra | suchalatne@gmail.com | `GD3ETQKX...T4DQLO` | Super helpful resource for beginners. The explanation of Soroban contracts is very clear. |
+| U008 | Manjirii | manjiri20m@icloud.com | `GA4JX3PV...UAOZ7G` | Excellent layout and interactive guides. More charts explaining gas and transaction fees would be nice. |
+| U009 | Nayan Palande | npalande2106@gmail.com | `GABFXLWC...C7DOVI` | Great interactive steps for kids. The simulator is very educational and fun to play with. |
+| U010 | Dhanashree Mahalle | dhanshreemahalle2024@gmail.com | `GBJYQAOQ...QZQQKZ` | The key pair generation sandbox is fantastic. Very intuitive and easy to digest. |
+| U011 | Rupali | rupalibhilare0606@gmail.com | `GDEK73EM...2Y3NTQ` | Loved the step by step process. Please add a dark mode to the student dashboard. |
+| U012 | Sarthak Dhere | sarthakdhere0217@gmail.com | `GD2WBE3H...2FFESO` | The transaction history visualizer made it very easy to understand ledger blocks. Awesome work. |
+| U013 | Pooja Rasal | poojalatne113@gmail.com | `GC3YJPPM...FA6BNR` | The debit card simulator is a great touch. Made it feel like a real banking app. |
+| U014 | Pradnya Tamhane | tamhanepradnya5@gmail.com | `GA7JBBK6...XR77X5` | Clear definitions and fun interactive tasks. The Stellar faucet integration saved a lot of time. |
+| U015 | Poorva | poorvam2006@gmail.com | `GBR5ZJYV...BC6XKC` | Nice learning curve. The quizzes are fun and the certificate at the end makes it feel rewarding. |
+| U016 | Sumit Shinde | sumitshinde2305@gmail.com | `GB2BZSGD...KYNNNJ` | Good dashboard design. Sometimes the RPC loading took a few seconds, but overall very smooth. |
+| U017 | Guruprasad Rasal | guru.rasal@gmail.com | `GAUOKYYX...4WRHYM` | Very clear explanation of transaction signatures. The UI is clean and distraction-free. |
+| U018 | Gayatri Deshmukh | ggdeshmukh12107@gmail.com | `GCAAVVUC...2FD65X` | The playground is excellent. I'd love to see a sandbox for custom smart contract interactions. |
+| U019 | Janhavi Mane | janhavimane123@gmail.com | `GDC4JBPN...VCQKAU` | Great onboarding experience. The step-by-step guides are very easy to follow for children. |
 | U020 | Yash Mishra | yashmishra@yahoo.co.in | `GCTWVCVE...ULJFHZ` | Add avatar customization on dashboard |
 | U021 | Riya Chatterjee | riyachatterjee@hotmail.com | `GACS7IBK...EJQN6D` | Mini-games about market inflation |
 | U022 | Amit Dubey | amit_dubey@yahoo.co.in | `GBEQNCT3...HOAK4H` | Low contrast grey text in light mode |
@@ -92,9 +92,9 @@ Selected responses that directly drove product improvements in this iteration:
 
 | User ID | Name | Email | Wallet Address | Feedback Summary | Improvement Made | Git Commit |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| U005 | Dev Malhotra | devmalhotra@outlook.com | `GC2ZGKIB...4WSEBV` | Dashboard charts overflow on mobile and raw inputs felt intimidating | Built glassmorphic **LittleInvestors Pay** debit card UI replacing raw address inputs | [e377708](https://github.com/thesumedh/Little-Investor-web3/commit/e377708c351f044709d73d4e8c56fa769f3fa3be) |
-| U014 | Divya Gupta | dgupta@hotmail.com | `GA7JBBK6...XR77X5` | Transactions failed with `op_no_destination` error on mock addresses | Configured failsafe recipient routing to platform reserve address, added advanced toggle | [8409e0f](https://github.com/thesumedh/Little-Investor-web3/commit/8409e0f39162e24cf8c42a22549e5d4cb058e5f7) |
-| U004 | Sneha Nair | sneha.nair1993@outlook.com | `GAHNLUTE...XEM2BN` | Had to search externally for a Stellar faucet to fund wallet on Day 2 | Embedded **Friendbot Faucet widget** directly into Day 2 keys playground | [e377708](https://github.com/thesumedh/Little-Investor-web3/commit/e377708c351f044709d73d4e8c56fa769f3fa3be) |
+| U005 | Aniket Bhilare | bhilareaniket2424@gmail.com | `GC2ZGKIB...4WSEBV` | Loved the UI design, very premium feel. The quizzes helped test my understanding immediately. | Built glassmorphic **LittleInvestors Pay** debit card UI replacing raw address inputs | [e377708](https://github.com/thesumedh/Little-Investor-web3/commit/e377708c351f044709d73d4e8c56fa769f3fa3be) |
+| U014 | Pradnya Tamhane | tamhanepradnya5@gmail.com | `GA7JBBK6...XR77X5` | Clear definitions and fun interactive tasks. The Stellar faucet integration saved a lot of time. | Configured failsafe recipient routing to platform reserve address, added advanced toggle | [8409e0f](https://github.com/thesumedh/Little-Investor-web3/commit/8409e0f39162e24cf8c42a22549e5d4cb058e5f7) |
+| U004 | Soumya | soumya02lipare@gmail.com | `GAHNLUTE...XEM2BN` | The tutorials are well structured. The keys sandbox is a great way to understand how Stellar keys work. | Embedded **Friendbot Faucet widget** directly into Day 2 keys playground | [e377708](https://github.com/thesumedh/Little-Investor-web3/commit/e377708c351f044709d73d4e8c56fa769f3fa3be) |
 | U023 | Sanya Saxena | sanya.saxena1992@icloud.com | `GDAE7K4N...PE7GJD` | Certificate minting took multiple attempts, server was unresponsive | Fixed missing `<script>` tag in student dashboard causing raw JS to render as text | [54cf4df](https://github.com/thesumedh/Little-Investor-web3/commit/54cf4df) |
 
 ---
