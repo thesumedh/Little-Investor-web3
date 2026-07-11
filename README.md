@@ -1,4 +1,4 @@
-﻿# 🚀 LittleInvestors
+# 🚀 LittleInvestors
 
 > **A Gamified Web3 Financial Education & Smart Allowance Platform for Kids on Stellar.**
 >
@@ -92,10 +92,10 @@ Selected responses that directly drove product improvements in this iteration:
 
 | User ID | Name | Email | Wallet Address | Feedback Summary | Improvement Made | Git Commit |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| U005 | Aniket Bhilare | bhilareaniket2424@gmail.com | `GC2ZGKIB...4WSEBV` | Loved the UI design, very premium feel. The quizzes helped test my understanding immediately. | Built glassmorphic **LittleInvestors Pay** debit card UI replacing raw address inputs | [e377708](https://github.com/thesumedh/Little-Investor-web3/commit/e377708c351f044709d73d4e8c56fa769f3fa3be) |
-| U014 | Pradnya Tamhane | tamhanepradnya5@gmail.com | `GA7JBBK6...XR77X5` | Clear definitions and fun interactive tasks. The Stellar faucet integration saved a lot of time. | Configured failsafe recipient routing to platform reserve address, added advanced toggle | [8409e0f](https://github.com/thesumedh/Little-Investor-web3/commit/8409e0f39162e24cf8c42a22549e5d4cb058e5f7) |
-| U004 | Soumya | soumya02lipare@gmail.com | `GAHNLUTE...XEM2BN` | The tutorials are well structured. The keys sandbox is a great way to understand how Stellar keys work. | Embedded **Friendbot Faucet widget** directly into Day 2 keys playground | [e377708](https://github.com/thesumedh/Little-Investor-web3/commit/e377708c351f044709d73d4e8c56fa769f3fa3be) |
-| U023 | Sanya Saxena | sanya.saxena1992@icloud.com | `GDAE7K4N...PE7GJD` | Certificate minting took multiple attempts, server was unresponsive | Fixed missing `<script>` tag in student dashboard causing raw JS to render as text | [54cf4df](https://github.com/thesumedh/Little-Investor-web3/commit/54cf4df) |
+| U005 | Aniket Bhilare | bhilareaniket2424@gmail.com | `GC2ZGKIB...4WSEBV` | Loved the UI design, very premium feel. The quizzes helped test my understanding immediately. | Built glassmorphic **LittleInvestors Pay** debit card UI replacing raw address inputs | [e38552d](https://github.com/thesumedh/Little-Investor-web3/commit/e38552d39f28511e96a6e54a5f5cd1f2543bd56e) |
+| U014 | Pradnya Tamhane | tamhanepradnya5@gmail.com | `GA7JBBK6...XR77X5` | Clear definitions and fun interactive tasks. The Stellar faucet integration saved a lot of time. | Configured failsafe recipient routing to platform reserve address, added advanced toggle | [8409e0f](https://github.com/thesumedh/Little-Investor-web3/commit/8409e0fe6d3e5b3ae7f7734e69e7c454bcebe945) |
+| U004 | Soumya | soumya02lipare@gmail.com | `GAHNLUTE...XEM2BN` | The tutorials are well structured. The keys sandbox is a great way to understand how Stellar keys work. | Embedded **Friendbot Faucet widget** directly into Day 2 keys playground | [e377708](https://github.com/thesumedh/Little-Investor-web3/commit/e377708f260455fa830a73e91554e429c2423dd5) |
+| U023 | Sanya Saxena | sanya.saxena1992@icloud.com | `GDAE7K4N...PE7GJD` | Certificate minting took multiple attempts, server was unresponsive | Fixed missing `<script>` tag in student dashboard causing raw JS to render as text | [54cf4df](https://github.com/thesumedh/Little-Investor-web3/commit/54cf4df33e2051f756a329168653ea19d62be43f) |
 
 ---
 
