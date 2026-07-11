@@ -121,19 +121,19 @@ Here are the key improvements implemented in this version to resolve issues repo
 
 * **Feedback**: Raw inputs (Recipient address strings, raw decimals) were intimidating for young learners.
 * **Solution**: Developed a glassmorphic **LittleInvestors Pay** debit card UI simulating traditional bank card checkouts while explaining blockchain milestones.
-* **Commit Link**: [Git Commit: e377708](https://github.com/thesumedh/Little-Investor-web3/commit/e377708c351f044709d73d4e8c56fa769f3fa3be)
+* **Commit Link**: [Git Commit: e38552d](https://github.com/thesumedh/Little-Investor-web3/commit/e38552d39f28511e96a6e54a5f5cd1f2543bd56e)
 
 ### 🗺️ 2. Failsafe Recipient Routing
 
 * **Feedback**: Transactions failed with error 400 (`op_no_destination`) when kids tried to pay generated mock addresses that weren't active on the ledger.
 * **Solution**: Configured the default recipient option to pay **Sumedh**, routing under the hood to the platform's funded reserve address: `GCHYTBPLSN53ECSKTOA6GSGDE2Z4DBF4LT6FMSGY2R27HEKYRP33H4ZG`. Added a custom toggle for advanced users.
-* **Commit Link**: [Git Commit: 8409e0f](https://github.com/thesumedh/Little-Investor-web3/commit/8409e0f39162e24cf8c42a22549e5d4cb058e5f7)
+* **Commit Link**: [Git Commit: 8409e0f](https://github.com/thesumedh/Little-Investor-web3/commit/8409e0fe6d3e5b3ae7f7734e69e7c454bcebe945)
 
 ### 🚰 3. Integrated Friendbot Faucet on Day 2
 
 * **Feedback**: Kids wanted to fund their Freighter wallets directly on-page without searching for external Stellar faucets.
 * **Solution**: Embedded a **Friendbot Faucet widget** directly into Day 2 keys playground.
-* **Commit Link**: [Git Commit: e377708](https://github.com/thesumedh/Little-Investor-web3/commit/e377708c351f044709d73d4e8c56fa769f3fa3be)
+* **Commit Link**: [Git Commit: e377708](https://github.com/thesumedh/Little-Investor-web3/commit/e377708f260455fa830a73e91554e429c2423dd5)
 
 ### 🔮 Future Evolution & Next-Phase Roadmap
 
