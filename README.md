@@ -1,4 +1,4 @@
-# 🚀 LittleInvestors
+﻿# 🚀 LittleInvestors
 
 > **A Gamified Web3 Financial Education & Smart Allowance Platform for Kids on Stellar.**
 >
