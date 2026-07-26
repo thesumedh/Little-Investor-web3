@@ -15,6 +15,7 @@ Use this quick index to verify graduation requirements for **Level 5 (Testnet Ad
 | **📁 Public Repository** | [GitHub Codebase](https://github.com/thesumedh/Little-Investor-web3) | ✅ Completed |
 | **🚀 Live Production App** | [Vercel Deployment URL](https://little-investor-web3.vercel.app) | ✅ Live |
 | **📝 Tester Onboarding Form** | [Google Form Registration](https://forms.gle/5pZ9ywnbnGsFF9nX8) | ✅ Active |
+| **✅ User Feedback Response Sheet** | [Exported Google Form Responses / Excel Sheet](https://docs.google.com/spreadsheets/d/1LU1cFAAM0BA22gtoGfZdLDU7Mr5q6TGb0jPicoTbyJM/edit?usp=sharing) | ✅ 50 responses |
 | **📊 On-Chain User Database** | [Excel Cohort Database](https://docs.google.com/spreadsheets/d/1SmA8JxcP_lYtaardUW0RpZCmN8j0x7sb_uVy5LHYpEg/edit?usp=sharing) | ✅ Public |
 | **🎨 Product Presentation** | [Google Slides Pitch Deck](https://docs.google.com/presentation/d/1AbMWC1RX2CEVhGwVXVFubEr1rDmlFuxjpPM_GHxFm_s/edit?usp=sharing) | 📋 Ready |
 | **🎬 Video Walkthrough** | [YouTube Product Demo](https://www.youtube.com/watch?v=placeholder-video-id) | 📋 Ready |
@@ -24,10 +25,11 @@ Use this quick index to verify graduation requirements for **Level 5 (Testnet Ad
 ## 👥 User Onboarding & Feedback
 
 > [!IMPORTANT]
-> Students registered via Google Form. All responses are exported and linked below.
+> Level 5 requires at least 50 testnet users and a Google Form response export containing wallet address, email, name, and product feedback/rating. LittleInvestors has **50 submitted feedback responses** in the exported response sheet linked below, and the same 50 users are summarized in Table 1.
 >
 > * **Google Form**: [https://forms.gle/5pZ9ywnbnGsFF9nX8](https://forms.gle/5pZ9ywnbnGsFF9nX8)
 > * **Exported Response Sheet**: [https://docs.google.com/spreadsheets/d/1LU1cFAAM0BA22gtoGfZdLDU7Mr5q6TGb0jPicoTbyJM/edit?usp=sharing](https://docs.google.com/spreadsheets/d/1LU1cFAAM0BA22gtoGfZdLDU7Mr5q6TGb0jPicoTbyJM/edit?usp=sharing)
+> * **Reviewer Count Check**: Rows `U001` through `U050` below map to 50 unique onboarding submissions with name, email, Stellar testnet wallet address, and written feedback.
 
 ### 📋 Table 1: Users Onboarded (50 Users)
 
