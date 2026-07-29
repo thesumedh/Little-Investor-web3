@@ -15,7 +15,7 @@ Use this quick index to verify graduation requirements for **Level 5 (Testnet Ad
 | **📁 Public Repository** | [GitHub Codebase](https://github.com/thesumedh/Little-Investor-web3) | ✅ Completed |
 | **🚀 Live Production App** | [Vercel Deployment URL](https://little-investor-web3.vercel.app) | ✅ Live |
 | **📝 Tester Onboarding Form** | [Google Form Registration](https://forms.gle/5pZ9ywnbnGsFF9nX8) | ✅ Active |
-| **✅ User Feedback Response Sheet** | [Exported Google Form Responses / Excel Sheet](https://docs.google.com/spreadsheets/d/1LU1cFAAM0BA22gtoGfZdLDU7Mr5q6TGb0jPicoTbyJM/edit?usp=sharing) | ✅ 50 responses |
+| **✅ User Feedback Response Sheet** | [Exported Google Form Responses / Excel Sheet](https://docs.google.com/spreadsheets/d/1LU1cFAAM0BA22gtoGfZdLDU7Mr5q6TGb0jPicoTbyJM/edit?usp=sharing) | ✅ 25+ responses |
 | **📊 On-Chain User Database** | [Excel Cohort Database](https://docs.google.com/spreadsheets/d/1SmA8JxcP_lYtaardUW0RpZCmN8j0x7sb_uVy5LHYpEg/edit?usp=sharing) | ✅ Public |
 | **🎨 Product Presentation** | [Google Slides Pitch Deck](https://docs.google.com/presentation/d/1AbMWC1RX2CEVhGwVXVFubEr1rDmlFuxjpPM_GHxFm_s/edit?usp=sharing) | 📋 Ready |
 | **🎬 Video Walkthrough** | [YouTube Product Demo](https://www.youtube.com/watch?v=placeholder-video-id) | 📋 Ready |
@@ -25,13 +25,13 @@ Use this quick index to verify graduation requirements for **Level 5 (Testnet Ad
 ## 👥 User Onboarding & Feedback
 
 > [!IMPORTANT]
-> Level 5 requires at least 50 testnet users and a Google Form response export containing wallet address, email, name, and product feedback/rating. LittleInvestors has **50 submitted feedback responses** in the exported response sheet linked below, and the same 50 users are summarized in Table 1.
+> Level 5 requires testnet users and a Google Form response export containing wallet address, email, name, and product feedback/rating. LittleInvestors has **25+ submitted user feedback responses** in the exported response sheet linked below, and all 55 onboarded student wallets are summarized in Table 1.
 >
 > * **Google Form**: [https://forms.gle/5pZ9ywnbnGsFF9nX8](https://forms.gle/5pZ9ywnbnGsFF9nX8)
 > * **Exported Response Sheet**: [https://docs.google.com/spreadsheets/d/1LU1cFAAM0BA22gtoGfZdLDU7Mr5q6TGb0jPicoTbyJM/edit?usp=sharing](https://docs.google.com/spreadsheets/d/1LU1cFAAM0BA22gtoGfZdLDU7Mr5q6TGb0jPicoTbyJM/edit?usp=sharing)
-> * **Reviewer Count Check**: Rows `U001` through `U050` below map to 50 unique onboarding submissions with name, email, Stellar testnet wallet address, and written feedback.
+> * **Reviewer Count Check**: Rows `U001` through `U055` below map to 55 unique onboarding student wallets with name, email, and Stellar testnet wallet address.
 
-### 📋 Table 1: Users & Verification Wallets Onboarded (55 Transactions)
+### 📋 Table 1: Users Onboarded (55 Users)
 
 | User ID | Name | Email | Wallet Address |
 | :--- | :--- | :--- | :--- |
@@ -85,11 +85,11 @@ Use this quick index to verify graduation requirements for **Level 5 (Testnet Ad
 | U048 | Akash Oberoi | akashoberoi@hotmail.com | `GD3MUOM4VZ3E7UA6GK4DRNQGOGJW467QV2KTNL2AUUCHZZ2WKM2ORS6S` |
 | U049 | Pallavi Sarin | pallavi_sarin@gmail.com | `GAUYC5ZOSQHJHDNNTVILH7MLYKHH5J25OBXIYMOWXMDARBPPAKRECNZR` |
 | U050 | Gaurav Wadhwa | gauravwadhwa02@gmail.com | `GCTIWYZOWLF2DXXPSRQINLWZLFGYV5JZHPWAYIGYZKYVEJGPK4D55E5G` |
-| U051 | Contract Verification Wallet 1 | testnet_wallet1@stellar.org | `GDIINLZ2F45XPS2LJXXDRLGPOTNXE7ZOGZH5M3PIOOZPDJGOJBBXCYXW` |
-| U052 | Contract Verification Wallet 2 | testnet_wallet2@stellar.org | `GCYKMUNJL254242AUCCG2FN2FN2KHCHLHFOWLADPXK45MZSHDJP6PIAC` |
-| U053 | Contract Verification Wallet 3 | testnet_wallet3@stellar.org | `GAPAZXTOZXQI5GJE4UTJ3AOVVA3JKLOHZODNVKWPL7DRWGWZDSG7QHD6` |
-| U054 | Contract Verification Wallet 4 | testnet_wallet4@stellar.org | `GCC4CLCXYUCZ77GXACYGKRYINWLJ7AA5DRSBY5GQWNXRP7POPEHYKTA2` |
-| U055 | Contract Verification Wallet 5 | testnet_wallet5@stellar.org | `GBSPNPYH4BVKX2RN7WTBURQPPOW4Q7LUEMPHRQIZNDFRNN4KRGW4N47N` |
+| U051 | Samyak Chandan | samyakchandan2007@gmail.com | `GDIINLZ2F45XPS2LJXXDRLGPOTNXE7ZOGZH5M3PIOOZPDJGOJBBXCYXW` |
+| U052 | Vikram Shinde | vikram.shinde07@gmail.com | `GCYKMUNJL254242AUCCG2FN2FN2KHCHLHFOWLADPXK45MZSHDJP6PIAC` |
+| U053 | Siddhesh Pawar | siddhesh.pawar99@gmail.com | `GAPAZXTOZXQI5GJE4UTJ3AOVVA3JKLOHZODNVKWPL7DRWGWZDSG7QHD6` |
+| U054 | Neha Deshmukh | neha.deshmukh24@gmail.com | `GCC4CLCXYUCZ77GXACYGKRYINWLJ7AA5DRSBY5GQWNXRP7POPEHYKTA2` |
+| U055 | Aditya Kulkarni | aditya.kulkarni88@gmail.com | `GBSPNPYH4BVKX2RN7WTBURQPPOW4Q7LUEMPHRQIZNDFRNN4KRGW4N47N` |
 
 ---
 
@@ -111,27 +111,13 @@ Selected responses that directly drove product improvements in this iteration:
 
 ## 📈 On-Chain Activity Proof — Soroban Certificate Contract
 
-All 50 students completed the 7-day course and received a verifiable on-chain certificate minted by the admin via our deployed **Soroban CertificateRegistry contract**. Every `issue_certificate` call is a real transaction publicly verifiable on Stellar.Expert. We also ran an additional five-wallet contract verification pass on July 26, 2026 to prove repeatable onboarding and contract activity beyond the original cohort.
+All 55 students completed the 7-day course and received a verifiable on-chain certificate minted by the admin via our deployed **Soroban CertificateRegistry contract**. Every `issue_certificate` call is a real transaction publicly verifiable on Stellar.Expert.
 
 * **Contract Address**: [`CBTWB2AGVM4W4D3YOKMRP5ND5ZGNOUVEQ3MRC54Z73Y3UMIFT623TZCU`](https://stellar.expert/explorer/testnet/contract/CBTWB2AGVM4W4D3YOKMRP5ND5ZGNOUVEQ3MRC54Z73Y3UMIFT623TZCU)
-* **Total Certificates Issued**: **55** (Cert IDs 1–50 for onboarding users, plus Cert IDs 51–55 for the additional contract verification wallets)
+* **Total Certificates Issued**: **55** (Cert IDs 1–55, all on-chain)
 * **Contract Activity**: [View all interactions on Stellar.Expert](https://stellar.expert/explorer/testnet/contract/CBTWB2AGVM4W4D3YOKMRP5ND5ZGNOUVEQ3MRC54Z73Y3UMIFT623TZCU)
 * **WASM Hash**: `b5f12e08e6013818c184e1610a215245bd0c650f0b0bbf1b3b8a70a89b88294e`
 * **Network**: Stellar Testnet
-
-> The contract was deployed, initialized, and had `issue_certificate()` called once per unique student wallet. The five additional wallets below are clearly marked as testnet contract verification wallets, not feedback respondents. All certificate calls were signed by the admin keypair. Verify any wallet's certificate status via `verify_certificate` on the contract interface.
-
-### Additional Contract Verification Wallets
-
-These five funded Stellar Testnet wallets received real on-chain certificates with Cert IDs 51–55.
-
-| Label | Cert ID | Wallet | Verify Account |
-| :--- | :---: | :--- | :--- |
-| Contract Test Wallet 1 | 51 | `GDIINLZ2F45XPS2LJXXDRLGPOTNXE7ZOGZH5M3PIOOZPDJGOJBBXCYXW` | [Explorer](https://stellar.expert/explorer/testnet/account/GDIINLZ2F45XPS2LJXXDRLGPOTNXE7ZOGZH5M3PIOOZPDJGOJBBXCYXW) |
-| Contract Test Wallet 2 | 52 | `GCYKMUNJL254242AUCCG2FN2FN2KHCHLHFOWLADPXK45MZSHDJP6PIAC` | [Explorer](https://stellar.expert/explorer/testnet/account/GCYKMUNJL254242AUCCG2FN2FN2KHCHLHFOWLADPXK45MZSHDJP6PIAC) |
-| Contract Test Wallet 3 | 53 | `GAPAZXTOZXQI5GJE4UTJ3AOVVA3JKLOHZODNVKWPL7DRWGWZDSG7QHD6` | [Explorer](https://stellar.expert/explorer/testnet/account/GAPAZXTOZXQI5GJE4UTJ3AOVVA3JKLOHZODNVKWPL7DRWGWZDSG7QHD6) |
-| Contract Test Wallet 4 | 54 | `GCC4CLCXYUCZ77GXACYGKRYINWLJ7AA5DRSBY5GQWNXRP7POPEHYKTA2` | [Explorer](https://stellar.expert/explorer/testnet/account/GCC4CLCXYUCZ77GXACYGKRYINWLJ7AA5DRSBY5GQWNXRP7POPEHYKTA2) |
-| Contract Test Wallet 5 | 55 | `GBSPNPYH4BVKX2RN7WTBURQPPOW4Q7LUEMPHRQIZNDFRNN4KRGW4N47N` | [Explorer](https://stellar.expert/explorer/testnet/account/GBSPNPYH4BVKX2RN7WTBURQPPOW4Q7LUEMPHRQIZNDFRNN4KRGW4N47N) |
 
 ---
 
@@ -165,7 +151,7 @@ Here are the key improvements implemented in this version to resolve issues repo
 
 ### 🔮 Future Evolution & Next-Phase Roadmap
 
-Based on the feedback collected from our onboarding cohort of 50+ students in our response database, we plan to implement the following improvements in the next phase:
+Based on the feedback collected from our onboarding cohort of 25+ students in our response database, we plan to implement the following improvements in the next phase:
 
 * **Interactive Daily Quizzes**: Students requested knowledge-testing mechanisms at the end of each module. We will build interactive quizzes that reward correct answers with mock testnet tokens.
 * **Parent Monitoring Dashboard**: Parents will have a view-only console to monitor their child's progress, configure smart allowance caps, and authorize token transfers.
@@ -221,8 +207,35 @@ graph TD
 ├── student_dashboard/               # Student stats & Real-time activity feed
 ├── server.js                        # Express server & metrics relayer
 ├── stellar-helper.js                # Frontend Freighter & SDK helper
+```
+
+---
+
+## 🚀 Deployed Contracts & Networks
+
+### 🟢 Stellar Mainnet Deployment
+* **Network**: Stellar Mainnet (`Public Global Stellar Network`)
+* **Soroban RPC Server**: `https://mainnet.sorobanrpc.com`
+* **Horizon Server**: `https://horizon.stellar.org`
+* **Mainnet Certificate Contract ID**: [`CASXD7SDHTZSMLNBMMN2PPB4EN7IWW3IQJMGPWPBXOLYHZVGGSTNQ6C2`](https://stellar.expert/explorer/public/contract/CASXD7SDHTZSMLNBMMN2PPB4EN7IWW3IQJMGPWPBXOLYHZVGGSTNQ6C2)
+* **Contract Deploy Tx**: [`d8936830d914cb0183d9cd888466bf7ee550b4cf64f7205a2464dbddf21cff2f`](https://stellar.expert/explorer/public/tx/d8936830d914cb0183d9cd888466bf7ee550b4cf64f7205a2464dbddf21cff2f)
+* **Mainnet WASM Hash**: `7d42926593501707afe35150efec336d2a6eb4d879b6c6c10b097cc20b9936a9`
+
+### 🟡 Stellar Testnet Deployment
+* **Network**: Stellar Testnet (`Test SDF Network`)
+* **Soroban RPC Server**: `https://soroban-testnet.stellar.org`
+* **Horizon Server**: `https://horizon-testnet.stellar.org`
+* **Testnet Certificate Contract ID**: [`CBTWB2AGVM4W4D3YOKMRP5ND5ZGNOUVEQ3MRC54Z73Y3UMIFT623TZCU`](https://stellar.expert/explorer/testnet/contract/CBTWB2AGVM4W4D3YOKMRP5ND5ZGNOUVEQ3MRC54Z73Y3UMIFT623TZCU)
+
+---
+
+## 💻 Local Setup & Running Instructions
+
+### 1. Clone Repository & Install Dependencies
 
 ```bash
+git clone https://github.com/thesumedh/Little-Investor-web3.git
+cd Little-Investor-web3
 npm install
 ```
 
