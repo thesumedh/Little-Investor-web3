@@ -31,7 +31,7 @@ Use this quick index to verify graduation requirements for **Level 5 (Testnet Ad
 > * **Exported Response Sheet**: [https://docs.google.com/spreadsheets/d/1LU1cFAAM0BA22gtoGfZdLDU7Mr5q6TGb0jPicoTbyJM/edit?usp=sharing](https://docs.google.com/spreadsheets/d/1LU1cFAAM0BA22gtoGfZdLDU7Mr5q6TGb0jPicoTbyJM/edit?usp=sharing)
 > * **Reviewer Count Check**: Rows `U001` through `U050` below map to 50 unique onboarding submissions with name, email, Stellar testnet wallet address, and written feedback.
 
-### 📋 Table 1: Users Onboarded (51 Users)
+### 📋 Table 1: Users Onboarded (50 Users)
 
 | User ID | Name | Email | Wallet Address |
 | :--- | :--- | :--- | :--- |
@@ -85,7 +85,6 @@ Use this quick index to verify graduation requirements for **Level 5 (Testnet Ad
 | U048 | Akash Oberoi | akashoberoi@hotmail.com | `GD3MUOM4VZ3E7UA6GK4DRNQGOGJW467QV2KTNL2AUUCHZZ2WKM2ORS6S` |
 | U049 | Pallavi Sarin | pallavi_sarin@gmail.com | `GAUYC5ZOSQHJHDNNTVILH7MLYKHH5J25OBXIYMOWXMDARBPPAKRECNZR` |
 | U050 | Gaurav Wadhwa | gauravwadhwa02@gmail.com | `GCTIWYZOWLF2DXXPSRQINLWZLFGYV5JZHPWAYIGYZKYVEJGPK4D55E5G` |
-| U051 | Samyak | samyakchandan2007@gmail.com | `GBUXI4VK22NZA4VXVAJNWCQFHMLIIIHAFXQBE56P3EXEPQPR35ERAOUN` |
 
 ---
 
@@ -123,11 +122,11 @@ Generated with `npm run testnet:extend-contract`. These five funded Stellar Test
 
 | Label | Cert ID | Wallet | Verify Account |
 | :--- | :---: | :--- | :--- |
-| Contract Test Wallet 1 | 51 | `GDIINLZ2...BXCYXW` | [Explorer](https://stellar.expert/explorer/testnet/account/GDIINLZ2F45XPS2LJXXDRLGPOTNXE7ZOGZH5M3PIOOZPDJGOJBBXCYXW) |
-| Contract Test Wallet 2 | 52 | `GCYKMUNJ...P6PIAC` | [Explorer](https://stellar.expert/explorer/testnet/account/GCYKMUNJL254242AUCCG2FN2FN2KHCHLHFOWLADPXK45MZSHDJP6PIAC) |
-| Contract Test Wallet 3 | 53 | `GAPAZXTO...G7QHD6` | [Explorer](https://stellar.expert/explorer/testnet/account/GAPAZXTOZXQI5GJE4UTJ3AOVVA3JKLOHZODNVKWPL7DRWGWZDSG7QHD6) |
-| Contract Test Wallet 4 | 54 | `GCC4CLCX...HYKTA2` | [Explorer](https://stellar.expert/explorer/testnet/account/GCC4CLCXYUCZ77GXACYGKRYINWLJ7AA5DRSBY5GQWNXRP7POPEHYKTA2) |
-| Contract Test Wallet 5 | 55 | `GBSPNPYH...W4N47N` | [Explorer](https://stellar.expert/explorer/testnet/account/GBSPNPYH4BVKX2RN7WTBURQPPOW4Q7LUEMPHRQIZNDFRNN4KRGW4N47N) |
+| Contract Test Wallet 1 | 51 | `GDIINLZ2F45XPS2LJXXDRLGPOTNXE7ZOGZH5M3PIOOZPDJGOJBBXCYXW` | [Explorer](https://stellar.expert/explorer/testnet/account/GDIINLZ2F45XPS2LJXXDRLGPOTNXE7ZOGZH5M3PIOOZPDJGOJBBXCYXW) |
+| Contract Test Wallet 2 | 52 | `GCYKMUNJL254242AUCCG2FN2FN2KHCHLHFOWLADPXK45MZSHDJP6PIAC` | [Explorer](https://stellar.expert/explorer/testnet/account/GCYKMUNJL254242AUCCG2FN2FN2KHCHLHFOWLADPXK45MZSHDJP6PIAC) |
+| Contract Test Wallet 3 | 53 | `GAPAZXTOZXQI5GJE4UTJ3AOVVA3JKLOHZODNVKWPL7DRWGWZDSG7QHD6` | [Explorer](https://stellar.expert/explorer/testnet/account/GAPAZXTOZXQI5GJE4UTJ3AOVVA3JKLOHZODNVKWPL7DRWGWZDSG7QHD6) |
+| Contract Test Wallet 4 | 54 | `GCC4CLCXYUCZ77GXACYGKRYINWLJ7AA5DRSBY5GQWNXRP7POPEHYKTA2` | [Explorer](https://stellar.expert/explorer/testnet/account/GCC4CLCXYUCZ77GXACYGKRYINWLJ7AA5DRSBY5GQWNXRP7POPEHYKTA2) |
+| Contract Test Wallet 5 | 55 | `GBSPNPYH4BVKX2RN7WTBURQPPOW4Q7LUEMPHRQIZNDFRNN4KRGW4N47N` | [Explorer](https://stellar.expert/explorer/testnet/account/GBSPNPYH4BVKX2RN7WTBURQPPOW4Q7LUEMPHRQIZNDFRNN4KRGW4N47N) |
 
 ---
 
