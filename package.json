@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "dev": "node --watch server.js",
-    "build": "echo 'No build required'"
+    "build": "echo 'No build required'",
+    "testnet:extend-contract": "node scripts/extend_contract_activity.js"
   },
   "dependencies": {
     "@stellar/freighter-api": "^6.0.1",

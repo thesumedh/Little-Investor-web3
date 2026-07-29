@@ -37,32 +37,43 @@ const {
 // ─── Config ──────────────────────────────────────────────────────────────────
 
 const PORT             = process.env.PORT || 3000;
-const HORIZON_URL      = 'https://horizon-testnet.stellar.org';
-const NETWORK_PASSPHRASE = Networks.TESTNET;
-const CONTRACT_ID      = process.env.CONTRACT_ID || null;
+const TARGET_NETWORK   = (process.env.NETWORK || 'testnet').toLowerCase();
+const IS_MAINNET       = TARGET_NETWORK === 'mainnet' || TARGET_NETWORK === 'public';
 
-// Platform wallet — receives certification fees.
-// Generated once and stored in .env.  Users pay 1 XLM here.
+const NETWORK_PASSPHRASE = IS_MAINNET ? Networks.PUBLIC : Networks.TESTNET;
+const HORIZON_URL        = process.env.HORIZON_URL || (IS_MAINNET ? 'https://horizon.stellar.org' : 'https://horizon-testnet.stellar.org');
+const SOROBAN_RPC_URL    = process.env.SOROBAN_RPC_URL || (IS_MAINNET ? 'https://mainnet.sorobanrpc.com' : 'https://soroban-testnet.stellar.org');
+const STELLAR_EXPERT_BASE = IS_MAINNET ? 'https://stellar.expert/explorer/public' : 'https://stellar.expert/explorer/testnet';
+const CONTRACT_ID        = process.env.CONTRACT_ID || null;
+
+// Platform wallet — receives 1 XLM certification fees.
 let platformKeypair;
 function getPlatformKeypair() {
   if (platformKeypair) return platformKeypair;
   if (process.env.PLATFORM_SECRET && process.env.PLATFORM_SECRET.length > 10) {
     try {
       platformKeypair = Keypair.fromSecret(process.env.PLATFORM_SECRET);
-      console.log(`[Platform] Using configured wallet: ${platformKeypair.publicKey()}`);
+      console.log(`[Platform] Using configured wallet (${IS_MAINNET ? 'MAINNET' : 'TESTNET'}): ${platformKeypair.publicKey()}`);
       return platformKeypair;
     } catch (_) {}
   }
   platformKeypair = Keypair.random();
-  console.log(`[Platform] ⚠️  Generated new platform wallet: ${platformKeypair.publicKey()}`);
+  console.log(`[Platform] ⚠️  Generated new platform wallet (${IS_MAINNET ? 'MAINNET' : 'TESTNET'}): ${platformKeypair.publicKey()}`);
   console.log(`[Platform] Add to .env: PLATFORM_SECRET=${platformKeypair.secret()}`);
   return platformKeypair;
+}
+
+function getPlatformAddress() {
+  if (process.env.PLATFORM_ADDRESS && process.env.PLATFORM_ADDRESS.length === 56) {
+    return process.env.PLATFORM_ADDRESS;
+  }
+  return getPlatformKeypair().publicKey();
 }
 
 // ─── Horizon & RPC Clients ───────────────────────────────────────────────────
 
 const server = new Horizon.Server(HORIZON_URL);
-const rpcServer = new rpc.Server('https://soroban-testnet.stellar.org');
+const rpcServer = new rpc.Server(SOROBAN_RPC_URL);
 
 // ─── Metrics ──────────────────────────────────────────────────────────────────
 
@@ -116,12 +127,28 @@ app.get('/health', (_req, res) => {
   res.json({
     status          : 'ok',
     uptime          : Math.floor((Date.now() - metrics.startTime) / 1000),
-    network         : 'testnet',
+    network         : IS_MAINNET ? 'mainnet' : 'testnet',
+    networkPassphrase: NETWORK_PASSPHRASE,
     horizonUrl      : HORIZON_URL,
-    platformAddress : getPlatformKeypair().publicKey(),
+    sorobanRpcUrl   : SOROBAN_RPC_URL,
+    platformAddress : getPlatformAddress(),
     contractId      : CONTRACT_ID || 'not-deployed',
     certsIssued     : metrics.certsIssued,
     totalTxs        : metrics.totalTxs,
+  });
+});
+
+/** GET /api/config — Provides client SDK with active network settings */
+app.get('/api/config', (_req, res) => {
+  res.json({
+    network          : IS_MAINNET ? 'mainnet' : 'testnet',
+    isMainnet        : IS_MAINNET,
+    networkPassphrase: NETWORK_PASSPHRASE,
+    horizonUrl       : HORIZON_URL,
+    sorobanRpcUrl    : SOROBAN_RPC_URL,
+    platformAddress  : getPlatformAddress(),
+    contractId       : CONTRACT_ID || null,
+    stellarExpertBase: STELLAR_EXPERT_BASE,
   });
 });
 
@@ -131,8 +158,9 @@ app.get('/api/metrics', (_req, res) => {
     certsIssued    : metrics.certsIssued,
     totalTxs       : metrics.totalTxs,
     recentTxs      : metrics.recentTxs.slice(-10),
-    platformAddress: getPlatformKeypair().publicKey(),
+    platformAddress: getPlatformAddress(),
     contractId     : CONTRACT_ID || null,
+    network        : IS_MAINNET ? 'mainnet' : 'testnet',
     uptimeMs       : Date.now() - metrics.startTime,
   });
 });
@@ -155,7 +183,7 @@ app.post('/api/stellar/balance', async (req, res) => {
       balance        : native ? native.balance : '0.0000000',
       sequenceNumber : acc.sequence,
       subentryCount  : acc.subentry_count,
-      explorerUrl    : `https://stellar.expert/explorer/testnet/account/${publicKey}`,
+      explorerUrl    : `${STELLAR_EXPERT_BASE}/account/${publicKey}`,
     });
   } catch (e) {
     if (e.response?.status === 404) {
@@ -208,7 +236,7 @@ app.post('/api/stellar/submit', async (req, res) => {
       success    : true,
       txHash     : result.hash,
       ledger     : result.ledger,
-      explorerUrl: `https://stellar.expert/explorer/testnet/tx/${result.hash}`,
+      explorerUrl: `${STELLAR_EXPERT_BASE}/tx/${result.hash}`,
     });
   } catch (e) {
     const detail = e.response?.data?.extras?.result_codes
@@ -241,7 +269,7 @@ app.post('/api/stellar/mint-certificate', async (req, res) => {
   }
 
   try {
-    console.log(`[mint] Verifying payment transaction ${txHash} for ${publicKey}...`);
+    console.log(`[mint] Verifying payment transaction ${txHash} for ${publicKey} on ${IS_MAINNET ? 'MAINNET' : 'TESTNET'}...`);
     
     // 1. Fetch transaction from Horizon
     let tx;
@@ -257,7 +285,7 @@ app.post('/api/stellar/mint-certificate', async (req, res) => {
 
     // 2. Fetch operations to verify payment
     const opsPage = await tx.operations();
-    const platformAddress = getPlatformKeypair().publicKey();
+    const platformAddress = getPlatformAddress();
     
     const paymentOp = opsPage.records.find(op => 
       op.type === 'payment' &&
@@ -337,8 +365,8 @@ app.post('/api/stellar/mint-certificate', async (req, res) => {
     res.json({
       success: true,
       txHash: submitResult.hash,
-      explorerUrl: `https://stellar.expert/explorer/testnet/tx/${submitResult.hash}`,
-      contractUrl: `https://stellar.expert/explorer/testnet/contract/${CONTRACT_ID}`,
+      explorerUrl: `${STELLAR_EXPERT_BASE}/tx/${submitResult.hash}`,
+      contractUrl: `${STELLAR_EXPERT_BASE}/contract/${CONTRACT_ID}`,
     });
 
   } catch (err) {
@@ -389,7 +417,7 @@ app.post('/api/stellar/verify-cert', async (req, res) => {
           hasCertificate: true,
           verifiedVia: 'contract',
           contractId: CONTRACT_ID,
-          explorerUrl: `https://stellar.expert/explorer/testnet/contract/${CONTRACT_ID}`,
+          explorerUrl: `${STELLAR_EXPERT_BASE}/contract/${CONTRACT_ID}`,
         });
       }
     } catch (err) {
@@ -418,7 +446,7 @@ app.post('/api/stellar/verify-cert', async (req, res) => {
       verifiedVia    : certTx ? 'horizon-memo' : 'none',
       txHash         : certTx?.hash || null,
       explorerUrl    : certTx
-        ? `https://stellar.expert/explorer/testnet/tx/${certTx.hash}`
+        ? `${STELLAR_EXPERT_BASE}/tx/${certTx.hash}`
         : null,
       contractId     : CONTRACT_ID || null,
     });

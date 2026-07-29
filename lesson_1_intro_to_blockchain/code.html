@@ -665,6 +665,13 @@
             <p class="text-[10px] text-on-surface-variant text-center">Generates a browser-based public/private keypair for practice.</p>
           </div>
 
+          <div class="rounded-xl border border-error/25 bg-error-container/40 px-3 py-2 flex gap-2 items-start">
+            <span class="material-symbols-outlined text-error text-[18px] mt-0.5">shield_lock</span>
+            <p class="text-[10px] leading-relaxed text-on-error-container">
+              Safety rule: share only your public `G...` address. Never paste a secret `S...` key into forms, chats, screenshots, or support messages.
+            </p>
+          </div>
+
           <div class="border-t border-outline-variant/30 pt-4">
             <label class="block text-[11px] font-bold text-on-surface-variant uppercase tracking-wider mb-1">Fund Wallet on Testnet (Friendbot)</label>
             <div class="flex gap-2">
@@ -690,6 +697,7 @@
           <div id="gen-sec" class="bg-surface border border-outline-variant/20 px-3 py-2 rounded-xl text-[11px] font-mono break-all text-on-surface-variant select-all cursor-pointer" onclick="navigator.clipboard.writeText(this.textContent); window.showStellarAlert('Secret seed copied! Keep it secret!', 'success')">
             Click generate button...
           </div>
+          <p class="mt-2 text-[10px] leading-relaxed text-error font-semibold">Practice key only. In a real wallet, never share or submit this secret seed.</p>
         </div>
       `;
       setupKeypairGenerator();

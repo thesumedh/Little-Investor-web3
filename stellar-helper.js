@@ -16,9 +16,10 @@
 (function () {
   'use strict';
 
-  const HORIZON_URL        = 'https://horizon-testnet.stellar.org';
-  const NETWORK_PASSPHRASE = 'Test SDF Network ; September 2015';
-  const STELLAR_EXPERT     = 'https://stellar.expert/explorer/testnet';
+  let HORIZON_URL        = 'https://horizon-testnet.stellar.org';
+  let NETWORK_PASSPHRASE = 'Test SDF Network ; September 2015';
+  let STELLAR_EXPERT     = 'https://stellar.expert/explorer/testnet';
+  let IS_MAINNET         = false;
 
   // ─── Global wallet state (read-only externally) ──────────────────────────
   window.stellarWallet = {
@@ -26,7 +27,47 @@
     balance: null,
     isConnected: false,
     networkPassphrase: NETWORK_PASSPHRASE,
+    isMainnet: false,
+    networkConfig: null,
   };
+
+  async function fetchNetworkConfig() {
+    try {
+      const res = await fetch('/api/config');
+      if (res.ok) {
+        const cfg = await res.json();
+        HORIZON_URL        = cfg.horizonUrl || HORIZON_URL;
+        NETWORK_PASSPHRASE = cfg.networkPassphrase || NETWORK_PASSPHRASE;
+        STELLAR_EXPERT     = cfg.stellarExpertBase || STELLAR_EXPERT;
+        IS_MAINNET         = !!cfg.isMainnet;
+
+        window.stellarWallet.networkPassphrase = NETWORK_PASSPHRASE;
+        window.stellarWallet.isMainnet         = IS_MAINNET;
+        window.stellarWallet.networkConfig     = cfg;
+
+        updateNetworkBadges();
+      }
+    } catch (e) {
+      console.warn('[stellar-helper] Config fetch error, using defaults:', e.message);
+    }
+  }
+
+  function updateNetworkBadges() {
+    const badges = document.querySelectorAll('.stellar-network-badge');
+    badges.forEach(badge => {
+      if (IS_MAINNET) {
+        badge.innerHTML = `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#10b981;margin-right:6px"></span> 🟢 Stellar Mainnet (Real 1 XLM)`;
+        badge.style.background = 'rgba(16, 185, 129, 0.12)';
+        badge.style.color = '#047857';
+        badge.style.border = '1px solid rgba(16, 185, 129, 0.3)';
+      } else {
+        badge.innerHTML = `<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#f59e0b;margin-right:6px"></span> 🟡 Stellar Testnet`;
+        badge.style.background = 'rgba(245, 158, 11, 0.12)';
+        badge.style.color = '#b45309';
+        badge.style.border = '1px solid rgba(245, 158, 11, 0.3)';
+      }
+    });
+  }
 
   // ─── Freighter detection ─────────────────────────────────────────────────
 
@@ -222,8 +263,9 @@
       }
 
       if (netDetails && netDetails.networkPassphrase !== NETWORK_PASSPHRASE) {
+        const targetNetName = IS_MAINNET ? '"Public Global Stellar Network" (Mainnet)' : '"Test SDF Network" (Testnet)';
         window.showStellarAlert(
-          `Wrong network! Switch wallet to "Test SDF Network" (Testnet).`,
+          `Wrong wallet network! Please switch Freighter network to ${targetNetName}.`,
           'error',
           10000
         );
@@ -497,7 +539,10 @@
 
   // ─── Auto-init on page load ───────────────────────────────────────────────
 
-  function init() {
+  async function init() {
+    // 0. Fetch network configuration from server
+    await fetchNetworkConfig();
+
     // Restore session (address only — re-verify with Freighter)
     const saved = sessionStorage.getItem('li_wallet');
     const api = getWalletApi();
