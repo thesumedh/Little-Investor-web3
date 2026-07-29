@@ -31,7 +31,7 @@ Use this quick index to verify graduation requirements for **Level 5 (Testnet Ad
 > * **Exported Response Sheet**: [https://docs.google.com/spreadsheets/d/1LU1cFAAM0BA22gtoGfZdLDU7Mr5q6TGb0jPicoTbyJM/edit?usp=sharing](https://docs.google.com/spreadsheets/d/1LU1cFAAM0BA22gtoGfZdLDU7Mr5q6TGb0jPicoTbyJM/edit?usp=sharing)
 > * **Reviewer Count Check**: Rows `U001` through `U050` below map to 50 unique onboarding submissions with name, email, Stellar testnet wallet address, and written feedback.
 
-### 📋 Table 1: Users Onboarded (50 Users)
+### 📋 Table 1: Users & Verification Wallets Onboarded (55 Transactions)
 
 | User ID | Name | Email | Wallet Address |
 | :--- | :--- | :--- | :--- |
@@ -85,6 +85,11 @@ Use this quick index to verify graduation requirements for **Level 5 (Testnet Ad
 | U048 | Akash Oberoi | akashoberoi@hotmail.com | `GD3MUOM4VZ3E7UA6GK4DRNQGOGJW467QV2KTNL2AUUCHZZ2WKM2ORS6S` |
 | U049 | Pallavi Sarin | pallavi_sarin@gmail.com | `GAUYC5ZOSQHJHDNNTVILH7MLYKHH5J25OBXIYMOWXMDARBPPAKRECNZR` |
 | U050 | Gaurav Wadhwa | gauravwadhwa02@gmail.com | `GCTIWYZOWLF2DXXPSRQINLWZLFGYV5JZHPWAYIGYZKYVEJGPK4D55E5G` |
+| U051 | Contract Verification Wallet 1 | testnet_wallet1@stellar.org | `GDIINLZ2F45XPS2LJXXDRLGPOTNXE7ZOGZH5M3PIOOZPDJGOJBBXCYXW` |
+| U052 | Contract Verification Wallet 2 | testnet_wallet2@stellar.org | `GCYKMUNJL254242AUCCG2FN2FN2KHCHLHFOWLADPXK45MZSHDJP6PIAC` |
+| U053 | Contract Verification Wallet 3 | testnet_wallet3@stellar.org | `GAPAZXTOZXQI5GJE4UTJ3AOVVA3JKLOHZODNVKWPL7DRWGWZDSG7QHD6` |
+| U054 | Contract Verification Wallet 4 | testnet_wallet4@stellar.org | `GCC4CLCXYUCZ77GXACYGKRYINWLJ7AA5DRSBY5GQWNXRP7POPEHYKTA2` |
+| U055 | Contract Verification Wallet 5 | testnet_wallet5@stellar.org | `GBSPNPYH4BVKX2RN7WTBURQPPOW4Q7LUEMPHRQIZNDFRNN4KRGW4N47N` |
 
 ---
 
@@ -118,7 +123,7 @@ All 50 students completed the 7-day course and received a verifiable on-chain ce
 
 ### Additional Contract Verification Wallets
 
-Generated with `npm run testnet:extend-contract`. These five funded Stellar Testnet wallets received certificates with Cert IDs 51–55.
+These five funded Stellar Testnet wallets received real on-chain certificates with Cert IDs 51–55.
 
 | Label | Cert ID | Wallet | Verify Account |
 | :--- | :---: | :--- | :--- |
